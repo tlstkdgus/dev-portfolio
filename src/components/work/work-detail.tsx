@@ -422,7 +422,7 @@ function TroubleItem({
   return (
     <li>
       <h3 className="flex gap-3 text-[21px] font-bold leading-snug tracking-[-0.02em] md:text-[24px]">
-        <span className="meta pt-1.5 font-bold text-accent">{String(n).padStart(2, "0")}</span>
+        <span className="meta shrink-0 pt-1.5 font-bold text-accent">{String(n).padStart(2, "0")}</span>
         <span>{isKo ? tr_.title : tr_.titleEn}</span>
       </h3>
       <dl className="mt-5 border-t border-foreground">
@@ -441,7 +441,7 @@ function TroubleItem({
             repoUrl ? (
               <a
                 key={f}
-                href={`${repoUrl}/blob/main/${f}`}
+                href={`${repoUrl}/blob/${tr_.branch ?? "main"}/${f}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono underline decoration-foreground/30 underline-offset-4 hover:text-accent hover:decoration-accent"

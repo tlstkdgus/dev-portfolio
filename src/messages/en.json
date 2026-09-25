@@ -190,7 +190,7 @@
         "before": "Paper roll call",
         "after": "QR scan, auto-logged",
         "label": "13th cohort session attendance",
-        "d": "Members scan the QR code on the staff screen with their phones and the check-in is recorded on the server right away; scans more than 20 minutes after the session starts are marked late automatically, so the roll shows only late and absent members.",
+        "d": "Members read the QR code on the staff screen with the in-app scan modal and the check-in is recorded on the server right away; the server marks scans more than 20 minutes after the session starts as late, so the roll shows only late and absent members.",
         "basis": "Basis: 45 members of HUFS LIKELION's 13th cohort · WelcomeKit PWA"
       }
     ],

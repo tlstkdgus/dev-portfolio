@@ -77,12 +77,12 @@ export const experiences: Experience[] = [
     startDate: "2025-01",
     endDate: "2025-12",
     description: [
-      "부원 45명이 쓴 13기 [웰컴키트 PWA](https://github.com/tlstkdgus/WelcomeKit) 프론트엔드 개발 리드(React) — 수기 출석부를 QR 스캔 출석으로 바꾸고 20분 기준 지각 자동 판정, 빙고 미션",
+      "부원 45명이 쓴 13기 [웰컴키트 PWA](https://github.com/tlstkdgus/WelcomeKit) 프론트엔드 개발 리드(React, 커밋 98개 중 60개) — 앱 안 QR 스캔 출석, 빙고 카드 공개, PWA 설치·서비스 워커로 수기 출석부를 대체",
       "13기 학생 교육 세션 기획·진행, 학생 관리 및 강의 진도 체크",
       "운영과 병행해 16P!ay · TCP · Y:Wave 프로젝트 리드 (교내 최우수상 2회, 전국 예선 진출 2회)",
     ],
     descriptionEn: [
-      "Led frontend development (React) of the 13th cohort [WelcomeKit PWA](https://github.com/tlstkdgus/WelcomeKit) used by 45 members — replaced the paper roll with QR check-in, automatic late marking at 20 minutes, and bingo missions",
+      "Led frontend development (React, 60 of 98 commits) of the 13th cohort [WelcomeKit PWA](https://github.com/tlstkdgus/WelcomeKit) used by 45 members — in-app QR check-in, bingo card reveals, and PWA install with a service worker, replacing the paper roll",
       "Planned and led educational sessions; managed students and lecture progress for the 13th cohort",
       "Led 16P!ay · TCP · Y:Wave projects alongside operations (2 campus Grand Prizes, 2 national semifinals)",
     ],
