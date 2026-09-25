@@ -104,7 +104,7 @@ export const projects: Project[] = [
       { label: "검사 레포", labelEn: "Repos swept", value: "562개" },
       { label: "직접 만든 도구", labelEn: "Tools built", value: "3개" },
     ],
-    tags: ["Next.js", "React", "TypeScript", "Supabase", "Python", "LLM"],
+    tags: ["Next.js", "React", "TypeScript", "Supabase", "Python", "discord.py", "LLM"],
     image: "/projects/hackathon14/01.png",
     images: [
       "/projects/hackathon14/01.png",

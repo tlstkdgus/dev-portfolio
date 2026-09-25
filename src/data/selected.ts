@@ -63,6 +63,8 @@ export interface SelectedProject {
   stack: string[];
   /** 공개 저장소. 개발자 포트폴리오라 메인 카드에서도 바로 연다. CleanB는 비공개라 넣지 않는다 */
   repoUrl?: string;
+  /** 같은 프로젝트의 다른 공개 저장소 (해커톤: FAQ 봇 · 제출물 검사). 라벨은 저장소가 무엇인지 */
+  extraRepos?: { label: Localized; url: string }[];
   /** 서비스 링크 */
   liveUrl?: string;
   /** 외부 공개 케이스 (예: 브랜드 디자인 랩의 Behance) */
@@ -129,8 +131,12 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "hackathon14",
-    stack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Python", "LLM API"],
+    stack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Python", "discord.py", "LLM API"],
     repoUrl: "https://github.com/tlstkdgus/animal-league",
+    extraRepos: [
+      { label: { ko: "FAQ 봇", en: "FAQ bot" }, url: "https://github.com/tlstkdgus/hackathon-faq-bot" },
+      { label: { ko: "제출물 검사", en: "Submission check" }, url: "https://github.com/tlstkdgus/hackathon-commit-check" },
+    ],
     // 사진·인용: 멋쟁이사자처럼 브랜드 디자인 랩의 Behance 케이스(공동 소유자로 등재). 브랜드 디자인은 랩의 작업이고,
     // 상현의 몫은 본선 무대·심사·운영 콘솔과 해커톤 기획이다. 사진은 콘솔이 실제 무대에서 쓰인 장면 위주로 골랐다.
     field: {

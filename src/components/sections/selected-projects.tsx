@@ -142,6 +142,9 @@ export function SelectedProjects() {
                   </Link>
                   {/* 코드와 배포본으로 바로 — 상세 페이지를 거치지 않아도 되게 */}
                   {p.repoUrl && <OutLink href={p.repoUrl} label={t("github")} title={title} isKo={isKo} />}
+                  {p.extraRepos?.map((r) => (
+                    <OutLink key={r.url} href={r.url} label={tr(r.label)} title={title} isKo={isKo} />
+                  ))}
                   {p.liveUrl && <OutLink href={p.liveUrl} label={t("live")} title={title} isKo={isKo} />}
                 </div>
               </div>

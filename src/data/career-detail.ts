@@ -33,6 +33,8 @@ export interface Trouble {
   resultEn: string;
   /** 근거 코드 경로 (예: lib/state.ts) — 저장소 링크 옆에 작게 보여 준다 */
   files?: string[];
+  /** files가 프로젝트 대표 저장소가 아닌 곳에 있을 때 (해커톤 FAQ 봇 · 제출물 검사) */
+  repo?: string;
 }
 
 export interface CareerDetailSection {
@@ -266,6 +268,30 @@ export const careerDetailSections: CareerDetailSection[] = [
         result: "본선 8팀 토너먼트를 이 콘솔로 끝까지 진행했고, 콘솔 조작이 무대 스크린에 반영되기까지 실측 2.2초였습니다.",
         resultEn: "The console ran the 8-team finals to the end, with a measured 2.2 seconds from console action to stage screen.",
         files: ["lib/tournament.ts", "lib/auth.ts", "docs/SPEC.md"],
+      },
+      {
+        title: "마감 후 검사만으로는 force-push를 잡을 수 없었습니다",
+        titleEn: "Checking after the deadline couldn't catch force-pushes",
+        problem: "커밋 시각만 보는 사후 검사로는 히스토리를 다시 쓴 force-push나 삭제된 브랜치가 드러나지 않고, 커밋 날짜도 위조할 수 있었습니다. 마감 시각에 562개 레포를 한 번에 훑어야 했지만 토큰으로도 GitHub API는 시간당 5,000회로 제한됩니다.",
+        problemEn: "A post-hoc check of commit times can't reveal a force-push that rewrote history or a deleted branch, and commit dates can be forged. All 562 repos had to be swept right at the deadline, while the GitHub API allows 5,000 calls an hour even with a token.",
+        solution: "마감 직후 모든 레포의 전 브랜치 SHA와 pushed_at을 스냅샷 JSON으로 찍고, 이후 대조로 추가 커밋 · force-push · 브랜치 삭제를 가려냈습니다. 표준 라이브러리만으로 스레드 8개를 동시에 돌리고, 2차 레이트리밋의 Retry-After를 받으면 모든 워커가 함께 멈췄다 재개하며, 50개마다 중간 저장해 --resume으로 이어서 돌게 했습니다. 스냅샷을 찍는 1~2분 사이에 푸시한 레포는 pushed_at으로 따로 세어 사람이 확인하게 했습니다.",
+        solutionEn: "Right after the deadline it snapshots every branch SHA and pushed_at of every repo to JSON, and later comparison exposes added commits, force-pushes, and deleted branches. Using only the standard library it runs 8 threads; on a secondary rate limit's Retry-After every worker pauses and resumes together, and it checkpoints every 50 repos so --resume can pick up. Repos pushed during the 1–2 minutes the snapshot takes are counted separately from pushed_at for a person to check.",
+        result: "실측 40개에 8초 속도로 562개 레포를 전수 검사해 위반 5팀을 찾았고, 판정은 검사 전에 합의한 기준으로 운영진이 내렸습니다. 입력 파싱과 대조 로직은 단위 테스트 34개로 고정했습니다.",
+        resultEn: "At a measured 40 repos per 8 seconds it swept all 562 repos and found 5 violating teams, which the staff ruled on by criteria agreed before the scan. Input parsing and comparison are pinned by 34 unit tests.",
+        files: ["check.py", "test_check.py"],
+        repo: "https://github.com/tlstkdgus/hackathon-commit-check",
+      },
+      {
+        title: "키워드 하나가 조용히 오답을 만들 수 있었습니다",
+        titleEn: "A single keyword could quietly produce a wrong answer",
+        problem: "FAQ 봇은 키워드 매칭을 먼저 쓰는데, '상'(상금) 같은 1글자 키워드가 '7인 이상'을 가로채거나 '발표'가 엉뚱한 항목을 끌어오는 일이 운영 중에 나왔습니다. 전각 문자로 입력하는 학생도 있었고, LLM 백엔드 하나가 실패하면 답이 끊겼습니다.",
+        problemEn: "The FAQ bot matches keywords first, and during operation one-letter keywords like '상' (prize) hijacked '7인 이상' (7 or more), and '발표' pulled in the wrong entry. Some students typed full-width characters, and a single failing LLM backend cut answers off.",
+        solution: "입력을 NFKC로 정규화하고, 점수가 동점이면 찍지 않고 LLM에 넘기며, OpenAI와 Claude를 같은 인터페이스로 두어 한쪽이 실패하면 다른 쪽으로 자동 전환했습니다. 질문별로 어느 항목에 가야 하는지를 라우팅 표 형태의 회귀 테스트로 고정하고, 미답변 리포트(digest.py)는 제안만 하고 faq.md는 사람이 고치게 했습니다. 배포는 GitHub Actions가 서버에서 update.sh를 돌리고, 저널에 '로그인 성공'이 찍힐 때까지 기다려 확인합니다.",
+        solutionEn: "Input is NFKC-normalized, ties go to the LLM instead of guessing, and OpenAI and Claude sit behind one interface so a failure on one switches to the other. Which entry each question should reach is pinned as a routing-table regression test, and the unanswered-question report (digest.py) only suggests while people edit faq.md. On deploy, GitHub Actions runs update.sh on the server and waits for 'login succeeded' in the journal.",
+        result: "한 달간 229건 중 80.8%를 키워드로 즉답(API 비용 0)하고 미응답은 0건이었습니다. 키워드를 늘릴 때마다 인접 주제를 가로채는지 테스트 62개가 바로 잡아냈습니다.",
+        resultEn: "Over a month, 80.8% of 229 questions got an instant keyword answer (zero API cost), with none unanswered. Each time keywords grew, 62 tests immediately caught any hijacking of neighboring topics.",
+        files: ["faq_engine.py", "llm.py", "test_faq_matching.py", "deploy/lib.sh"],
+        repo: "https://github.com/tlstkdgus/hackathon-faq-bot",
       },
     ],
     results: [

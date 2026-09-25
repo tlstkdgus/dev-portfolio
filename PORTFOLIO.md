@@ -5,6 +5,7 @@
 > - 첫 화면 숫자: 15개+ 서비스 개발·배포 · 해커톤 운영 도구 3개 단독 개발 · 170+ PR 외주 저장소 릴리스 관리 · 투표→무대 스크린 2.2초
 > - 대표 프로젝트 순서: 해커톤 운영 도구(ANIMAL LEAGUE) → CleanB → FlowPay → Y:Wave
 > - 코드에서 확인한 기술 사실(animal-league 공개 저장소): 브래킷 전이는 순수 함수(lib/tournament.ts)·단위 테스트 59개(거부 경로 위주, Node 내장 러너) / 상태는 Supabase 한 행 + rev 낙관적 잠금, 충돌 시 최대 3회 재적용(lib/state.ts) / POST /api/vote는 서버가 심사 코드·명단·경기 live 여부 검증, 명단 밖 403·늦은 제출 409 / 운영 세션은 PIN을 HMAC-SHA256으로 파생한 httpOnly 쿠키 + timingSafeEqual, PIN 변경 시 전 세션 무효 / proxy.ts + 라우트 핸들러 이중 가드 / 스크린 1.5초 폴링 / CI: 타입체크·린트·테스트·빌드(Supabase 키 없이 빌드 통과 확인)
+> - 해커톤 운영 도구 저장소: FAQ 봇 https://github.com/tlstkdgus/hackathon-faq-bot (discord.py · OpenAI/Claude 상호 폴백 · NFKC 정규화 · 동점이면 LLM에 넘김 · 테스트 62개 · GitHub Actions → 서버 update.sh, 저널에서 '로그인 성공' 대기) / 제출물 검사 https://github.com/tlstkdgus/hackathon-commit-check (표준 라이브러리만 · 전 브랜치 SHA + pushed_at 스냅샷 · 스레드 8개, 실측 40개/8초 · 2차 레이트리밋 시 전 워커 일시정지 · 50개마다 저장 후 --resume · 테스트 34개)
 > - FlowPay 공개 저장소: React 19 · TypeScript · Tailwind CSS · Tesseract.js 영수증 OCR · PWA(서비스 워커)
 > - 웰컴키트 공개 저장소: React 18 · styled-components · html5-qrcode/qrcode.react · JWT 쿠키 인증 · Docker 멀티 스테이지 빌드 · GitHub Actions(self-hosted) 배포
 
