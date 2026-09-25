@@ -1172,6 +1172,11 @@ export const careerDetailSections: CareerDetailSection[] = [
         textEn:
           "Existing programs were government-led and face-to-face — paradoxically creating high barriers for isolated youth. Concluded that a non-face-to-face, anonymous, step-by-step approach would be the key differentiator.",
       },
+      {
+        text: "한국외대 GBT학부 캡스톤 프로젝트로, 3인 팀에서 기획·디자인·프론트엔드를 맡았습니다. (2024.09 ~ 2024.12)",
+        textEn:
+          "A HUFS GBT capstone project — in a team of three, I handled planning, design, and frontend. (Sep – Dec 2024)",
+      },
     ],
     role: [
       {
@@ -1275,9 +1280,9 @@ export const careerDetailSections: CareerDetailSection[] = [
         ],
       },
       {
-        text: "멋쟁이사자처럼 12기 최종 프로젝트로, 4인 팀에서 기획·디자인·프론트엔드 개발을 맡았습니다. 2024년 7월부터 11월까지 약 4개월간 진행했습니다.",
+        text: "멋쟁이사자처럼 12기 최종 프로젝트로, 4인 팀에서 기획·디자인·프론트엔드 개발을 맡았습니다. 2024년 9월부터 11월까지 약 3개월간 진행했습니다.",
         textEn:
-          "The Likelion 12th cohort final project — in a 4-person team, I handled planning, design, and frontend development over about 4 months (July–November 2024).",
+          "The Likelion 12th cohort final project — in a 4-person team, I handled planning, design, and frontend development over about 3 months (September–November 2024).",
       },
     ],
     role: [
@@ -1483,9 +1488,9 @@ export const careerDetailSections: CareerDetailSection[] = [
         ],
       },
       {
-        text: "멋쟁이사자처럼 12기 프로젝트로, 문제 정의부터 비즈니스 모델 설계, UI/UX 디자인, 프론트엔드 개발까지 맡았습니다.",
+        text: "멋쟁이사자처럼 12기 프로젝트로, 팀장과 함께 문제 정의와 비즈니스 모델을 공동으로 기획하고 UI/UX 디자인과 프론트엔드 개발을 맡았습니다.",
         textEn:
-          "A Likelion 12th cohort project — I handled problem definition, business model design, UI/UX design, and frontend development.",
+          "A Likelion 12th cohort project — I co-planned the problem definition and business model with the team lead, and handled UI/UX design and frontend development.",
       },
     ],
     role: [
