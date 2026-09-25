@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* 에디토리얼 팔레트 — 흰 바탕·검정 잉크·포인트 블루 한 색으로 통일. 프로젝트별 색은 두지 않는다.
+     블루는 역할이 둘이라 토큰도 둘이다. 다크 모드에서 한 값으로 두 역할을 맡기면
+     흰 글자를 올린 면은 3.9:1, 검정 위 글자는 4.1:1로 둘 다 AA에 못 미친다 (2026-09-19 audit).
+       accent          — 페이지 바탕 위의 글자·선·숫자
+       accent-surface  — 흰 글자를 올리는 '성과' 화면의 면 */
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-muted: #f3f3f1;
+  --color-muted-foreground: #6b6b6b;
+  --color-border: #e4e4e1;
+  --color-ink: #0a0a0a;
+  --color-ink-foreground: #fafafa;
+  --color-ink-muted: #8a8a8a;
+  --color-accent: #1f36ff;
+  --color-accent-surface: #1f36ff;
+  --color-accent-foreground: #ffffff;
+  /* 검은 화면(ink) 위 강조 — 기본 블루는 검정 위에서 대비가 2:1대 */
+  --color-accent-bright: #8e9aff;
+
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-background: #0b0b0c;
+  --color-foreground: #f2f2f0;
+  --color-muted: #18181a;
+  --color-muted-foreground: #9a9a9a;
+  --color-border: #2a2a2d;
+  /* 검은 슬라이드가 바탕(#0b0b0c)에 묻히지 않도록 한 단계 띄운다 */
+  --color-ink: #1a1a1d;
+  --color-ink-foreground: #fafafa;
+  --color-ink-muted: #9a9a9a;
+  --color-accent: #8e9aff;
+  --color-accent-surface: #1f36ff;
+  --color-accent-foreground: #ffffff;
+  --color-accent-bright: #8e9aff;
+}
+
+body {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+p,
+li {
+  text-wrap: pretty;
+}
+.meta,
+.eyebrow,
+time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 읽는 폭 — 같은 폭에서 영문은 글자가 좁아 한 줄이 95~108자까지 늘어났다.
+   영문은 34em(약 70자), 한글은 44em. ch 단위는 '0' 폭 기준이라 영문 평균 글자보다 넓어
+   68ch로 잡아도 한 줄 90자가 됐다 */
+.measure {
+  max-width: 44em;
+}
+:lang(en) .measure {
+  max-width: 34em;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: var(--color-accent-surface);
+  color: var(--color-accent-foreground);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+/* 건너뛰기 링크·해시 이동으로 포커스만 받는 영역(main 등)은 테두리를 그리지 않는다.
+   그리면 화면 폭 전체에 파란 선이 생긴다 (푸터 경계에 보이던 선) */
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+/* 블루·검정 화면 위에서는 블루 테두리가 안 보이거나(블루 위) 대비 2.4:1(검정 위) —
+   그 화면의 글자색으로 테두리를 그린다 */
+.bg-accent-surface :focus-visible,
+.bg-ink :focus-visible {
+  outline-color: currentColor;
+}
+.bg-accent-surface ::selection {
+  background-color: var(--color-accent-foreground);
+  color: var(--color-accent-surface);
+}
+
+html {
+  scrollbar-color: var(--color-muted-foreground) var(--color-background);
+}
+
+/* ── 타이포 스케일 ─────────────────────────────────────────────
+   레퍼런스의 핵심은 '중간 크기가 없다'는 것. 초대형 디스플레이와 작은 메타만 쓴다. */
+
+/* 화면 폭을 채우는 워드마크 (표지 'Portfolio', 섹션 표지 제목) */
+.wordmark {
+  font-weight: 800;
+  letter-spacing: -0.065em;
+  line-height: 0.86;
+  font-size: clamp(3.75rem, 19.5vw, 17.5rem);
+}
+
+/* 섹션 제목 — 'Where I've worked.' 급 */
+.display {
+  text-wrap: balance;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  font-size: clamp(2.5rem, 7.2vw, 6.5rem);
+}
+
+/* 프로젝트 헤드라인 — 한글 문장이 두세 줄로 떨어지는 크기 */
+.headline {
+  text-wrap: balance;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.12;
+  font-size: clamp(1.875rem, 4.6vw, 4rem);
+}
+
+/* 성과 숫자 — 칸 폭(cqi)에 맞춘다. 화면 폭(vw)만 보면 4칸 배치에서 "562개"가
+   칸보다 커져 "562 / 개"로 쪼개졌다 (1320~1440px). 가장 긴 값 "9.7/10" ≈ 3.05em */
+.stat-cell {
+  container-type: inline-size;
+}
+.stat {
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  white-space: nowrap;
+  font-size: min(clamp(3rem, 9vw, 8.5rem), 30cqi);
+}
+
+/* 모서리 메타 텍스트 ('Creative Presentation · 09 Jan, 2026' 자리) */
+.meta {
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+/* 넓은 자간은 영문 대문자용이다. 한글에 걸면 '학 력', '역 할'처럼 글자가 흩어져 읽혔다.
+   한국어 페이지의 영문 라벨(Key impact)은 lang="en"을 달아 넓은 자간을 유지한다 */
+.eyebrow:lang(ko) {
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 768px) {
+  .meta,
+  .eyebrow {
+    font-size: 14px;
+  }
+}
+
+/* 좌우 여백 — 폰 16px, 데스크톱은 넓게 */
+.gutter {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+@media (min-width: 768px) {
+  .gutter {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+@media (min-width: 1280px) {
+  .gutter {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+/* 작은 텍스트 링크의 터치 영역을 44px 가까이로 넓힌다 — 보이는 모양은 그대로 */
+.hit {
+  position: relative;
+}
+.hit::after {
+  content: "";
+  position: absolute;
+  inset: -12px -6px;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .scroll-to-top {
+    display: none !important;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

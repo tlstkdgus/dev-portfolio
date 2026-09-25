@@ -1,0 +1,124 @@
+<!doctype html>
+<!--
+  메인 카드 썸네일 원본 (2026-09-25). thumbs.html = 영어판, thumbs-ko.html = 한글판.
+  - 섹션 하나가 썸네일 한 장(1600×1000). 헤드리스 Chrome에서 deviceScaleFactor 1.5로 #hackathon14·#flowpay·#ywave·#cleanb를
+    요소 캡처(--allow-file-access-from-files) → sharp로 JPEG q86 → public/projects/<id>/thumb-{ko,en}.jpg.
+  - 글꼴·색은 사이트와 같다: Pretendard Variable, 검정 #0a0a0a · 회색 #f3f3f1 · 블루 #1f36ff.
+  - 한글판은 자간을 좁힌다. 영문 대문자용 넓은 자간을 한글에 쓰면 글자가 흩어져 읽힌다.
+  - assets/: FlowPay는 배포본(flow-pay-seven.vercel.app)을 390·1440 폭에서 캡처, Y:Wave는 원본 화면이 없어
+    발표 자료 03·04 슬라이드에서 휴대폰 화면 부분만 잘랐다. 해커톤·CleanB는 public/projects의 원본 화면을 쓴다.
+  - 팀원 실명이 있는 슬라이드(Y:Wave 01 등)는 쓰지 않는다.
+  - 이름 자리는 글자 대신 각 프로젝트의 로고(2026-09-25 상현 요청). ANIMAL LEAGUE는 파일이 없어 animal-league 저장소의
+    콘솔 배경(public/main.1_background_ver3.png)에 흰색 반투명으로 들어 있는 워드마크를 불투명 마스크로 뽑고 카드 뒷면의
+    주황(#E47424)을 입혔다. FlowPay public/LOGO.png, Y:Wave ywave-vite/src/Images/TitleLogo2.svg(블루 바탕이라 흰색으로),
+    CleanB는 RumiCleanFE의 RowLogo.svg에서 집 심볼만 — 로고 글자가 'RoomiClean' 표기라 이름은 CleanB로 둔다.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+  :root { --ink:#0a0a0a; --muted:#f3f3f1; --blue:#1f36ff; --line:rgba(10,10,10,.18); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"Pretendard Variable",Pretendard,sans-serif; background:#777; }
+  .t { position:relative; width:1600px; height:1000px; overflow:hidden; margin-bottom:40px; color:var(--ink); background:var(--muted); }
+  .t.ink { background:var(--ink); color:#fafafa; --line:rgba(250,250,250,.22); }
+  .t.blue { background:var(--blue); color:#fff; --line:rgba(255,255,255,.35); }
+  .meta { position:absolute; left:80px; right:80px; top:64px; display:flex; justify-content:space-between; font-size:30px; font-weight:700; letter-spacing:.06em; padding-bottom:24px; border-bottom:2px solid var(--line); }
+  .copy { position:absolute; left:80px; bottom:76px; width:620px; z-index:5; }
+  .logo { display:block; }
+  .brand { display:flex; align-items:center; gap:28px; }
+  .title { font-size:150px; font-weight:800; letter-spacing:-.055em; line-height:.92; }
+  .sub { margin-top:34px; font-size:40px; font-weight:600; line-height:1.35; letter-spacing:-.02em; opacity:.82; }
+  .role { margin-top:40px; font-size:28px; font-weight:700; letter-spacing:.12em; }
+  .role::before { content:""; display:inline-block; width:18px; height:18px; background:var(--blue); margin-right:16px; vertical-align:0; }
+  .blue .role::before { background:#fff; }
+  /* 기기 */
+  .dev { position:absolute; }
+  .shadow { box-shadow:0 40px 80px -20px rgba(0,0,0,.35), 0 12px 24px -8px rgba(0,0,0,.18); }
+  .laptop .scr { border:16px solid #1c1c1e; border-bottom-width:22px; border-radius:22px 22px 6px 6px; overflow:hidden; background:#000; }
+  .laptop .scr img { display:block; width:100%; }
+  .laptop .base { height:22px; margin:0 -9%; background:linear-gradient(#d9d9dc,#a9a9ae); border-radius:2px 2px 14px 14px; position:relative; }
+  .laptop .base::after { content:""; position:absolute; left:42%; right:42%; top:0; height:8px; background:#9b9ba0; border-radius:0 0 10px 10px; }
+  .phone { border:12px solid #111; border-radius:52px; overflow:hidden; background:#fff; }
+  .phone img { display:block; width:100%; height:100%; object-fit:cover; object-position:top; }
+  .monitor .scr { border:14px solid #151517; border-radius:14px; overflow:hidden; background:#000; }
+  .monitor .scr img { display:block; width:100%; }
+  .window { border-radius:14px; overflow:hidden; background:#fff; }
+  .window .bar { height:34px; background:#ececea; display:flex; align-items:center; gap:9px; padding-left:16px; }
+  .window .bar i { width:12px; height:12px; border-radius:50%; background:#c9c9c6; display:block; }
+  .window img { display:block; width:100%; }
+</style>
+</head>
+<body>
+
+<!-- 1. 14기 중앙해커톤 — 검정 -->
+<section class="t ink" id="hackathon14">
+  <div class="meta"><span>LIKELION 14TH HACKATHON</span><span>2026.06 – 2026.08</span></div>
+  <div class="copy">
+    <img class="logo" src="assets/al_logo_orange.png" alt="ANIMAL LEAGUE" style="width:620px" />
+    <div class="sub">Planned and run end to end,<br/>with the ops tools I built</div>
+    <div class="role">PLANNING &amp; OPS</div>
+  </div>
+  <div class="dev monitor shadow" style="left:730px; top:190px; width:800px;">
+    <div class="scr"><img src="../../public/projects/hackathon14/02.png" /></div>
+  </div>
+  <div class="dev laptop" style="left:1010px; top:545px; width:520px;">
+    <div class="scr shadow"><img src="../../public/projects/hackathon14/04.png" /></div>
+    <div class="base"></div>
+  </div>
+</section>
+
+<!-- 2. FlowPay — 밝은 회색 -->
+<section class="t" id="flowpay">
+  <div class="meta"><span>FIN:NECT CHALLENGE · 5TH OF 102</span><span>2025.06 – 2025.08</span></div>
+  <div class="copy">
+    <img class="logo" src="assets/fp_logo.png" alt="FlowPay" style="height:190px" />
+    <div class="sub">Corporate-card expenses,<br/>8 steps down to 3</div>
+    <div class="role">PM · FRONTEND · IR</div>
+  </div>
+  <div class="dev laptop" style="left:740px; top:205px; width:960px;">
+    <div class="scr shadow"><img src="assets/fp_dash.png" /></div>
+    <div class="base"></div>
+  </div>
+  <div class="dev phone shadow" style="left:1270px; top:395px; width:250px; height:540px;">
+    <img src="assets/fp_m_pay.png" />
+  </div>
+</section>
+
+<!-- 3. Y:Wave — 블루 -->
+<section class="t blue" id="ywave">
+  <div class="meta"><span>LIKELION 13TH HACKATHON · TOP 12%</span><span>2025.07 – 2025.08</span></div>
+  <div class="copy">
+    <img class="logo" src="assets/yw_title2.svg" alt="Y:Wave" style="height:150px; filter:brightness(0) invert(1)" />
+    <div class="sub">390K merchants, turned into<br/>a recommendation list</div>
+    <div class="role">PM · FRONTEND · DESIGN</div>
+  </div>
+  <div class="dev phone shadow" style="left:760px; top:200px; width:330px; height:720px; transform:rotate(-4deg);">
+    <img src="assets/yw_s_map.png" />
+  </div>
+  <div class="dev phone shadow" style="left:1110px; top:170px; width:350px; height:740px; transform:rotate(3deg);">
+    <img src="assets/yw_s_rec.png" />
+  </div>
+</section>
+
+<!-- 4. CleanB — 밝은 회색 -->
+<section class="t" id="cleanb">
+  <div class="meta"><span>CLIENT PROJECT · RUMICLEAN</span><span>2025.11 –</span></div>
+  <div class="copy">
+    <div class="title brand"><img src="assets/rc_icon.png" alt="" style="height:128px" />CleanB</div>
+    <div class="sub">Airbnb cleaning, proven with<br/>before-and-after photos</div>
+    <div class="role">PM · FRONTEND · DESIGN</div>
+  </div>
+  <div class="dev laptop" style="left:740px; top:205px; width:960px;">
+    <div class="scr shadow"><img src="../../public/projects/cleanb/03.png" /></div>
+    <div class="base"></div>
+  </div>
+  <div class="dev window shadow" style="left:1080px; top:545px; width:470px;">
+    <div class="bar"><i></i><i></i><i></i></div>
+    <img src="../../public/projects/cleanb/05.png" />
+  </div>
+</section>
+
+</body>
+</html>

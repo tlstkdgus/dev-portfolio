@@ -1,0 +1,212 @@
+{
+  "nav": {
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "certified": "Awards",
+    "contact": "Contact",
+    "hero": "Intro",
+    "rail_label": "Page position"
+  },
+  "meta": {
+    "deck": "Portfolio 2026",
+    "role": "Service Planning · PM",
+    "location": "Seoul, Korea"
+  },
+  "hero": {
+    "name": "Sanghyeon Shin",
+    "lead": "A service planner who finds the answer in what users actually do, then builds and ships.",
+    "summary": "As a LIKELION intern, I planned and ran a community platform for 80 universities and **took a 2,000-person national hackathon from planning through the finals**. With a limited ops team, I **built automation tools myself and put them to work** where the bottlenecks were: participant inquiries, checking 562 submitted repos, and tallying the finals.\n\nBeyond that, over two years I've built, shipped, and run 15+ services myself, from screens to backend and AI tooling, and learned that what makes a plan convincing isn't the finished screen, but **what I decided about the user and on what evidence**. Next, I want to **make the next decision from the data users leave behind, and check that decision with users again**.",
+    "metrics": [
+      {
+        "v": "2,000+",
+        "k": "hackathon participants"
+      },
+      {
+        "v": "80",
+        "k": "universities — community platform"
+      },
+      {
+        "v": "15+",
+        "k": "services planned & shipped"
+      },
+      {
+        "v": "11",
+        "k": "awards"
+      }
+    ],
+    "scroll": "Scroll"
+  },
+  "about": {
+    "what_heading": "What I do.",
+    "skills": [
+      "Service planning",
+      "User research",
+      "Policy design",
+      "Business models",
+      "IR pitching",
+      "Figma",
+      "React",
+      "Next.js",
+      "Python",
+      "Supabase",
+      "LLM APIs"
+    ],
+    "edu_label": "Education",
+    "training_label": "Training",
+    "cert_label": "Certifications",
+    "gpa": "GPA 4.13 / 4.5",
+    "training_title": "SSAFY 15th Cohort · Non-CS Java Track",
+    "training_detail": "Samsung SW·AI Academy For Youth",
+    "training_date": "2026.01 – 2026.04",
+    "profile_heading": "Profile.",
+    "military_label": "Military",
+    "military_title": "ROK Army, Sergeant, Honorable Discharge",
+    "military_date": "2021.10 – 2023.04"
+  },
+  "principles": {
+    "heading": "How I work.",
+    "to_projects": "See how the three steps played out in the projects",
+    "items": [
+      {
+        "t": "I find the problem\nin what users actually do.",
+        "d": "I start by watching how users and operators really move, and I re-check common assumptions against data. The point where people keep getting stuck becomes the problem the product has to solve."
+      },
+      {
+        "t": "I turn that problem into a flow and rules,\nand build it myself.",
+        "d": "I design the user flow and the policy, and when needed I build it myself, from the screens to the backend and AI tooling, so it becomes a product that actually runs. Being able to check that it works as planned cuts the communication cost between planning and development."
+      },
+      {
+        "t": "After launch, I watch users\nand fix it again.",
+        "d": "Launch is where user data starts coming in. I run the product where it's actually used and feed the questions and problems back into it."
+      }
+    ]
+  },
+  "experience": {
+    "heading": "Where I've worked.",
+    "main_label": "Main role"
+  },
+  "selected": {
+    "index_heading": "Selected work.",
+    "sub": "Selected projects where I found the user's problem and built the answer myself. The reasoning behind each decision is on its project page.",
+    "key_impact": "Key impact",
+    "role": "Role",
+    "more": "View project",
+    "decision": "Decision"
+  },
+  "projects": {
+    "heading": "Other projects.",
+    "sub": "Work beyond the selected projects. Open one to see the background, my role, the results, and what I learned.",
+    "detail_link": "Project page",
+    "more_toggle": "{n} more projects"
+  },
+  "certified": {
+    "heading": "Awards.",
+    "count_label": "Competition awards",
+    "awards": "Top award per project",
+    "awards_rest": "More awards"
+  },
+  "contact": {
+    "heading": "Let's talk.",
+    "description": "For hiring or collaboration, email is the fastest way to reach me.",
+    "phone": "Phone",
+    "email": "Email",
+    "blog": "Blog",
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
+  },
+  "footer": {
+    "copyright": "© 2026 Sanghyeon Shin",
+    "built_with": "Sanghyeon Shin Portfolio"
+  },
+  "common": {
+    "present": "Present",
+    "goal": "Problem",
+    "content": "What I did",
+    "decision": "Key decisions",
+    "result": "Results",
+    "view_slides": "Slides",
+    "view_video": "Watch Video",
+    "featured": "Featured",
+    "active": "Active"
+  },
+  "career_story": {
+    "title": "Case Studies.",
+    "subtitle": "Every project in one list. Open one to see its background, my role, the results, and what I learned.",
+    "back": "Back to main"
+  },
+  "figures": {
+    "heading": "Changes I can prove in numbers",
+    "sub": "Only what actually changed in operations.",
+    "group_ops": "OPERATIONAL IMPACT",
+    "group_scale": "SCALE",
+    "changes": [
+      {
+        "before": "3 hrs/day",
+        "after": "15 min/day (−92%)",
+        "label": "Participant inquiries",
+        "d": "The FAQ bot answered 80.8% of inquiries instantly by keyword, and the staff spent 15 minutes a day reviewing the bot log and filling in missing answers.",
+        "basis": "Basis: one month after the FAQ bot · 229 questions · 0 unanswered · staff time includes log review and answer updates · 14th hackathon"
+      },
+      {
+        "before": "Manual check of 562 repos",
+        "after": "One full scan",
+        "label": "Submission checks",
+        "d": "Post-deadline commits, force-pushes, and private flips were detected automatically across every branch, and the staff made the verdicts against criteria agreed before the scan.",
+        "basis": "Basis: after the 314-team deadline · 5 violations found · 14th hackathon"
+      },
+      {
+        "before": "Tally, then PPT",
+        "after": "On screen as votes land",
+        "label": "Finals results reveal",
+        "d": "Judges' votes gathered in a console I built and reached the stage screen in 2.2 seconds.",
+        "basis": "Basis: 8-team finals tournament · measured · 14th hackathon"
+      },
+      {
+        "before": "Paper roll call",
+        "after": "QR scan, auto-logged",
+        "label": "13th cohort session attendance",
+        "d": "Staff put up a QR code, members scan it on their phones, it's recorded on the server instantly, lateness is judged automatically at the 20-minute mark, and only late or absent members show up on the roll.",
+        "basis": "Basis: 45 members of HUFS LIKELION's 13th cohort · WelcomeKit PWA"
+      }
+    ],
+    "scale": [
+      {
+        "v": "2,500+",
+        "label": "Students on the community platform",
+        "note": "80 universities"
+      },
+      {
+        "v": "314 teams",
+        "label": "14th hackathon submissions",
+        "note": "8-team finals tournament"
+      },
+      {
+        "v": "1,822",
+        "label": "National ideathon participants",
+        "note": "378 projects · 470 satisfaction responses analyzed"
+      }
+    ]
+  },
+  "work": {
+    "back_selected": "Selected work",
+    "back_other": "All projects",
+    "period": "Period",
+    "role": "Role",
+    "status": "Status",
+    "links": "Links",
+    "live": "Visit site",
+    "behance": "Behance case (Brand Design Lab)",
+    "summary": "Summary",
+    "impact": "Impact",
+    "background": "Background",
+    "did": "Execution",
+    "results": "Results",
+    "lessons": "What I learned",
+    "field": "On site",
+    "pager": "Other projects",
+    "prev": "Previous project",
+    "next": "Next project",
+    "all": "All projects"
+  }
+}
