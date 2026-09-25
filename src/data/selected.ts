@@ -2,9 +2,9 @@
 // 헤드라인·본문 세 문장·전→후 성과·현장 사진은 /work/<id> 상세 페이지(work-detail.tsx)에서 쓴다.
 // 한 일 목록·범위 칩·흐름 도식·인용문은 FINAL(2026.09.22)에서 뺐다.
 //
-// 순서 (HANDOFF §G, 2026-09-24): 14기 중앙해커톤 → FlowPay → Y:Wave → CleanB.
-// 사내 개발 교육은 Other projects로 옮겼다(상세 페이지는 유지). IT 기획 포지션에서 대표 4개 중
-// 서비스 기획 케이스가 2개뿐이었다. CleanB는 여전히 FlowPay 뒤(2026.09.13 지시).
+// 개발자 포트폴리오 순서 (2026-09-25): 해커톤 운영 도구(ANIMAL LEAGUE) → CleanB → FlowPay → Y:Wave.
+// 직접 짠 코드의 양과 현장에서 실제로 돌아간 정도 순서다. 기획자 포트폴리오(tlstkdgus/Portfolio)와 사실은 같고,
+// 헤드라인·판단·본문을 구현과 설계 판단 중심으로 다시 썼다. 기술 내용은 공개 저장소 코드에서 확인한 것만 쓴다.
 // 수치는 PORTFOLIO.md에 출처가 있는 것만 쓴다. 역할 경계("공동"/"직접")도 PORTFOLIO.md를 따른다.
 
 export interface Localized {
@@ -59,7 +59,11 @@ export interface SelectedProject {
   heroTone: "ink" | "muted";
   gallery: SelectedImage[];
   caseId: string;
-  /** 서비스 링크. 저장소 링크는 projects.ts(repo)에 두고 상세 페이지에서만 보여준다 */
+  /** 쓴 기술 — 메인 카드와 상세 페이지 메타에 칩으로 보여 준다. 저장소 package.json·README에서 확인한 것만 */
+  stack: string[];
+  /** 공개 저장소. 개발자 포트폴리오라 메인 카드에서도 바로 연다. CleanB는 비공개라 넣지 않는다 */
+  repoUrl?: string;
+  /** 서비스 링크 */
   liveUrl?: string;
   /** 외부 공개 케이스 (예: 브랜드 디자인 랩의 Behance) */
   behanceUrl?: string;
@@ -73,25 +77,25 @@ export interface SelectedProject {
 export const selectedProjects: SelectedProject[] = [
   {
     id: "hackathon14",
-    kicker: { ko: "멋쟁이사자처럼 인턴 · 14기 중앙해커톤", en: "LIKELION Internship · 14th Hackathon" },
-    status: { ko: "완료 · 2026.08 본선", en: "Completed · Finals Aug 2026" },
-    title: { ko: "14기 중앙해커톤 기획·운영", en: "LIKELION 14th Hackathon" },
+    kicker: { ko: "멋쟁이사자처럼 인턴 · 14기 중앙해커톤 운영 도구", en: "LIKELION Internship · 14th Hackathon Ops Tools" },
+    status: { ko: "현장 투입 · 2026.08 본선", en: "Used live · Finals Aug 2026" },
+    title: { ko: "ANIMAL LEAGUE", en: "ANIMAL LEAGUE" },
     period: { ko: "2026.06 – 2026.08", en: "Jun – Aug 2026" },
-    role: { ko: "커뮤니티 매니저 인턴 · 기획·운영", en: "Community Manager Intern · Planning & Ops" },
+    role: { ko: "운영 도구 3종 단독 개발 · 본선 현장 운영", en: "Built 3 ops tools solo · Ran the finals on site" },
     headline: {
-      ko: "2,000명의 참가자가 평가 기준을\n예측할 수 있는 해커톤을 만들었습니다.",
-      en: "I made a hackathon where 2,000 participants could predict how they'd be judged.",
+      ko: "2,000명 앞에서 멈추면 안 되는\n본선 콘솔을 직접 만들어 운영했습니다.",
+      en: "I built and ran a finals console that couldn't stop in front of 2,000 people.",
     },
     // '연합 해커톤'은 학생 주최 대학 연합 해커톤(별도 기획물)을 가리키므로 여기서는 쓰지 않는다 (§G-5)
-    summary: { ko: "80개 대학 2,000명이 참가한 멋쟁이사자처럼 14기 중앙해커톤 'ANIMAL LEAGUE'의 기획부터 본선 운영까지", en: "LIKELION's 14th national hackathon 'ANIMAL LEAGUE', with 2,000 participants from 80 universities, run from planning through the finals" },
-    decision: { ko: "판정 기준은 검사 전에 합의하고, 검사 도구는 근거만 내도록 설계했습니다.", en: "I had the judging criteria agreed before the scan, and designed the checking tool to produce only evidence." },
+    summary: { ko: "80개 대학 2,000명이 참가한 14기 중앙해커톤의 본선 토너먼트 콘솔(스크린·심사·운영 3화면)과 제출물 검사 스크립트, FAQ 디스코드 봇", en: "The finals tournament console (stage, judge, and ops views), a submission-checking script, and an FAQ Discord bot for LIKELION's 14th hackathon, with 2,000 participants from 80 universities" },
+    decision: { ko: "결과를 되돌릴 수 없는 현장이라고 보고, 심사 제출은 서버가 명단과 경기 상태로 다시 검증하고 상태 쓰기는 버전 번호로 충돌을 막도록 설계했습니다.", en: "Results couldn't be undone on stage, so the server re-validates every vote against the allowlist and match state, and state writes are guarded by a version number against conflicts." },
     thumb: {
       src: { ko: "/projects/hackathon14/thumb-ko.jpg", en: "/projects/hackathon14/thumb-en.jpg" },
       alt: { ko: "검정 바탕 썸네일: ANIMAL LEAGUE, 기획부터 본선 운영까지. 본선 무대 스크린(결승 3 대 2)과 직접 만든 운영 콘솔 화면", en: "Black thumbnail: ANIMAL LEAGUE, planned and run end to end. The finals stage screen (3 to 2) and the ops console I built" },
     },
     body: {
-      ko: "314팀이 참가하는 해커톤에서 참가자는 무엇을 제출하면 어떻게 평가받는지 알기 어려웠고, 문의는 운영진이 하루 3시간씩 직접 답하고 있었습니다. 제출 항목과 심사 기준을 1:1로 연결해 평가를 예측할 수 있게 했고, 참가자가 겪는 순서대로 가이드를 짜고 FAQ 봇이 즉답하게 했습니다. 본선 결과는 심사위원 투표가 무대 스크린에 바로 반영되도록 콘솔(Next.js · Supabase)을 DB 스키마부터 직접 개발해 진행했습니다.",
-      en: "With 314 teams competing, participants couldn't tell what to submit or how it would be judged, and the staff were answering inquiries by hand for three hours a day. I mapped submission items 1:1 to judging criteria so scoring became predictable, structured the guide in the order participants live it, and had an FAQ bot answer instantly. For the finals I built the console (Next.js · Supabase) from the DB schema up so judges' votes showed on the stage screen as they came in.",
+      ko: "본선 토너먼트는 심사위원 5명의 투표가 무대 스크린에 바로 반영돼야 했고, 결과를 공개한 뒤에는 되돌릴 수 없었습니다. 브래킷 전이를 순수 함수로 분리해 단위 테스트 59개로 거부 경로를 확인하고, Supabase의 상태 한 행을 rev 번호로 잠가 운영자가 동시에 조작해도 상태가 꼬이지 않게 했으며, 명단 밖 제출과 늦게 도착한 제출은 서버에서 거부했습니다. 이 콘솔로 본선 8팀 토너먼트를 끝까지 진행했고, 투표에서 무대 스크린까지 실측 2.2초였습니다.",
+      en: "In the finals tournament, five judges' votes had to reach the stage screen right away, and a revealed result couldn't be taken back. I split the bracket transitions into pure functions covered by 59 unit tests focused on rejection paths, locked the single Supabase state row with a rev number so concurrent operators couldn't corrupt it, and rejected off-list and late-arriving votes on the server. The console ran the 8-team finals to the end, with a measured 2.2 seconds from vote to stage screen.",
     },
     stats: [
       // §G-4·5: 전후 단위를 맞췄다(하루 3시간 → 하루 15분). 추정치(약 2일)는 숫자 전체의 신뢰도를 깎아 뺐다.
@@ -125,6 +129,8 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "hackathon14",
+    stack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Python", "LLM API"],
+    repoUrl: "https://github.com/tlstkdgus/animal-league",
     // 사진·인용: 멋쟁이사자처럼 브랜드 디자인 랩의 Behance 케이스(공동 소유자로 등재). 브랜드 디자인은 랩의 작업이고,
     // 상현의 몫은 본선 무대·심사·운영 콘솔과 해커톤 기획이다. 사진은 콘솔이 실제 무대에서 쓰인 장면 위주로 골랐다.
     field: {
@@ -143,25 +149,73 @@ export const selectedProjects: SelectedProject[] = [
     behanceUrl: "https://www.behance.net/gallery/255861853/ANIMAL-LEAGUE-LIKELION-HACKATHON-2026",
   },
   {
+    id: "cleanb",
+    kicker: { ko: "외주 프로젝트 · 루미클린(RumiClean)", en: "Client Project · RumiClean" },
+    status: { ko: "배포 완료 · 결제 연동 전", en: "Deployed · Payments pending" },
+    title: { ko: "CleanB", en: "CleanB" },
+    period: { ko: "2025.11 – 현재", en: "Nov 2025 – Present" },
+    role: { ko: "프론트엔드 · PM · 디자인 (3인 팀)", en: "Frontend · PM · Design (team of 3)" },
+    headline: {
+      ko: "청소자 화면 전체를 직접 개발하고,\n3인 팀이 운영할 수 있게 배포 구성을 줄였습니다.",
+      en: "I built the entire cleaner-side app and cut the deployment down to what a team of three can run.",
+    },
+    summary: { ko: "에어비앤비 호스트와 청소자를 잇는 청소 매칭 서비스 루미클린 (외주 · Next.js)", en: "RumiClean, a cleaning-matching service connecting Airbnb hosts and cleaners (client project · Next.js)" },
+    decision: { ko: "3인 팀이 직접 운영할 수 있어야 한다고 판단해 k3s·ArgoCD 대신 Docker Compose와 Caddy로 배포를 단순화하고, 정적 파일은 CloudFront로 분리해 배포 중에도 화면이 유지되게 했습니다.", en: "A team of three had to be able to run it, so I simplified deployment from k3s and ArgoCD to Docker Compose and Caddy, and moved static files to CloudFront so the screens stay up during a deploy." },
+    thumb: {
+      src: { ko: "/projects/cleanb/thumb-ko.jpg", en: "/projects/cleanb/thumb-en.jpg" },
+      alt: { ko: "회색 바탕 썸네일: CleanB, 에어비앤비 청소 매칭과 전·후 사진 완료 인증. 청소자 작업 요청 목록과 완료 인증 화면", en: "Gray thumbnail: CleanB, Airbnb cleaning proven with before-and-after photos. The cleaner job list and the completion screen" },
+    },
+    body: {
+      ko: "외주로 맡은 에어비앤비 청소 매칭 서비스에서 청소자 화면 전체(요청 수신 → 진행 → 완료 인증)를 Next.js·TypeScript로 직접 개발했습니다. 청소 작업의 상태 흐름 5단계를 먼저 확정해 화면을 도출하고, 전·후 사진 5장을 완료 조건으로 두었으며, 카카오맵과 Firebase 웹 푸시를 연동했습니다. PR 170개 이상이 오간 저장소의 릴리스를 관리하며 아토믹 디자인과 data-testid QA 규칙을 세웠고, 지금도 배포본을 수정하고 있습니다.",
+      en: "On this client project, an Airbnb cleaning-matching service, I built the entire cleaner-side app (receive request → in progress → proof of completion) in Next.js and TypeScript. I fixed the five-state job flow first and derived the screens from it, made five before-and-after photos the completion condition, and integrated Kakao Map and Firebase web push. I manage releases for a repo with 170+ PRs, set up atomic design and data-testid QA rules, and I'm still revising the deployed app.",
+    },
+    stats: [
+      { v: { ko: "170+ PR", en: "170+ PRs" }, k: { ko: "저장소 릴리스 관리", en: "repo releases managed" } },
+      { before: "k3s · ArgoCD", v: "Docker Compose", k: { ko: "3인 팀 배포 구성 · Caddy · CloudFront", en: "deploys for a team of 3 · Caddy · CloudFront" } },
+      { v: { ko: "배포 완료", en: "Deployed" }, k: { ko: "rumiclean.com · 결제 연동 전", en: "rumiclean.com · payments not yet connected" } },
+    ],
+    hero: {
+      src: "/projects/cleanb/01.png",
+      alt: { ko: "루미클린 첫 화면: 에어비앤비 청소, 이제 루미클린과 함께", en: "RumiClean home screen: Airbnb cleaning, now with RumiClean" },
+    },
+    heroTone: "muted",
+    gallery: [
+      {
+        src: "/projects/cleanb/03.png",
+        alt: { ko: "청소자용 작업 요청 목록과 일정 달력 화면", en: "Cleaner-side job request list and schedule calendar" },
+      },
+      {
+        src: "/projects/cleanb/05.png",
+        alt: {
+          ko: "청소 완료 인증 화면: 청소 전·후 사진 업로드와 작업 특이사항 입력",
+          en: "Completion screen: uploading before/after photos and work notes",
+        },
+      },
+    ],
+    caseId: "cleanb",
+    stack: ["Next.js", "TypeScript", "Kakao Map", "Firebase", "Docker Compose", "Caddy", "CloudFront"],
+    liveUrl: "https://www.rumiclean.com",
+  },
+  {
     id: "flowpay",
     kicker: { ko: "B2B 핀테크 · FIN:NECT 챌린지", en: "B2B Fintech · FIN:NECT Challenge" },
     status: { ko: "수상 · 102팀 중 5위", en: "Award · 5th of 102" },
     title: { ko: "FlowPay", en: "FlowPay" },
     period: { ko: "2025.06 – 2025.08", en: "Jun – Aug 2025" },
-    role: { ko: "PM · 프론트엔드 · IR", en: "PM · Frontend · IR" },
+    role: { ko: "프론트엔드 · PM · IR", en: "Frontend · PM · IR" },
     headline: {
-      ko: "무기명 법인카드 정산 8단계를\n3단계로 줄였습니다.",
-      en: "I cut anonymous corporate card reconciliation from 8 steps to 3.",
+      ko: "무기명 법인카드 정산 8단계를\n3단계로 줄인 화면을 만들었습니다.",
+      en: "I built the screens that cut anonymous corporate-card reconciliation from 8 steps to 3.",
     },
-    summary: { ko: "무기명 법인카드의 결제부터 지출보고서까지 자동화하는 B2B 정산 서비스 프로토타입", en: "A B2B prototype that automates anonymous corporate-card spending from payment to expense report" },
+    summary: { ko: "무기명 법인카드의 결제부터 지출보고서까지 자동화하는 B2B 정산 서비스 프로토타입 (React · TypeScript PWA)", en: "A B2B prototype that automates anonymous corporate-card spending from payment to expense report (React · TypeScript PWA)" },
     decision: { ko: "회계에 필요한 것은 실명보다 누가 썼는지의 구분이라고 판단해, 가명 토큰으로 결제자를 식별했습니다.", en: "Accounting needs to know who spent, not their real name, so I identified payers with a pseudonymous token." },
     thumb: {
       src: { ko: "/projects/flowpay/thumb-ko.jpg", en: "/projects/flowpay/thumb-en.jpg" },
       alt: { ko: "회색 바탕 썸네일: FlowPay, 무기명 법인카드 정산 8단계에서 3단계로. 노트북의 지출 대시보드와 휴대폰 결제 화면", en: "Gray thumbnail: FlowPay, corporate-card expenses from 8 steps to 3. The spending dashboard on a laptop and the payment screen on a phone" },
     },
     body: {
-      ko: "회계담당자는 지출보고서 1건에 20분씩, 월 100건 이상을 처리하고 있었습니다. 인터뷰해 보니 진짜 병목은 결제 이후 수기로 작성하는 전표라고 판단했고, 익명성을 지키는 가명 토큰 Flow ID로 결제 시점부터 사용자를 식별해 지출보고서가 자동 생성되도록 설계했습니다. FIN:NECT 챌린지에서 102팀 중 5위에 올랐습니다.",
-      en: "Accountants were spending 20 minutes per expense report, over 100 reports a month. Interviews showed the real bottleneck was the vouchers written by hand after each payment, so I designed Flow ID, a pseudonymous token that identifies the user at the moment of payment while keeping anonymity, so expense reports generate themselves. It placed 5th of 102 teams at the FIN:NECT Challenge.",
+      ko: "회계담당자 인터뷰에서 진짜 병목은 결제 이후 수기로 쓰는 전표라고 판단해, 가명 토큰 Flow ID로 결제 시점부터 사용자를 식별하고 지출보고서가 자동 생성되는 흐름을 설계했습니다. React·TypeScript·Tailwind CSS로 부서별 예산과 지출을 보여 주는 대시보드, FIDO2 생체인증 결제 화면, Tesseract.js로 영수증에서 가맹점·금액을 읽어 오는 OCR 업로드를 직접 개발하고 PWA로 배포했습니다. FIN:NECT 챌린지에서 102팀 중 5위에 올랐습니다.",
+      en: "Interviews with accountants showed the real bottleneck was the vouchers written by hand after each payment, so I designed a flow where Flow ID, a pseudonymous token, identifies the user at the moment of payment and expense reports generate themselves. I built the budget and spending dashboard, the FIDO2 biometric payment screens, and an OCR receipt upload that reads merchant and amount with Tesseract.js, in React, TypeScript, and Tailwind CSS, and shipped it as a PWA. It placed 5th of 102 teams at the FIN:NECT Challenge.",
     },
     stats: [
       { before: { ko: "8단계", en: "8 steps" }, v: { ko: "3단계", en: "3 steps" }, k: { ko: "법인카드 지출 정산 단계", en: "corporate-card reconciliation steps" } },
@@ -190,6 +244,8 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "flowpay",
+    stack: ["React", "TypeScript", "Tailwind CSS", "Tesseract.js", "PWA"],
+    repoUrl: "https://github.com/tlstkdgus/FlowPay",
     liveUrl: "https://flow-pay-seven.vercel.app",
   },
   {
@@ -198,9 +254,9 @@ export const selectedProjects: SelectedProject[] = [
     status: { ko: "2차 예선 진출 · 247팀 중 상위 12%", en: "2nd round · top 12% of 247" },
     title: { ko: "Y:Wave", en: "Y:Wave" },
     period: { ko: "2025.07 – 2025.08", en: "Jul – Aug 2025" },
-    role: { ko: "PM · 프론트엔드 · 디자인 (6인 팀)", en: "PM · Frontend · Design (team of 6)" },
+    role: { ko: "프론트엔드 · PM · 디자인 (6인 팀)", en: "Frontend · PM · Design (team of 6)" },
     headline: {
-      ko: "가맹점 39만 건을 사용자가 바로 고를 수 있는\n추천 리스트로 바꿨습니다.",
+      ko: "가맹점 39만 건을 사용자가 바로 고를 수 있는\n추천 리스트 화면으로 만들었습니다.",
       en: "I turned 390K merchants into a recommendation list users can pick from right away.",
     },
     summary: { ko: "경기도 지역화폐 가맹점 39만 건을 분석해 위치와 소비 카테고리로 가맹점을 추천하는 서비스", en: "A service that analyzes 390K Gyeonggi local-currency merchants and recommends them by location and spending category" },
@@ -240,52 +296,7 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "ywave",
-  },
-  {
-    id: "cleanb",
-    kicker: { ko: "외주 프로젝트 · 루미클린(RumiClean)", en: "Client Project · RumiClean" },
-    status: { ko: "배포 완료 · 결제 연동 전", en: "Deployed · Payments pending" },
-    title: { ko: "CleanB", en: "CleanB" },
-    period: { ko: "2025.11 – 현재", en: "Nov 2025 – Present" },
-    role: { ko: "PM · 프론트엔드 · 디자인 (3인 팀)", en: "PM · Frontend · Design (team of 3)" },
-    headline: {
-      ko: "호스트와 청소자가 '청소 완료'를 두고\n다투지 않는 서비스를 설계했습니다.",
-      en: "I designed a service where hosts and cleaners don't argue over whether the cleaning was done.",
-    },
-    summary: { ko: "에어비앤비 호스트와 청소자를 잇는 청소 매칭 서비스 루미클린 (외주)", en: "RumiClean, a cleaning-matching service connecting Airbnb hosts and cleaners (client project)" },
-    decision: { ko: "완료 기준이 서비스 안에 있어야 분쟁이 생기지 않는다고 판단해, 전·후 사진 5장을 완료 조건으로 정했습니다.", en: "Disputes stop only when the completion standard lives inside the service, so I made five before-and-after photos the condition for completion." },
-    thumb: {
-      src: { ko: "/projects/cleanb/thumb-ko.jpg", en: "/projects/cleanb/thumb-en.jpg" },
-      alt: { ko: "회색 바탕 썸네일: CleanB, 에어비앤비 청소 매칭과 전·후 사진 완료 인증. 청소자 작업 요청 목록과 완료 인증 화면", en: "Gray thumbnail: CleanB, Airbnb cleaning proven with before-and-after photos. The cleaner job list and the completion screen" },
-    },
-    body: {
-      ko: "외주로 맡은 에어비앤비 청소 매칭 서비스입니다. 서로 모르는 호스트와 청소자가 다투지 않으려면 완료 기준이 서비스 안에 있어야 해서, 청소 작업의 상태 흐름 5단계를 먼저 확정하고 전·후 사진 5장을 완료 조건으로 정했습니다. 청소자 화면 전체를 직접 개발해 배포했고, 지금도 수정하고 있습니다.",
-      en: "A client project: an Airbnb cleaning matching service. Hosts and cleaners who've never met need the completion standard to live inside the service, so I fixed the five-state job flow first and made five before-and-after photos the condition for completion. I built the entire cleaner-side app myself, shipped it, and I'm still revising it.",
-    },
-    stats: [
-      { v: { ko: "사진 5장", en: "5 photos" }, k: { ko: "청소 완료 인증 조건 · 전·후 사진", en: "completion proof · before/after photos" } },
-      { v: { ko: "상태 5단계", en: "5 states" }, k: { ko: "청소자 화면을 도출한 작업 흐름", en: "job flow the cleaner screens were derived from" } },
-      { v: { ko: "배포 완료", en: "Deployed" }, k: { ko: "rumiclean.com · 결제 연동 전", en: "rumiclean.com · payments not yet connected" } },
-    ],
-    hero: {
-      src: "/projects/cleanb/01.png",
-      alt: { ko: "루미클린 첫 화면: 에어비앤비 청소, 이제 루미클린과 함께", en: "RumiClean home screen: Airbnb cleaning, now with RumiClean" },
-    },
-    heroTone: "muted",
-    gallery: [
-      {
-        src: "/projects/cleanb/03.png",
-        alt: { ko: "청소자용 작업 요청 목록과 일정 달력 화면", en: "Cleaner-side job request list and schedule calendar" },
-      },
-      {
-        src: "/projects/cleanb/05.png",
-        alt: {
-          ko: "청소 완료 인증 화면: 청소 전·후 사진 업로드와 작업 특이사항 입력",
-          en: "Completion screen: uploading before/after photos and work notes",
-        },
-      },
-    ],
-    caseId: "cleanb",
-    liveUrl: "https://www.rumiclean.com",
+    stack: ["React", "TypeScript", "Vite", "Tailwind CSS", "ChatGPT API"],
+    repoUrl: "https://github.com/yong2gether/FE",
   },
 ];

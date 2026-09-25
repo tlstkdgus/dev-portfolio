@@ -34,8 +34,9 @@ export interface Project {
 
 // Other projects 노출 (§G-6, 2026-09-24): 앞의 6개만 펼쳐 두고 나머지는 '그 외 프로젝트' 접기 안에 둔다.
 // 15개가 한 번에 펼쳐져 있어 대표가 아닌 작업까지 같은 무게로 읽혔다. 데이터와 상세 페이지는 모두 유지한다.
-export const otherProjectsShown = ["songeul", "welcomekit", "devsite", "dotori", "neurosight", "tcp"];
-export const otherProjectsFolded = ["connect", "hai", "ainterview", "rzi", "artliving", "mealdang", "huriup", "16play"];
+// 개발자 포트폴리오 (2026-09-25): 직접 코드를 쓴 프로젝트를 앞에 펼치고, 기획·IR 중심 작업은 접기 안으로 보낸다.
+export const otherProjectsShown = ["welcomekit", "devsite", "songeul", "rzi", "connect", "ainterview"];
+export const otherProjectsFolded = ["hai", "mealdang", "16play", "dotori", "tcp", "neurosight", "artliving", "huriup"];
 
 export const projects: Project[] = [
   // 순서 = 사이트 노출 순서. 멋사 인턴 경험(중앙해커톤·사내 교육)이 항상 앞,
@@ -103,7 +104,7 @@ export const projects: Project[] = [
       { label: "검사 레포", labelEn: "Repos swept", value: "562개" },
       { label: "직접 만든 도구", labelEn: "Tools built", value: "3개" },
     ],
-    tags: ["Event Ops", "Policy Design", "Next.js", "Supabase", "Python", "LLM"],
+    tags: ["Next.js", "React", "TypeScript", "Supabase", "Python", "LLM"],
     image: "/projects/hackathon14/01.png",
     images: [
       "/projects/hackathon14/01.png",

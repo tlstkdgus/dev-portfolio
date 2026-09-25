@@ -1,5 +1,13 @@
 # 신상현 — 포트폴리오 전체 정리
 
+> **개발자 포트폴리오판 (2026-09-25)**: 이 저장소는 기획자 포트폴리오(tlstkdgus/Portfolio)에서 갈라진 개발자 버전입니다. 아래 사실은 그대로 쓰고, 사이트 문구만 개발자 기준으로 바꿨습니다.
+> - 포지셔닝: **사용자가 실제로 쓰는 화면을 만들고, 배포한 뒤에도 직접 운영하며 고치는 프론트엔드 개발자** · 역할 라벨 '프론트엔드 개발자'
+> - 첫 화면 숫자: 15개+ 서비스 개발·배포 · 해커톤 운영 도구 3개 단독 개발 · 170+ PR 외주 저장소 릴리스 관리 · 투표→무대 스크린 2.2초
+> - 대표 프로젝트 순서: 해커톤 운영 도구(ANIMAL LEAGUE) → CleanB → FlowPay → Y:Wave
+> - 코드에서 확인한 기술 사실(animal-league 공개 저장소): 브래킷 전이는 순수 함수(lib/tournament.ts)·단위 테스트 59개(거부 경로 위주, Node 내장 러너) / 상태는 Supabase 한 행 + rev 낙관적 잠금, 충돌 시 최대 3회 재적용(lib/state.ts) / POST /api/vote는 서버가 심사 코드·명단·경기 live 여부 검증, 명단 밖 403·늦은 제출 409 / 운영 세션은 PIN을 HMAC-SHA256으로 파생한 httpOnly 쿠키 + timingSafeEqual, PIN 변경 시 전 세션 무효 / proxy.ts + 라우트 핸들러 이중 가드 / 스크린 1.5초 폴링 / CI: 타입체크·린트·테스트·빌드(Supabase 키 없이 빌드 통과 확인)
+> - FlowPay 공개 저장소: React 19 · TypeScript · Tailwind CSS · Tesseract.js 영수증 OCR · PWA(서비스 워커)
+> - 웰컴키트 공개 저장소: React 18 · styled-components · html5-qrcode/qrcode.react · JWT 쿠키 인증 · Docker 멀티 스테이지 빌드 · GitHub Actions(self-hosted) 배포
+
 > 이 문서는 사이트(src/data/*)의 모든 콘텐츠를 텍스트로 정리한 원본입니다.
 > 지원서·이력서·경력기술서 작성 시 이 파일에서 복사해 쓰세요. 사이트 데이터가 바뀌면 이 문서도 함께 갱신합니다.
 

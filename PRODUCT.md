@@ -1,5 +1,15 @@
 # Product
 
+> **Developer edition (2026-09-25).** This repository is the developer version of 신상현's portfolio, forked from `tlstkdgus/Portfolio` (the planner version, which must stay untouched). The rules below still hold for facts, role boundaries, voice, and "do not fabricate", with these overrides:
+>
+> - **Users**: frontend / product-engineering hiring managers and interviewers. They skim for stack, shipped code, and how he handles failure cases; they open the GitHub links.
+> - **Positioning**: 「사용자가 실제로 쓰는 화면을 만들고, 배포한 뒤에도 직접 운영하며 고치는 프론트엔드 개발자」 / "A frontend developer who builds the screens people actually use, then keeps running and fixing them after launch." Role label: '프론트엔드 개발자' / 'Frontend Developer'.
+> - **First-screen numbers**: 15+ services built & shipped · 3 hackathon ops tools built solo · 170+ PRs (CleanB releases managed) · 2.2 s vote → stage screen.
+> - **Section order**: Hero → Profile + stack (grouped Frontend / Backend·Data / Infra·Tools) → Selected work → Figures ("What the tools I built changed") → How I work (SPEC as single source · close irreversible failures first · fix from logs after launch) → Experience → Other projects → Awards → Contact.
+> - **Selected work order**: hackathon ops tools (ANIMAL LEAGUE console, check.py, FAQ bot) → CleanB → FlowPay → Y:Wave. Cards show stack chips and GitHub/live links (CleanB has no repo link: private).
+> - **Project pages** add a stack row and, where evidence exists, "기술적 도전 / Technical challenges" (problem → solution → result) with source-file links. Technical claims must come from code in the public repos (animal-league: `lib/state.ts` rev optimistic locking, `lib/tournament.ts` pure transitions + 59 tests, `app/api/vote/route.ts` server validation, `lib/auth.ts` HMAC session, `proxy.ts`, CI) or from PORTFOLIO.md for private work.
+> - The hackathon planning/policy work is still shown on its project page, after the tools. Never describe the hackathon as a whole as "built by him"; he built the three tools and ran the finals on site.
+
 <!-- impeccable:product-schema 1 -->
 
 ## Platform
