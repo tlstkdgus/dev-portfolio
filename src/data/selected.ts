@@ -63,6 +63,8 @@ export interface SelectedProject {
   stack: string[];
   /** 공개 저장소. 개발자 포트폴리오라 메인 카드에서도 바로 연다. CleanB는 비공개라 넣지 않는다 */
   repoUrl?: string;
+  /** 같은 프로젝트의 다른 공개 저장소 (해커톤: FAQ 봇 · 제출물 검사). 라벨은 저장소가 무엇인지 */
+  extraRepos?: { label: Localized; url: string }[];
   /** 서비스 링크 */
   liveUrl?: string;
   /** 외부 공개 케이스 (예: 브랜드 디자인 랩의 Behance) */
@@ -129,8 +131,12 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "hackathon14",
-    stack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Python", "LLM API"],
+    stack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Python", "discord.py", "LLM API"],
     repoUrl: "https://github.com/tlstkdgus/animal-league",
+    extraRepos: [
+      { label: { ko: "FAQ 봇", en: "FAQ bot" }, url: "https://github.com/tlstkdgus/hackathon-faq-bot" },
+      { label: { ko: "제출물 검사", en: "Submission check" }, url: "https://github.com/tlstkdgus/hackathon-commit-check" },
+    ],
     // 사진·인용: 멋쟁이사자처럼 브랜드 디자인 랩의 Behance 케이스(공동 소유자로 등재). 브랜드 디자인은 랩의 작업이고,
     // 상현의 몫은 본선 무대·심사·운영 콘솔과 해커톤 기획이다. 사진은 콘솔이 실제 무대에서 쓰인 장면 위주로 골랐다.
     field: {
@@ -266,8 +272,8 @@ export const selectedProjects: SelectedProject[] = [
       alt: { ko: "블루 바탕 썸네일: Y:Wave, 경기도 가맹점 39만 건을 추천 리스트로. 휴대폰 두 대의 지도 화면과 오늘의 추천 화면", en: "Blue thumbnail: Y:Wave, 390K merchants turned into a recommendation list. A map screen and a today's-picks screen on two phones" },
     },
     body: {
-      ko: "직접 진행한 설문에서 응답자 53%가 지역화폐 가맹점을 찾기 어렵다고 답했고, 경기도 가맹점 39만 곳은 데이터로만 공개돼 있었습니다. 39만 건을 전수 분석한 뒤, 사용자가 지도에서 직접 찾아야 하는 화면 대신 위치 반경과 소비 카테고리로 가맹점을 추천하는 리스트를 첫 화면에 두었습니다. React·TypeScript로 프론트엔드를 직접 개발했고, 13기 중앙해커톤에서 247팀 중 상위 12%로 2차 예선에 진출했습니다.",
-      en: "In a survey we ran ourselves, 53% of respondents said local-currency merchants were hard to find, and Gyeonggi's 390K merchants were published only as raw data. After analyzing all 390K records, I put a list recommending merchants by distance and spending category on the first screen, instead of making users search the map themselves. I built the frontend myself in React and TypeScript, and the project reached the second round of the LIKELION 13th hackathon, in the top 12% of 247 teams.",
+      ko: "직접 진행한 설문에서 응답자 53%가 지역화폐 가맹점을 찾기 어렵다고 답했고, 경기도 가맹점 39만 곳은 데이터로만 공개돼 있었습니다. 39만 건을 전수 분석한 뒤, 사용자가 지도에서 직접 찾아야 하는 화면 대신 위치 반경과 소비 카테고리로 가맹점을 추천하는 리스트를 첫 화면에 두었습니다. 프론트엔드 커밋 209개 중 184개를 맡아 React·TypeScript로 지도(마커 클러스터링 · GPS 정확도 보정)와 드래그 바텀시트, 재시도하는 API 계층을 만들었고, 13기 중앙해커톤에서 247팀 중 상위 12%로 2차 예선에 진출했습니다.",
+      en: "In a survey we ran ourselves, 53% of respondents said local-currency merchants were hard to find, and Gyeonggi's 390K merchants were published only as raw data. After analyzing all 390K records, I put a list recommending merchants by distance and spending category on the first screen, instead of making users search the map themselves. Writing 184 of the frontend's 209 commits in React and TypeScript, I built the map (marker clustering, GPS accuracy fallback), a draggable bottom sheet, and a retrying API layer; the project reached the second round of the LIKELION 13th hackathon, in the top 12% of 247 teams.",
     },
     stats: [
       { before: { ko: "지도에서 직접 찾기", en: "Searching the map" }, v: { ko: "위치·카테고리 기반 추천", en: "Recommended by place & category" }, k: { ko: "가맹점 탐색", en: "finding a merchant" } },
@@ -296,7 +302,7 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "ywave",
-    stack: ["React", "TypeScript", "Vite", "Tailwind CSS", "ChatGPT API"],
+    stack: ["React 19", "TypeScript", "Vite", "styled-components", "Google Maps API", "PWA"],
     repoUrl: "https://github.com/yong2gether/FE",
   },
 ];

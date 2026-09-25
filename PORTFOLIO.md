@@ -5,6 +5,18 @@
 > - 첫 화면 숫자: 15개+ 서비스 개발·배포 · 해커톤 운영 도구 3개 단독 개발 · 170+ PR 외주 저장소 릴리스 관리 · 투표→무대 스크린 2.2초
 > - 대표 프로젝트 순서: 해커톤 운영 도구(ANIMAL LEAGUE) → CleanB → FlowPay → Y:Wave
 > - 코드에서 확인한 기술 사실(animal-league 공개 저장소): 브래킷 전이는 순수 함수(lib/tournament.ts)·단위 테스트 59개(거부 경로 위주, Node 내장 러너) / 상태는 Supabase 한 행 + rev 낙관적 잠금, 충돌 시 최대 3회 재적용(lib/state.ts) / POST /api/vote는 서버가 심사 코드·명단·경기 live 여부 검증, 명단 밖 403·늦은 제출 409 / 운영 세션은 PIN을 HMAC-SHA256으로 파생한 httpOnly 쿠키 + timingSafeEqual, PIN 변경 시 전 세션 무효 / proxy.ts + 라우트 핸들러 이중 가드 / 스크린 1.5초 폴링 / CI: 타입체크·린트·테스트·빌드(Supabase 키 없이 빌드 통과 확인)
+> - 해커톤 운영 도구 저장소: FAQ 봇 https://github.com/tlstkdgus/hackathon-faq-bot (discord.py · OpenAI/Claude 상호 폴백 · NFKC 정규화 · 동점이면 LLM에 넘김 · 테스트 62개 · GitHub Actions → 서버 update.sh, 저널에서 '로그인 성공' 대기) / 제출물 검사 https://github.com/tlstkdgus/hackathon-commit-check (표준 라이브러리만 · 전 브랜치 SHA + pushed_at 스냅샷 · 스레드 8개, 실측 40개/8초 · 2차 레이트리밋 시 전 워커 일시정지 · 50개마다 저장 후 --resume · 테스트 34개)
+> - **프로젝트 저장소 커밋 확인 (2026-09-25, 개발자판 상세 페이지 근거)** — 본인 커밋·git blame 기준
+>   - Y:Wave(yong2gether/FE): 프론트 2인, 커밋 209개 중 184개·PR 77건, 코드 약 76%. 스택은 styled-components(Tailwind 아님), 프론트에서 ChatGPT 호출 없음(추천은 백엔드 API). ApiClient 재시도, GPS 정확도 100m 기준 폴백, MarkerClusterer, 150m 이동 시 재검색 버튼, 직접 만든 바텀시트
+>   - 손글(tlstkdgus/songeul): 2026-01-13 단독 커밋 8개의 React 프로토타입. OCR·보안 검사는 목업, OCR 앙상블은 설계만. TTS·햅틱 접근성 훅, 큰 글씨 토큰. README의 'WCAG AAA 7:1'·'CSS Modules'는 코드와 맞지 않음
+>   - 사내 교육 사이트: 커밋 20개 전부 본인. SVG 도식 17종(강의 14 + 가이드 3), 인터랙티브 실습 10개, 용어 51개, HashRouter → BrowserRouter + vercel.json rewrite
+>   - RZi: 프론트 커밋 61개 중 13개(비머지), 백엔드 커밋 0 → 역할 '풀스택' 대신 '프론트엔드'. 지도 페이지·API 계층(401 단일 갱신 + 대기열)·토큰 갱신 라우트·PWA. OCR은 팀원
+>   - 커넥트: 프론트 커밋 23개 전부 본인, 라우트 39개. 프론트에 API 호출 없음(백엔드 연동 문구 삭제). 한국외대 GBT학부 캡스톤 프로젝트(상현 확인, 2026-09-25)
+>   - AInterview: 프론트 3인 중 최다 커밋 19개. 면접 진행 화면·RecordRTC WAV 녹음·업로드. Azure STT/TTS는 백엔드. 기간은 2024.09~11로 표기(상현 확인)
+>   - hai: 커밋 8개 — 마이페이지·홈 뉴스 피드. AI 채팅 UI는 팀원
+>   - Meal당: 커밋 148개 중 47개 — 혈당 차트·다이어톤·포도 포인트. 팀장과 함께 공동 진행(상현 확인) → 역할 '공동 PM · 프론트엔드'
+>   - 웰컴키트(포크): 커밋 98개 중 60개. 앱 안 QR 스캔 모달·빙고 공개 잠금·PWA. 지각 20분 판정은 백엔드(팀원) 코드
+>   - FlowPay: main에는 FIDO2/WebAuthn 실제 호출 없음(결제 단계 라벨만), 대시보드는 목업 데이터, 운영 빌드에서 서비스 워커 설치 실패 — 기능 수정 중이라 사이트 문구는 보류
 > - FlowPay 공개 저장소: React 19 · TypeScript · Tailwind CSS · Tesseract.js 영수증 OCR · PWA(서비스 워커)
 > - 웰컴키트 공개 저장소: React 18 · styled-components · html5-qrcode/qrcode.react · JWT 쿠키 인증 · Docker 멀티 스테이지 빌드 · GitHub Actions(self-hosted) 배포
 
@@ -168,12 +180,12 @@
 | **dotori** — 점자 교육 플랫폼 | 2025.06~11 | PM·IR·프론트엔드 | 창업캠프 실전 IR 피칭 최우수상(06) · PICK YOUR IDEA IR 우수상(07) · G-RISE×경상대학 창업 BM 경진대회 대상(11) |
 | **NeuroSight** — 마취 시술 보조 | 2025.07 | PM·IR | 배럴아이 QUS 기술 기반 마취 보조 컨셉. FDA/CE 규제를 OEM 수익원으로 뒤집은 하이브리드 BM 설계 (KAIST ICISTS GRAFFITI 2025, 6인 팀 4일). RZi와 함께 HUFStudy 최우수상 |
 | **TCP** — 약관 위험 알림 | 2025.04~05 | PM | 131명 설문(93% 약관 안 읽음) 근거, 스크린 오버레이 자동 감지 설계. 교내 아이디어톤 최우수상, 전국 해커톤 2차 예선 진출 |
-| **커넥트** — 은둔형 청년 지원 플랫폼 | 2024.09~12 | PM·프론트엔드 | 비대면·익명 2단계 커리큘럼, React 40페이지 UI + Spring Boot·카카오맵 연동 (멋사 12기 3인 팀). 26명 시장 테스트 유용성 8.9점 |
+| **커넥트** — 은둔형 청년 지원 플랫폼 | 2024.09~12 | PM·프론트엔드 | 비대면·익명 2단계 커리큘럼, React 라우트 39개 모바일 UI + 카카오맵 (한국외대 GBT학부 캡스톤, 3인 팀). 26명 시장 테스트 유용성 8.9점 |
 | **hai** — 커리어 멘토링 | 2025.06 | PM·프론트엔드 | 자기 이해→직무 매칭→로드맵 3단계 구조화. 해커톤 기간 내 MVP 완성·배포 (CHALLKATHON) |
-| **AInterview** — 모의 면접 | 2024.07~11 | PM·프론트엔드 | Azure Speech STT/TTS + fine-tuned GPT-4o-mini 직무별 질문 생성. 멋사 12기 최종 프로젝트 |
+| **AInterview** — 모의 면접 | 2024.09~11 | PM·프론트엔드 | Azure Speech STT/TTS + fine-tuned GPT-4o-mini 직무별 질문 생성. 멋사 12기 최종 프로젝트 |
 | **RZi** — 알뜰 지출관리 PWA | 2025.07~08 | PM·풀스택 | 전통시장 가격비교+OCR+AI 추천, Next.js 15 PWA 해커톤 기간 내 배포 (K-HTML 해커톤). NeuroSight와 함께 HUFStudy 최우수상 |
 | **ARtliving** — AR 가구 추천 | 2024.12~2025.06 | PM | AR 시각화+AI 추천 기획. HUFS H-UP 진리상(최우수상) |
-| **Meal당** — 당뇨 AI 식단 관리 | 2024.07~08 | PM·프론트엔드 | 식품교환표 기반 칼로리 계산+ChatGPT 식단 생성. mealdang.vercel.app 배포 |
+| **Meal당** — 당뇨 AI 식단 관리 | 2024.07~08 | 공동 PM·프론트엔드 | 식품교환표 기반 칼로리 계산+ChatGPT 식단 생성. mealdang.vercel.app 배포 |
 | **허리UP!** — 웹캠 자세 교정 | 2024.05 | PM | 심평원 통계 기반 문제 정의, B2C→B2B 전략, 16일 내 프로토타입 (6인 팀 PM) |
 | **16P!ay** — MBTI 커뮤니티 | 2025.03~06 | PM·디자인·프론트엔드 | 13기 운영진으로서 아기사자(13기 부원)들과 함께 기획·디자인·개발. 멋사 13기 미니프로젝트 최우수상 |
 

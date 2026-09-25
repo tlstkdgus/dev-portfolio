@@ -76,6 +76,9 @@ export function WorkDetail({ id }: { id: string }) {
                 {liveUrl && <OutLink href={liveUrl} label={t("live")} isKo={isKo} />}
                 {selected?.behanceUrl && <OutLink href={selected.behanceUrl} label={t("behance")} isKo={isKo} />}
                 {repoUrl && <OutLink href={repoUrl} label="GitHub" isKo={isKo} />}
+                {selected?.extraRepos?.map((r) => (
+                  <OutLink key={r.url} href={r.url} label={`GitHub · ${tr(r.label)}`} isKo={isKo} />
+                ))}
               </span>
             </Meta>
           )}
@@ -194,7 +197,7 @@ export function WorkDetail({ id }: { id: string }) {
           <Section n="03" label={t("trouble")}>
             <ol className="space-y-14">
               {detail.troubles!.map((tr_, k) => (
-                <TroubleItem key={tr_.titleEn} n={k + 1} tr_={tr_} isKo={isKo} repoUrl={repoUrl} labels={{ p: t("t_problem"), s: t("t_solution"), r: t("t_result") }} />
+                <TroubleItem key={tr_.titleEn} n={k + 1} tr_={tr_} isKo={isKo} repoUrl={tr_.repo ?? repoUrl} labels={{ p: t("t_problem"), s: t("t_solution"), r: t("t_result") }} />
               ))}
             </ol>
           </Section>
@@ -419,7 +422,7 @@ function TroubleItem({
   return (
     <li>
       <h3 className="flex gap-3 text-[21px] font-bold leading-snug tracking-[-0.02em] md:text-[24px]">
-        <span className="meta pt-1.5 font-bold text-accent">{String(n).padStart(2, "0")}</span>
+        <span className="meta shrink-0 pt-1.5 font-bold text-accent">{String(n).padStart(2, "0")}</span>
         <span>{isKo ? tr_.title : tr_.titleEn}</span>
       </h3>
       <dl className="mt-5 border-t border-foreground">
@@ -432,11 +435,13 @@ function TroubleItem({
       </dl>
       {tr_.files && tr_.files.length > 0 && (
         <p className="meta mt-3 flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground">
+          {/* 대표 저장소가 아닌 곳의 파일이면 저장소 이름을 앞에 적는다 */}
+          {tr_.repo && <span className="font-semibold">{tr_.repo.split("/").pop()}</span>}
           {tr_.files.map((f) =>
             repoUrl ? (
               <a
                 key={f}
-                href={`${repoUrl}/blob/main/${f}`}
+                href={`${repoUrl}/blob/${tr_.branch ?? "main"}/${f}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono underline decoration-foreground/30 underline-offset-4 hover:text-accent hover:decoration-accent"

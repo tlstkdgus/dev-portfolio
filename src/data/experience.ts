@@ -29,14 +29,14 @@ export const experiences: Experience[] = [
     startDate: "2026-04",
     endDate: "2026-08",
     description: [
-      "14기 중앙해커톤(80개 대학 · 2,000명+) 운영 도구 3종 단독 개발·현장 투입 — 본선 토너먼트 콘솔(Next.js · Supabase, 투표→무대 스크린 실측 2.2초), 562개 레포 제출물 검사 스크립트(Python), FAQ 디스코드 봇(키워드 우선 + LLM 폴백, 한 달 229건 중 80.8% 즉답)",
+      "14기 중앙해커톤(80개 대학 · 2,000명+) 운영 도구 3종 단독 개발·현장 투입 — [본선 토너먼트 콘솔](https://github.com/tlstkdgus/animal-league)(Next.js · Supabase, 투표→무대 스크린 실측 2.2초), [562개 레포 제출물 검사 스크립트](https://github.com/tlstkdgus/hackathon-commit-check)(Python), [FAQ 디스코드 봇](https://github.com/tlstkdgus/hackathon-faq-bot)(키워드 우선 + LLM 폴백, 한 달 229건 중 80.8% 즉답)",
       "비개발 직군 대상 사내 개발 교육 6회 기획·강의와 [교육 사이트](https://likelion-dev-site.vercel.app) 개발(React · TypeScript · Vite) — SVG 도식 14종, 브라우저 라이브 실습, 만족도 전원 5/5",
       "80개 대학 2,500여 명이 쓰는 [커뮤니티 플랫폼](https://likelion.community/) 운영 — 행사 상세페이지 3개 설계·QA, 백오피스 기능 추가·수정 제안, 중앙해커톤 기능명세서 작성 후 개발 조직(AXP) 핸드오프",
       "연합 해커톤 플랫폼 기능 명세 — 4단계 권한 격리 · 학교 자동 검증 · 시각 기반 자동화, 페이지 26개 · 기능 영역 10개",
       "전국 연합 아이디어톤(1,822명 · 378개 프로젝트) 본선 심사 자동화 시트(Google Sheets) 공동 제작",
     ],
     descriptionEn: [
-      "Built 3 ops tools solo and ran them live for the 14th national hackathon (80 universities, 2,000+ participants) — the finals tournament console (Next.js · Supabase, 2.2 s measured from vote to stage screen), a Python script that checked 562 submitted repos, and an FAQ Discord bot (keyword-first with LLM fallback, 80.8% of 229 questions answered instantly in a month)",
+      "Built 3 ops tools solo and ran them live for the 14th national hackathon (80 universities, 2,000+ participants) — the [finals tournament console](https://github.com/tlstkdgus/animal-league) (Next.js · Supabase, 2.2 s measured from vote to stage screen), a [Python script that checked 562 submitted repos](https://github.com/tlstkdgus/hackathon-commit-check), and an [FAQ Discord bot](https://github.com/tlstkdgus/hackathon-faq-bot) (keyword-first with LLM fallback, 80.8% of 229 questions answered instantly in a month)",
       "Planned and taught a 6-session internal dev course for non-developers and built its [course site](https://likelion-dev-site.vercel.app) (React · TypeScript · Vite) — 14 SVG diagrams, live in-browser exercises, 5/5 satisfaction from every attendee",
       "Ran the [community platform](https://likelion.community/) used by 2,500+ students at 80 universities — designed and QA'd 3 event detail pages, proposed back-office features and fixes, wrote the national hackathon feature spec and handed it off to the dev team (AXP)",
       "Specified the inter-university hackathon platform — 4-level permission isolation, automatic school verification, time-based automation; 26 pages across 10 feature areas",
@@ -77,12 +77,12 @@ export const experiences: Experience[] = [
     startDate: "2025-01",
     endDate: "2025-12",
     description: [
-      "부원 45명이 쓴 13기 [웰컴키트 PWA](https://github.com/tlstkdgus/WelcomeKit) 프론트엔드 개발 리드(React) — 수기 출석부를 QR 스캔 출석으로 바꾸고 20분 기준 지각 자동 판정, 빙고 미션",
+      "부원 45명이 쓴 13기 [웰컴키트 PWA](https://github.com/tlstkdgus/WelcomeKit) 프론트엔드 개발 리드(React, 커밋 98개 중 60개) — 앱 안 QR 스캔 출석, 빙고 카드 공개, PWA 설치·서비스 워커로 수기 출석부를 대체",
       "13기 학생 교육 세션 기획·진행, 학생 관리 및 강의 진도 체크",
       "운영과 병행해 16P!ay · TCP · Y:Wave 프로젝트 리드 (교내 최우수상 2회, 전국 예선 진출 2회)",
     ],
     descriptionEn: [
-      "Led frontend development (React) of the 13th cohort [WelcomeKit PWA](https://github.com/tlstkdgus/WelcomeKit) used by 45 members — replaced the paper roll with QR check-in, automatic late marking at 20 minutes, and bingo missions",
+      "Led frontend development (React, 60 of 98 commits) of the 13th cohort [WelcomeKit PWA](https://github.com/tlstkdgus/WelcomeKit) used by 45 members — in-app QR check-in, bingo card reveals, and PWA install with a service worker, replacing the paper roll",
       "Planned and led educational sessions; managed students and lecture progress for the 13th cohort",
       "Led 16P!ay · TCP · Y:Wave projects alongside operations (2 campus Grand Prizes, 2 national semifinals)",
     ],

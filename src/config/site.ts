@@ -1,5 +1,5 @@
 export const siteConfig = {
-  url: process.env.NEXT_PUBLIC_BASE_URL || "https://dev-portfolio-tlstkdgus.vercel.app",
+  url: process.env.NEXT_PUBLIC_BASE_URL || "https://dev-portfolio-phi-eight.vercel.app",
 
   author: {
     name: { ko: "신상현", en: "Sanghyeon Shin" },

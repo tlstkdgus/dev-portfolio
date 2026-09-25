@@ -104,7 +104,7 @@ export const projects: Project[] = [
       { label: "검사 레포", labelEn: "Repos swept", value: "562개" },
       { label: "직접 만든 도구", labelEn: "Tools built", value: "3개" },
     ],
-    tags: ["Next.js", "React", "TypeScript", "Supabase", "Python", "LLM"],
+    tags: ["Next.js", "React", "TypeScript", "Supabase", "Python", "discord.py", "LLM"],
     image: "/projects/hackathon14/01.png",
     images: [
       "/projects/hackathon14/01.png",
@@ -163,7 +163,7 @@ export const projects: Project[] = [
       { label: "만족도", labelEn: "Satisfaction", value: "5/5 전원" },
       { label: "추천 의향", labelEn: "Recommend", value: "9.7/10" },
     ],
-    tags: ["Education", "React", "TypeScript", "Vite", "Content Design"],
+    tags: ["React 18", "TypeScript", "Vite", "Tailwind CSS v4", "React Router 7", "Vercel"],
     image: "/projects/devsite/01.png",
     images: [
       "/projects/devsite/01.png",
@@ -323,13 +323,13 @@ export const projects: Project[] = [
     contents: [
       "경기도 39만 건 가맹점 데이터 전수 분석으로 추천 알고리즘 방향 확정",
       "사용자 위치 반경 + 소비 카테고리 기반 AI 가맹점 추천 기능 설계 및 구현",
-      "React + TypeScript + Tailwind CSS 기반 반응형 UI 개발 (위치 기반 지도, AI 추천 리스트, 카테고리 필터)",
+      "React + TypeScript + styled-components 기반 반응형 UI 개발 (Google Maps 마커 클러스터링, 드래그 바텀시트, 추천 리스트, 카테고리 필터)",
       "멋쟁이사자처럼 13기 중앙해커톤 제출작 — 6인 팀에서 PM·프론트엔드·디자인 담당",
     ],
     contentsEn: [
       "Analyzed all ~390K Gyeonggi merchant records to set the recommendation direction",
       "Designed and built AI store recommendation based on user radius + spending category",
-      "Built responsive UI with React + TypeScript + Tailwind CSS (location map, AI recommendation list, category filters)",
+      "Built responsive UI with React + TypeScript + styled-components (Google Maps marker clustering, draggable bottom sheet, recommendation list, category filters)",
       "Submitted to the LIKELION 13th national hackathon — PM, frontend, and design in a 6-person team",
     ],
     decisions: [
@@ -349,7 +349,7 @@ export const projects: Project[] = [
       { label: "해커톤", labelEn: "Hackathon", value: "상위 12%" },
       { label: "탐색 어려움", labelEn: "Hard to discover", value: "53%" },
     ],
-    tags: ["React", "TypeScript", "Tailwind CSS", "AI", "Figma"],
+    tags: ["React", "TypeScript", "Vite", "styled-components", "Google Maps API", "PWA"],
     image: "/projects/ywave/01.png",
     images: [
       "/projects/ywave/01.png",
@@ -398,7 +398,7 @@ export const projects: Project[] = [
       "Won Excellence Award at the 2025 KIITI Winter Academic Conference",
       "Led a 6-person team (3 frontend · 3 backend) as PM across planning, AI architecture, and frontend development",
     ],
-    tags: ["React", "TypeScript", "AI-OCR", "FinTech", "Figma"],
+    tags: ["React 18", "TypeScript", "Vite", "React Router 6", "Web Speech API"],
     image: "/projects/songeul/01.png",
     images: [
       "/projects/songeul/01.png",
@@ -436,7 +436,7 @@ export const projects: Project[] = [
     ],
     results: ["부원 45명이 세션 출석과 빙고 미션에 사용"],
     resultsEn: ["Used by 45 members for session attendance and bingo missions"],
-    tags: ["React", "PWA", "QR"],
+    tags: ["React 18", "styled-components", "axios", "PWA", "QR"],
   },
   {
     title: "커넥트",
@@ -462,7 +462,7 @@ export const projects: Project[] = [
       "AI 취업 컨설팅, 외부 기관 연계, 일간 뉴스레터 등 사회 참여 훈련 기능 개발",
       "구독 모델(사회 적응 6,900원 / 사회 참여 9,900원) 및 3단계 확장 전략 수립",
       "React 기반 40개 페이지 UI 구현, Spring Boot 백엔드 연동, 카카오맵 API 연동",
-      "멋쟁이사자처럼 12기 3인 팀 프로젝트 — 기획·디자인·프론트엔드 담당",
+      "한국외대 GBT학부 캡스톤 3인 팀 프로젝트 — 기획·디자인·프론트엔드 담당",
     ],
     contentsEn: [
       "Designed social adaptation training features: text simulation, AI role-play chat, and user matching dialogue",
@@ -481,7 +481,7 @@ export const projects: Project[] = [
       "Weekly challenge feature received highest rating of 9.4",
       "Lowered the subscription price after 38.5% of testers flagged it as a burden",
     ],
-    tags: ["React", "Spring Boot", "AI", "Figma", "Kakao Maps"],
+    tags: ["React 18", "React Router 6", "styled-components", "Kakao Maps API", "Figma"],
     image: "/projects/connect/01.png",
     images: [
       "/projects/connect/01.png",
@@ -639,7 +639,7 @@ export const projects: Project[] = [
     resultsEn: [
       "Shipped a working AI career recommendation MVP within the hackathon period",
     ],
-    tags: ["React", "TypeScript", "AI", "Figma"],
+    tags: ["Next.js 15", "React 19", "TypeScript", "Emotion"],
     image: "/projects/hai/01.png",
     images: [
       "/projects/hai/01.png",
@@ -656,8 +656,8 @@ export const projects: Project[] = [
     titleEn: "AInterview",
     subtitle: "모의 면접 서비스",
     subtitleEn: "Mock Interview App",
-    period: "2024.07. ~ 2024.11.",
-    periodEn: "Jul 2024 — Nov 2024",
+    period: "2024.09. ~ 2024.11.",
+    periodEn: "Sep 2024 — Nov 2024",
     repo: "https://github.com/Team2-AInterview/frontend",
     commitsUrl: "https://github.com/Team2-AInterview/frontend/commits?author=tlstkdgus",
     roles: ["PM", "프론트엔드"],
@@ -688,7 +688,7 @@ export const projects: Project[] = [
     resultsEn: [
       "Completed the voice-based real-time AI interview flow and presented it as the 12th cohort final project",
     ],
-    tags: ["React", "Spring Boot", "Azure Speech", "GPT-4o", "AI", "Figma"],
+    tags: ["React 18", "styled-components", "RecordRTC", "axios", "Figma"],
     image: "/projects/ainterview/01.png",
     images: [
       "/projects/ainterview/01.png",
@@ -708,7 +708,7 @@ export const projects: Project[] = [
     periodEn: "Jul 2025 — Aug 2025",
     repo: "https://github.com/Gongdori-Moondori/Gongdori-Moondori-FE",
     commitsUrl: "https://github.com/Gongdori-Moondori/Gongdori-Moondori-FE/commits/main/?author=tlstkdgus",
-    roles: ["PM", "풀스택"],
+    roles: ["PM", "프론트엔드"],
     rolesEn: ["PM", "Full-stack"],
     goals: [
       "동대문구 청년층 전통시장 이용률(8.2%) 저조 문제를 전통시장·대형마트 실시간 가격 비교로 해결",
@@ -738,7 +738,7 @@ export const projects: Project[] = [
       "Delivered a working MVP integrating OCR, AI recommendation, and Google Maps navigation in one app (K-HTML Hackathon completed)",
       "Grand Prize, 2025 Spring HUFStudy — HUFS Center for Educational Innovation (based on NeuroSight · RZi work)",
     ],
-    tags: ["Next.js", "React", "PWA", "OCR", "Google Maps API", "AI"],
+    tags: ["Next.js 15", "React 19", "TypeScript", "TanStack Query", "Tailwind CSS v4", "Google Maps API", "PWA"],
     image: "/projects/rzi/01.png",
     images: [
       "/projects/rzi/01.png",
@@ -795,8 +795,8 @@ export const projects: Project[] = [
     periodEn: "Jul 2024 — Aug 2024",
     repo: "https://github.com/MealSugar/FE",
     commitsUrl: "https://github.com/MealSugar/FE/commits/master/?author=tlstkdgus",
-    roles: ["PM", "프론트엔드"],
-    rolesEn: ["PM", "Frontend"],
+    roles: ["공동 PM", "프론트엔드"],
+    rolesEn: ["Co-PM", "Frontend"],
     goals: [
       "예측보다 30년 빠르게 600만 명을 돌파한 국내 당뇨 인구의 가장 큰 어려움인 식단 관리(44%) 문제 해결",
       "대한당뇨병학회 식품교환표 기반 개인 맞춤 권장 칼로리 계산 및 ChatGPT 활용 식단 자동 생성",
@@ -825,7 +825,7 @@ export const projects: Project[] = [
       "Service deployed (mealdang.vercel.app)",
       "Completed as Likelion 12th cohort project",
     ],
-    tags: ["React", "ChatGPT", "AI", "Healthcare", "Figma"],
+    tags: ["React 18", "styled-components", "nivo", "axios", "Figma"],
     url: "https://mealdang.vercel.app",
     image: "/projects/mealdang/01.png",
     images: [
