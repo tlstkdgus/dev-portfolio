@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { fmtPeriod, getWork, workHref, type WorkEntry } from "@/lib/work";
-import type { CareerDetailItem, FlowDiagram } from "@/data/career-detail";
+import type { CareerDetailItem, FlowDiagram, Trouble } from "@/data/career-detail";
 import type { Localized } from "@/data/selected";
 import { ImageCarousel } from "@/components/ui/image-carousel";
 import { MetaRow } from "@/components/ui/meta-row";
@@ -33,6 +33,12 @@ export function WorkDetail({ id }: { id: string }) {
   const roles = selected ? tr(selected.role) : (isKo ? project?.roles : project?.rolesEn)?.join(" · ");
   const period = selected ? tr(selected.period) : fmtPeriod(isKo ? project?.period : project?.periodEn);
   const liveUrl = selected?.liveUrl ?? project?.url;
+  const repoUrl = selected?.repoUrl ?? project?.repo;
+  const stack = selected?.stack ?? project?.tags ?? [];
+  // 섹션 번호: 기술적 도전이 있는 프로젝트만 03을 쓰고 결과·배운 점이 한 칸씩 밀린다
+  const hasTroubles = Boolean(detail.troubles?.length);
+  const nResults = hasTroubles ? "04" : "03";
+  const nLessons = hasTroubles ? "05" : "04";
   const backHref = `/${locale}#${selected ? "projects" : "more-projects"}`;
 
   return (
@@ -64,16 +70,28 @@ export function WorkDetail({ id }: { id: string }) {
           {period && <Meta label={t("period")}>{period}</Meta>}
           {roles && <Meta label={t("role")}>{roles}</Meta>}
           {selected && <Meta label={t("status")}>{tr(selected.status)}</Meta>}
-          {(liveUrl || project?.repo || selected?.behanceUrl) && (
+          {(liveUrl || repoUrl || selected?.behanceUrl) && (
             <Meta label={t("links")}>
               <span className="-my-2 flex flex-col">
                 {liveUrl && <OutLink href={liveUrl} label={t("live")} isKo={isKo} />}
                 {selected?.behanceUrl && <OutLink href={selected.behanceUrl} label={t("behance")} isKo={isKo} />}
-                {project?.repo && <OutLink href={project.repo} label="GitHub" isKo={isKo} />}
+                {repoUrl && <OutLink href={repoUrl} label="GitHub" isKo={isKo} />}
               </span>
             </Meta>
           )}
         </dl>
+        {stack.length > 0 && (
+          <div className="flex flex-col gap-3 border-b border-border py-4 sm:flex-row sm:items-baseline sm:gap-6 lg:py-5">
+            <p className="eyebrow shrink-0 text-muted-foreground">{t("stack")}</p>
+            <ul className="flex flex-wrap gap-1.5">
+              {stack.map((s) => (
+                <li key={s} className="meta rounded-full border border-border px-2.5 py-0.5 font-semibold">
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </header>
 
       {/* 2. 자료 — 발표 자료·화면. 원본 PDF에서 2400px로 다시 뽑았다 */}
@@ -172,7 +190,17 @@ export function WorkDetail({ id }: { id: string }) {
           </div>
         )}
 
-        <Section n="03" label={t("results")} accent>
+        {hasTroubles && (
+          <Section n="03" label={t("trouble")}>
+            <ol className="space-y-14">
+              {detail.troubles!.map((tr_, k) => (
+                <TroubleItem key={tr_.titleEn} n={k + 1} tr_={tr_} isKo={isKo} repoUrl={repoUrl} labels={{ p: t("t_problem"), s: t("t_solution"), r: t("t_result") }} />
+              ))}
+            </ol>
+          </Section>
+        )}
+
+        <Section n={nResults} label={t("results")} accent>
           {/* 굵은 파란 세로선(border-l 3px)은 뺐다. 결과 제목이 이미 파란색이고, 나머지 목록처럼 가로 괘선으로 나눈다 */}
           <ul className="border-t border-foreground">
             {detail.results.map((item, j) => (
@@ -186,7 +214,7 @@ export function WorkDetail({ id }: { id: string }) {
 
         {/* 확인된 문장이 없는 프로젝트(웰컴키트)는 배운 점을 비워 둔다 — 빈 제목만 남기지 않는다 */}
         {detail.lessons.length > 0 && (
-          <Section n="04" label={t("lessons")}>
+          <Section n={nLessons} label={t("lessons")}>
             <Items items={detail.lessons} isKo={isKo} />
           </Section>
         )}
@@ -365,6 +393,64 @@ function Diagram({ d, isKo }: { d: FlowDiagram; isKo: boolean }) {
         </p>
       )}
     </figure>
+  );
+}
+
+// 기술적 도전 한 건 = 제목 + 문제 · 해결 · 결과 세 줄. 개발자 포트폴리오의 트러블슈팅 형식.
+// 근거 파일이 있으면 공개 저장소의 해당 경로로 바로 연다(main 브랜치 기준).
+function TroubleItem({
+  n,
+  tr_,
+  isKo,
+  repoUrl,
+  labels,
+}: {
+  n: number;
+  tr_: Trouble;
+  isKo: boolean;
+  repoUrl?: string;
+  labels: { p: string; s: string; r: string };
+}) {
+  const rows: [string, string][] = [
+    [labels.p, isKo ? tr_.problem : tr_.problemEn],
+    [labels.s, isKo ? tr_.solution : tr_.solutionEn],
+    [labels.r, isKo ? tr_.result : tr_.resultEn],
+  ];
+  return (
+    <li>
+      <h3 className="flex gap-3 text-[21px] font-bold leading-snug tracking-[-0.02em] md:text-[24px]">
+        <span className="meta pt-1.5 font-bold text-accent">{String(n).padStart(2, "0")}</span>
+        <span>{isKo ? tr_.title : tr_.titleEn}</span>
+      </h3>
+      <dl className="mt-5 border-t border-foreground">
+        {rows.map(([label, text]) => (
+          <div key={label} className="grid gap-x-6 gap-y-1 border-b border-border py-4 sm:grid-cols-[64px_1fr]">
+            <dt className={cn("eyebrow pt-1", label === labels.r ? "text-accent" : "text-muted-foreground")}>{label}</dt>
+            <dd className="text-[16px] leading-[1.8] md:text-[17px]">{text}</dd>
+          </div>
+        ))}
+      </dl>
+      {tr_.files && tr_.files.length > 0 && (
+        <p className="meta mt-3 flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground">
+          {tr_.files.map((f) =>
+            repoUrl ? (
+              <a
+                key={f}
+                href={`${repoUrl}/blob/main/${f}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono underline decoration-foreground/30 underline-offset-4 hover:text-accent hover:decoration-accent"
+              >
+                {f}
+                <span className="sr-only">{isKo ? " (새 창)" : " (opens in a new tab)"}</span>
+              </a>
+            ) : (
+              <code key={f}>{f}</code>
+            )
+          )}
+        </p>
+      )}
+    </li>
   );
 }
 

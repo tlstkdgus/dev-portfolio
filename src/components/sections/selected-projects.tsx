@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { selectedProjects, type Localized } from "@/data/selected";
 import { workHref } from "@/lib/work";
 import { cn } from "@/lib/utils";
@@ -115,24 +115,57 @@ export function SelectedProjects() {
                   ))}
                 </dl>
 
-                <dl className="mt-5 grid grid-cols-[64px_1fr] gap-x-4 text-[15px]">
+                <dl className="mt-5 grid grid-cols-[64px_1fr] gap-x-4 gap-y-3 text-[15px]">
                   <dt className="eyebrow pt-0.5 text-muted-foreground">{t("role")}</dt>
                   <dd className="font-semibold">{tr(p.role)}</dd>
+                  {/* 스택 칩 — 개발자 포트폴리오에서 카드마다 기대하는 정보. 저장소에서 확인한 것만 */}
+                  <dt className="eyebrow pt-1 text-muted-foreground">{t("stack")}</dt>
+                  <dd>
+                    <ul className="flex flex-wrap gap-1.5">
+                      {p.stack.map((s) => (
+                        <li key={s} className="meta rounded-full border border-border px-2.5 py-0.5 font-semibold">
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
                 </dl>
 
-                <Link
-                  href={href}
-                  className="hit mt-8 inline-flex w-fit items-center gap-2 border-b-2 border-foreground pb-1 text-[16px] font-bold transition-colors hover:border-accent hover:text-accent"
-                >
-                  {t("more")}
-                  <span className="sr-only">: {title}</span>
-                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                </Link>
+                <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
+                  <Link
+                    href={href}
+                    className="hit inline-flex w-fit items-center gap-2 border-b-2 border-foreground pb-1 text-[16px] font-bold transition-colors hover:border-accent hover:text-accent"
+                  >
+                    {t("more")}
+                    <span className="sr-only">: {title}</span>
+                    <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  </Link>
+                  {/* 코드와 배포본으로 바로 — 상세 페이지를 거치지 않아도 되게 */}
+                  {p.repoUrl && <OutLink href={p.repoUrl} label={t("github")} title={title} isKo={isKo} />}
+                  {p.liveUrl && <OutLink href={p.liveUrl} label={t("live")} title={title} isKo={isKo} />}
+                </div>
               </div>
             </li>
           );
         })}
       </ol>
     </section>
+  );
+}
+
+function OutLink({ href, label, title, isKo }: { href: string; label: string; title: string; isKo: boolean }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hit inline-flex items-center gap-1 text-[15px] font-semibold text-muted-foreground transition-colors hover:text-accent"
+    >
+      {label}
+      <span className="sr-only">
+        : {title} ({isKo ? "새 탭" : "opens in a new tab"})
+      </span>
+      <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+    </a>
   );
 }

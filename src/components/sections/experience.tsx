@@ -58,7 +58,7 @@ export function Experience() {
                   </p>
                   <p className="text-[15px] text-ink-muted">{isKo ? exp.company : exp.companyEn}</p>
                   <p className="mt-2 text-[15px] leading-[1.7] text-ink-foreground/70">
-                    {(isKo ? exp.description : exp.descriptionEn)[0]}
+                    <Emph text={(isKo ? exp.description : exp.descriptionEn)[0]} />
                   </p>
                 </div>
               </li>

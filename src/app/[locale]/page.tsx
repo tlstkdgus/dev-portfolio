@@ -60,13 +60,14 @@ export default function Home() {
     <>
       <Header />
       <main id="main" tabIndex={-1} className="outline-none">
-        {/* 흐름: 표지 → 소개(문장·증거·숫자) → What I do → How I work → Where I've worked(인턴이 메인) → 목차·대표 프로젝트 */}
+        {/* 흐름(개발자 포트폴리오): 소개 → Profile·스택 → 대표 프로젝트 → 도구가 바꾼 것 → 일하는 방식 → 경력 → 그 외 프로젝트.
+            개발자 채용에서는 코드와 결과물을 먼저 보므로 대표 프로젝트를 스택 바로 아래로 올렸다 */}
         <Hero />
         <About />
-        <Principles />
-        <Figures />
-        <Experience />
         <SelectedProjects />
+        <Figures />
+        <Principles />
+        <Experience />
         <Projects />
         <Credentials />
         <Contact />

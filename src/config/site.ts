@@ -1,11 +1,11 @@
 export const siteConfig = {
-  url: process.env.NEXT_PUBLIC_BASE_URL || "https://portfolio-tlstkdgus.vercel.app",
+  url: process.env.NEXT_PUBLIC_BASE_URL || "https://dev-portfolio-tlstkdgus.vercel.app",
 
   author: {
     name: { ko: "신상현", en: "Sanghyeon Shin" },
     title: {
-      ko: "사용자의 실제 행동에서 답을 찾아, 직접 만들어 배포하는 서비스 기획자",
-      en: "A service planner who finds the answer in what users actually do, then builds and ships",
+      ko: "사용자가 실제로 쓰는 화면을 만들고, 배포한 뒤에도 직접 운영하며 고치는 프론트엔드 개발자",
+      en: "A frontend developer who builds the screens people actually use, then keeps running and fixing them after launch",
     },
     email: "a91945840@gmail.com",
   },
@@ -18,8 +18,8 @@ export const siteConfig = {
 
   nav: [
     "about",
-    "experience",
     "projects",
+    "experience",
     "certified",
     "contact",
   ] as const,
@@ -36,15 +36,17 @@ export const siteConfig = {
 
   seo: {
     titleTemplate: "%s | 신상현",
-    defaultTitle: "신상현 | 사용자의 실제 행동에서 답을 찾아, 직접 만들어 배포하는 서비스 기획자",
+    defaultTitle: "신상현 | 사용자가 실제로 쓰는 화면을 만들고, 배포한 뒤에도 직접 운영하며 고치는 프론트엔드 개발자",
     description:
-      "사용자의 실제 행동에서 답을 찾아 직접 만들어 배포하는 서비스 기획자 신상현의 포트폴리오입니다. 회계담당자 인터뷰, 가맹점 39만 건 전수 분석, 어르신의 손글씨 습관에서 출발한 서비스들과, 멋쟁이사자처럼 인턴으로 기획부터 본선까지 운영한 2,000명 해커톤.",
+      "React·Next.js·TypeScript로 15개 이상의 서비스를 만들어 배포한 프론트엔드 개발자 신상현의 포트폴리오입니다. 2,000명 해커톤 본선을 진행한 토너먼트 콘솔(Next.js · Supabase), 562개 레포 제출물 검사 스크립트, FAQ 봇, 외주 서비스 루미클린의 청소자 앱까지.",
     keywords: [
       "포트폴리오",
-      "IT 기획",
-      "PM",
-      "PO",
-      "프론트엔드 개발",
+      "개발자 포트폴리오",
+      "프론트엔드 개발자",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Supabase",
       "신상현",
       "SSAFY",
       "신상현 포트폴리오"

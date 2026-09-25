@@ -10,7 +10,7 @@ import { profile } from "@/data/profile";
 export function About() {
   const t = useTranslations("about");
   const isKo = useLocale() === "ko";
-  const skills: string[] = t.raw("skills");
+  const skills: { g: string; items: string[] }[] = t.raw("skills");
   const edu = profile.education[0];
   // "2020.03. ~ 2026.02." → "2020.03 – 2026.02"
   const dash = (v: string) => v.replace(/\.(?=\s|$)/g, "").replace(/ ~ /g, " – ");
@@ -44,18 +44,24 @@ export function About() {
         </ul>
       </div>
 
-      {/* What I do — 레퍼런스 3번 슬라이드: 큰 질문 + 짧은 답 + 흩어진 키워드 */}
+      {/* What I do — 개발자 포트폴리오에서 흔한 방식대로 스택을 영역별로 나눈다. 한 줄 = 영역 라벨 + 기술들.
+          평평한 칩 12개는 어디가 주력인지 안 보였다 */}
       <h2 className="display mt-28 md:mt-40">{t("what_heading")}</h2>
-      <ul className="mt-14 grid grid-cols-2 border-t border-foreground md:mt-20 md:grid-cols-3">
-        {skills.map((s) => (
-          <li
-            key={s}
-            className="border-b border-border py-4 pr-4 text-[17px] font-semibold tracking-[-0.01em] md:py-5 md:text-[20px]"
+      <dl className="mt-14 border-t border-foreground md:mt-20">
+        {skills.map(({ g, items }) => (
+          <div
+            key={g}
+            className="grid gap-x-6 gap-y-3 border-b border-border py-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:py-8 lg:gap-x-16"
           >
-            {s}
-          </li>
+            <dt className="eyebrow pt-1 text-muted-foreground">{g}</dt>
+            <dd className="flex flex-wrap gap-x-6 gap-y-2 text-[20px] font-semibold tracking-[-0.02em] md:text-[26px]">
+              {items.map((s) => (
+                <span key={s}>{s}</span>
+              ))}
+            </dd>
+          </div>
         ))}
-      </ul>
+      </dl>
     </section>
   );
 }

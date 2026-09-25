@@ -20,6 +20,21 @@ export interface FlowDiagram {
   captionEn?: string;
 }
 
+/** 기술적 도전 — 개발자 포트폴리오에서 흔한 트러블슈팅 형식(문제 → 해결 → 결과).
+ *  공개 저장소 코드나 PORTFOLIO.md로 확인되는 내용만 쓴다. 비공개 저장소(CleanB)는 PORTFOLIO.md 기록만 */
+export interface Trouble {
+  title: string;
+  titleEn: string;
+  problem: string;
+  problemEn: string;
+  solution: string;
+  solutionEn: string;
+  result: string;
+  resultEn: string;
+  /** 근거 코드 경로 (예: lib/state.ts) — 저장소 링크 옆에 작게 보여 준다 */
+  files?: string[];
+}
+
 export interface CareerDetailSection {
   id: string;
   title: string;
@@ -28,17 +43,18 @@ export interface CareerDetailSection {
   diagrams?: FlowDiagram[];
   background: CareerDetailItem[];
   role: SubSection[];
+  troubles?: Trouble[];
   results: CareerDetailItem[];
   lessons: CareerDetailItem[];
 }
 
 export const careerDetailSections: CareerDetailSection[] = [
-// 순서 = 메인 페이지 노출 순서(/career 목록과 상세 페이지 이전·다음도 이 순서). HANDOFF §G (2026-09-24):
-// 대표 4개(해커톤 → FlowPay → Y:Wave → CleanB) → Other 노출 6개 → 접힌 8개. CleanB는 FlowPay 뒤(2026.09.13 지시).
+// 순서 = 메인 페이지 노출 순서(/career 목록과 상세 페이지 이전·다음도 이 순서). 개발자 포트폴리오 (2026-09-25):
+// 대표 4개(해커톤 운영 도구 → CleanB → FlowPay → Y:Wave) → Other 노출 6개(개발 비중 순) → 접힌 8개.
   {
     id: "hackathon14",
-    title: "2,000명 규모 해커톤 기획·운영 — 14기 중앙해커톤 'ANIMAL LEAGUE'",
-    titleEn: "Planning and Running a 2,000-Person Hackathon — LIKELION 14th 'ANIMAL LEAGUE'",
+    title: "14기 중앙해커톤 본선 콘솔·운영 도구 개발 — ANIMAL LEAGUE",
+    titleEn: "Finals Console & Ops Tools for LIKELION's 14th Hackathon — ANIMAL LEAGUE",
     images: [
       "/projects/hackathon14/01.png",
       "/projects/hackathon14/02.png",
@@ -47,6 +63,19 @@ export const careerDetailSections: CareerDetailSection[] = [
       "/projects/hackathon14/05.png",
     ],
     diagrams: [
+      {
+        title: "심사위원의 표가 무대 스크린에 뜨기까지",
+        titleEn: "How a judge's vote reaches the stage screen",
+        steps: [
+          { label: "심사 화면", labelEn: "Judge view", note: "심사위원이 승자(A/B)와 코멘트를 제출합니다", noteEn: "A judge submits the winner (A/B) and a comment" },
+          { label: "서버 검증", labelEn: "Server checks", tag: "POST /api/vote", tagEn: "POST /api/vote", note: "심사 코드 · 명단 · 경기 live 여부를 확인하고, 제출 시각은 서버가 기록합니다", noteEn: "Judge code, allowlist, and live match are verified; the server stamps the time" },
+          { label: "Supabase", labelEn: "Supabase", note: "표는 votes 테이블에 upsert, 브래킷 상태는 한 행에 rev 번호와 함께 저장합니다", noteEn: "Votes are upserted to a votes table; bracket state lives in one row with a rev number" },
+          { label: "운영 콘솔", labelEn: "Ops console", tag: "rev 가드", tagEn: "rev guard", note: "운영자가 결과를 공개하면 mutate()가 순수 전이를 적용하고 rev를 대조해 저장합니다", noteEn: "On reveal, mutate() applies a pure transition and saves only if rev still matches" },
+          { label: "무대 스크린", labelEn: "Stage screen", tag: "실측 2.2초", tagEn: "2.2 s measured", note: "1.5초 간격으로 공개 스냅샷을 읽어 카드 공개 연출을 띄웁니다", noteEn: "Reads the public snapshot every 1.5 s and plays the card reveal" },
+        ],
+        caption: "쓰기는 서버의 mutate() 한 곳으로만, 읽기는 비밀값을 벗긴 공개 스냅샷(GET /api/state)으로만 나눠, 스크린과 심사 화면에는 심사 코드와 운영 PIN이 내려가지 않습니다.",
+        captionEn: "Writes go only through the server's mutate(), and reads only through a public snapshot with secrets stripped (GET /api/state), so the judge code and ops PIN never reach the screen or judge views.",
+      },
       {
         title: "314팀에서 1팀까지, 예측 가능한 3단계 심사",
         titleEn: "From 314 teams to one, in three predictable stages",
@@ -89,70 +118,6 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     role: [
       {
-        title: "사전 기획 공동 참여 — 플랫폼 기능명세서·워밍업 세션",
-        titleEn: "Co-planned the Pre-event Work — Platform Specs & Warm-up Sessions",
-        items: [
-          {
-            text: "해커톤 커뮤니티 플랫폼의 기능명세서 2종(중앙해커톤·연합해커톤)을 팀원들과 공동 작성해 개발(AXP)·디자인(브디랩) 조직에 핸드오프했습니다. 각 항목을 As-Is → To-Be → 기대 산출물 → 세부 명세 순서로 정리하고, 운영팀이 먼저 결정해야 할 사항과 개발 항목을 분리했습니다.",
-            textEn:
-              "Co-wrote two feature specs for the hackathon community platform (central and inter-university) with the team and handed them off to the dev (AXP) and design (BD Lab) teams. Each item followed As-Is → To-Be → expected output → detailed spec, with ops decisions separated from dev items.",
-            subItems: [
-              {
-                text: "5단계 권한 체계(플랫폼 관리자/대표 운영진/일반 운영진/참가자/미참가자)별 기능 권한 매트릭스, '팀 없으면 제출 불가' 규칙을 제출 시 팀원 등록으로 바꾸는 팀빌딩 재설계, 등록 → 승인 → 노출 워크플로우와 상태 배지를 포함했습니다.",
-                textEn:
-                  "Included a 5-level permission matrix (platform admin / lead staff / staff / participant / non-participant), a team-building redesign replacing 'no team, no submission' with member registration at submission, and a register → approve → publish workflow with status badges.",
-              },
-            ],
-          },
-          {
-            text: "워밍업 세션 3회를 '문제 발견 → MVP 범위 결정 → AI 실전 개발' 순서로 공동 기획하고, 세션 간 경계와 takeaway를 정의해 연사 간 중복을 막았습니다.",
-            textEn:
-              "Co-planned a 3-part warm-up series — problem discovery → MVP scoping → hands-on AI development — defining boundaries and takeaways per session to avoid overlap between speakers.",
-          },
-        ],
-      },
-      {
-        title: "심사 정책·프로세스 공동 설계",
-        titleEn: "Co-designed the Judging Policy & Process",
-        items: [
-          {
-            text: "3단계 심사 퍼널(서류 심사 60팀 → 트랙 피칭 8팀 → 본선 토너먼트 1팀)과 공통 심사 기준 100점 배점(문제 정의 25 · 실현 가능성 20 · 시장성 15 · UI/UX 10 · 전달력 10 · 트랙 적합성 20)을 설계했습니다.",
-            textEn:
-              "Designed the 3-stage judging funnel (60 teams by docs → 8 by track pitching → 1 by tournament) and the 100-point common rubric (problem definition 25 · feasibility 20 · market 15 · UI/UX 10 · delivery 10 · track fit 20).",
-            subItems: [
-              {
-                text: "서비스 기획안 제출 항목(문제정의/핵심기능/시장성)을 심사 기준과 1:1로 연계해, 참가자가 무엇을 쓰면 어떻게 평가받는지 예측 가능하게 만들었습니다.",
-                textEn:
-                  "Mapped submission items (problem/features/market) 1:1 to judging criteria, so teams could predict how what they wrote would be scored.",
-              },
-              {
-                text: "공정성 규칙: 대본 낭독 시 전달력 0점, 발표는 운영팀 기기로 통일, 대진·순서는 현장 랜덤 추첨 후 변경 불가.",
-                textEn:
-                  "Fairness rules: script-reading scores zero on delivery, all pitches on operator-provided devices, bracket and order drawn live and locked.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "제출물 무결성 검증 — check.py 직접 제작",
-        titleEn: "Submission Integrity — Built check.py Myself",
-        items: [
-          {
-            text: "'마감 후 수정 금지' 규정을 집행하려면 314팀 · 562개 레포를 검사해야 했습니다. Claude를 활용해 check.py를 직접 만들었습니다 — 전 레포·전 브랜치를 순회하며 마감 이후 커밋을 검출하고, 스냅샷 JSON 대조로 force-push · 브랜치 삭제 · Public→Private 전환까지 탐지합니다.",
-            textEn:
-              "Enforcing 'no edits after deadline' meant checking 562 repos across 314 teams. I built check.py with Claude — it sweeps every branch of every repo for post-deadline commits, and snapshot-JSON comparison catches force-pushes, deleted branches, and public-to-private flips.",
-            subItems: [
-              {
-                text: "판정 기준을 검사 전에 합의했습니다: 기능 추가·개선 범위의 코드 수정 = 실격 / 단순 README 수정 = 감점 / 마감 직후 커밋 = 정상참작. 도구는 엑셀 리포트로 근거만 제시하고, 판정은 운영진 회의가 했습니다.",
-                textEn:
-                  "The verdict criteria were agreed before scanning: feature-level code changes = disqualification / README-only edits = deduction / just-past-deadline commits = leniency. The tool only presented evidence in an Excel report; the ops meeting made the calls.",
-              },
-            ],
-          },
-        ],
-      },
-      {
         title: "본선 토너먼트 콘솔 'ANIMAL LEAGUE' 직접 제작·운영",
         titleEn: "Finals Tournament Console — Built & Operated",
         items: [
@@ -181,6 +146,24 @@ export const careerDetailSections: CareerDetailSection[] = [
         ],
       },
       {
+        title: "제출물 무결성 검증 — check.py 직접 제작",
+        titleEn: "Submission Integrity — Built check.py Myself",
+        items: [
+          {
+            text: "'마감 후 수정 금지' 규정을 집행하려면 314팀 · 562개 레포를 검사해야 했습니다. Claude를 활용해 check.py를 직접 만들었습니다 — 전 레포·전 브랜치를 순회하며 마감 이후 커밋을 검출하고, 스냅샷 JSON 대조로 force-push · 브랜치 삭제 · Public→Private 전환까지 탐지합니다.",
+            textEn:
+              "Enforcing 'no edits after deadline' meant checking 562 repos across 314 teams. I built check.py with Claude — it sweeps every branch of every repo for post-deadline commits, and snapshot-JSON comparison catches force-pushes, deleted branches, and public-to-private flips.",
+            subItems: [
+              {
+                text: "판정 기준을 검사 전에 합의했습니다: 기능 추가·개선 범위의 코드 수정 = 실격 / 단순 README 수정 = 감점 / 마감 직후 커밋 = 정상참작. 도구는 엑셀 리포트로 근거만 제시하고, 판정은 운영진 회의가 했습니다.",
+                textEn:
+                  "The verdict criteria were agreed before scanning: feature-level code changes = disqualification / README-only edits = deduction / just-past-deadline commits = leniency. The tool only presented evidence in an Excel report; the ops meeting made the calls.",
+              },
+            ],
+          },
+        ],
+      },
+      {
         title: "참가자 커뮤니케이션 · FAQ 봇 · 파트너 운영",
         titleEn: "Participant Comms, FAQ Bot & Partner Ops",
         items: [
@@ -202,6 +185,87 @@ export const careerDetailSections: CareerDetailSection[] = [
             ],
           },
         ],
+      },
+      {
+        title: "심사 정책·프로세스 공동 설계",
+        titleEn: "Co-designed the Judging Policy & Process",
+        items: [
+          {
+            text: "3단계 심사 퍼널(서류 심사 60팀 → 트랙 피칭 8팀 → 본선 토너먼트 1팀)과 공통 심사 기준 100점 배점(문제 정의 25 · 실현 가능성 20 · 시장성 15 · UI/UX 10 · 전달력 10 · 트랙 적합성 20)을 설계했습니다.",
+            textEn:
+              "Designed the 3-stage judging funnel (60 teams by docs → 8 by track pitching → 1 by tournament) and the 100-point common rubric (problem definition 25 · feasibility 20 · market 15 · UI/UX 10 · delivery 10 · track fit 20).",
+            subItems: [
+              {
+                text: "서비스 기획안 제출 항목(문제정의/핵심기능/시장성)을 심사 기준과 1:1로 연계해, 참가자가 무엇을 쓰면 어떻게 평가받는지 예측 가능하게 만들었습니다.",
+                textEn:
+                  "Mapped submission items (problem/features/market) 1:1 to judging criteria, so teams could predict how what they wrote would be scored.",
+              },
+              {
+                text: "공정성 규칙: 대본 낭독 시 전달력 0점, 발표는 운영팀 기기로 통일, 대진·순서는 현장 랜덤 추첨 후 변경 불가.",
+                textEn:
+                  "Fairness rules: script-reading scores zero on delivery, all pitches on operator-provided devices, bracket and order drawn live and locked.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "사전 기획 공동 참여 — 플랫폼 기능명세서·워밍업 세션",
+        titleEn: "Co-planned the Pre-event Work — Platform Specs & Warm-up Sessions",
+        items: [
+          {
+            text: "해커톤 커뮤니티 플랫폼의 기능명세서 2종(중앙해커톤·연합해커톤)을 팀원들과 공동 작성해 개발(AXP)·디자인(브디랩) 조직에 핸드오프했습니다. 각 항목을 As-Is → To-Be → 기대 산출물 → 세부 명세 순서로 정리하고, 운영팀이 먼저 결정해야 할 사항과 개발 항목을 분리했습니다.",
+            textEn:
+              "Co-wrote two feature specs for the hackathon community platform (central and inter-university) with the team and handed them off to the dev (AXP) and design (BD Lab) teams. Each item followed As-Is → To-Be → expected output → detailed spec, with ops decisions separated from dev items.",
+            subItems: [
+              {
+                text: "5단계 권한 체계(플랫폼 관리자/대표 운영진/일반 운영진/참가자/미참가자)별 기능 권한 매트릭스, '팀 없으면 제출 불가' 규칙을 제출 시 팀원 등록으로 바꾸는 팀빌딩 재설계, 등록 → 승인 → 노출 워크플로우와 상태 배지를 포함했습니다.",
+                textEn:
+                  "Included a 5-level permission matrix (platform admin / lead staff / staff / participant / non-participant), a team-building redesign replacing 'no team, no submission' with member registration at submission, and a register → approve → publish workflow with status badges.",
+              },
+            ],
+          },
+          {
+            text: "워밍업 세션 3회를 '문제 발견 → MVP 범위 결정 → AI 실전 개발' 순서로 공동 기획하고, 세션 간 경계와 takeaway를 정의해 연사 간 중복을 막았습니다.",
+            textEn:
+              "Co-planned a 3-part warm-up series — problem discovery → MVP scoping → hands-on AI development — defining boundaries and takeaways per session to avoid overlap between speakers.",
+          },
+        ],
+      },
+    ],
+    troubles: [
+      {
+        title: "운영자 여러 명이 동시에 조작하면 상태가 덮어써질 수 있었습니다",
+        titleEn: "Concurrent operators could overwrite each other's state",
+        problem: "브래킷과 경기 상태 전체를 Supabase의 한 행(JSON)에 두고 여러 대의 운영 콘솔에서 조작했습니다. 두 요청이 같은 상태를 읽고 각각 쓰면 먼저 쓴 변경이 조용히 사라질 수 있었습니다.",
+        problemEn: "The whole bracket and match state lived in one Supabase row (JSON) and was operated from several consoles. If two requests read the same state and each wrote back, the first change could silently vanish.",
+        solution: "쓰기를 모두 mutate() 하나로 모으고 UPDATE … WHERE rev = <읽은 값>으로 낙관적 잠금을 걸었습니다. 0행이 갱신되면 다시 읽어 같은 변형을 최대 3회 재적용하고, 재적용이 안전하도록 브래킷 전이를 입력을 바꾸지 않는 순수 함수로 분리했습니다. 최초 접근 때 두 요청이 동시에 초기 행을 만들면 PK 충돌(23505)을 무시하고 다시 읽게 했습니다.",
+        solutionEn: "All writes go through a single mutate() with optimistic locking: UPDATE … WHERE rev = <value read>. If zero rows update, it re-reads and re-applies the same transform up to three times, so every bracket transition is a pure function that never mutates its input. When two first requests race to create the initial row, the PK conflict (23505) is ignored and the row is re-read.",
+        result: "전이 로직이 DB·React와 분리돼 Node 내장 테스트 러너로 단위 테스트 59개(거부 경로 위주)를 돌릴 수 있었고, GitHub Actions에서 타입체크 · 린트 · 테스트 · 빌드를 푸시마다 확인했습니다.",
+        resultEn: "With transitions decoupled from the DB and React, 59 unit tests (mostly rejection paths) run on Node's built-in test runner, and GitHub Actions checks typecheck, lint, tests, and build on every push.",
+        files: ["lib/state.ts", "lib/tournament.ts", "lib/tournament.test.ts", ".github/workflows/ci.yml"],
+      },
+      {
+        title: "심사 제출을 클라이언트 검증만으로 믿을 수 없었습니다",
+        titleEn: "Votes couldn't be trusted on client-side checks alone",
+        problem: "심사 화면은 코드 하나로 들어오는 가벼운 게이트라 코드가 새면 누구나 표를 낼 수 있었고, 결과 공개 직후 늦게 도착한 제출이 기록을 바꿀 위험도 있었습니다. 운영 콘솔의 PIN도 쿠키에 그대로 둘 수 없었습니다.",
+        problemEn: "The judge view sat behind a single light code, so a leaked code would let anyone vote, and a vote arriving just after a reveal could change the record. The ops PIN couldn't sit in a cookie as-is either.",
+        solution: "POST /api/vote에서 서버가 심사 코드, 심사위원 명단, 경기의 live 여부를 차례로 검증하고, 제출 시각은 서버가 찍고 코멘트 길이도 서버에서 자릅니다. 운영 세션은 PIN을 HMAC-SHA256으로 파생한 토큰을 httpOnly 쿠키에 담아 timingSafeEqual로 비교하고, /api/admin/*은 proxy에서 쿠키 유무를, 라우트 핸들러에서 토큰을 다시 확인하는 이중 가드로 막았습니다.",
+        solutionEn: "POST /api/vote has the server verify the judge code, the judge allowlist, and that the match is live, in that order; the server stamps the time and trims comments. Ops sessions carry an HMAC-SHA256 token derived from the PIN in an httpOnly cookie, compared with timingSafeEqual, and /api/admin/* is double-guarded: the proxy checks the cookie exists, and each route handler re-checks the token.",
+        result: "명단 밖 이름은 403, 이미 끝난 경기로 늦게 온 제출은 409로 거부됩니다. PIN을 바꾸면 기존 운영 세션이 모두 무효가 되고, 쿠키가 새어도 PIN 원문은 드러나지 않습니다.",
+        resultEn: "Off-list names get a 403 and late votes on a closed match get a 409. Changing the PIN invalidates every existing ops session, and a leaked cookie doesn't reveal the PIN.",
+        files: ["app/api/vote/route.ts", "lib/auth.ts", "proxy.ts"],
+      },
+      {
+        title: "네트워크가 끊기거나 표가 0건이어도 본선은 진행돼야 했습니다",
+        titleEn: "The finals had to go on even with no network or zero votes",
+        problem: "행사장 네트워크나 심사 화면에 문제가 생기면 2,000명 앞의 무대가 멈추고, 한 번 공개한 결과는 되돌릴 수 없었습니다.",
+        problemEn: "If the venue network or the judge view failed, the stage in front of 2,000 people would stall, and a revealed result couldn't be taken back.",
+        solution: "심사 제출이 0건이어도 운영자가 직접 승자를 지정해 공개하는 백업 모드를 두고, 결과 공개에는 롤백 대신 확인 다이얼로그를 필수로 넣었습니다. 로컬 production 빌드를 LAN IP로 띄우는 오프라인 폴백을 위해 secure 쿠키를 끄는 환경 변수를 따로 두었고, 빌드가 Supabase 키 없이도 통과하는지 CI에서 확인했습니다.",
+        solutionEn: "A backup mode lets the operator name the winner and reveal even with zero votes, and reveals require a confirm dialog instead of offering rollback. For an offline fallback that serves a local production build over a LAN IP, a separate env var can turn off the secure cookie flag, and CI checks that the build passes without Supabase keys.",
+        result: "본선 8팀 토너먼트를 이 콘솔로 끝까지 진행했고, 콘솔 조작이 무대 스크린에 반영되기까지 실측 2.2초였습니다.",
+        resultEn: "The console ran the 8-team finals to the end, with a measured 2.2 seconds from console action to stage screen.",
+        files: ["lib/tournament.ts", "lib/auth.ts", "docs/SPEC.md"],
       },
     ],
     results: [
@@ -236,6 +300,131 @@ export const careerDetailSections: CareerDetailSection[] = [
         text: "가이드·FAQ·봇·문의 채널은 결국 하나의 시스템이었습니다. 정보의 단일 출처를 정하고 나머지가 그걸 재사용하게 만들자, 같은 질문에 다른 답이 나가는 일이 줄었습니다.",
         textEn:
           "The guide, FAQ, bot, and inquiry channels were really one system. Designating a single source of truth and making everything else reuse it reduced the 'same question, different answer' failure.",
+      },
+    ],
+  },
+
+  {
+    id: "cleanb",
+    title: "외주 에어비앤비 청소 매칭 플랫폼 개발·운영 — CleanB",
+    titleEn: "Operating a Client's Airbnb Cleaning Matching Platform — CleanB",
+    images: [
+      "/projects/cleanb/01.png",
+      "/projects/cleanb/03.png",
+      "/projects/cleanb/05.png",
+      "/projects/cleanb/07.png",
+    ],
+    diagrams: [
+      {
+        title: "청소 작업의 상태 흐름에서 화면을 도출했습니다",
+        titleEn: "Screens derived from the cleaning job's state flow",
+        steps: [
+          { label: "수락 대기", labelEn: "Pending", note: "작업 요청 목록 — 숙소·일정·옵션·보수 확인 후 수락/거절", noteEn: "Request list — check place, date, options, pay; accept or decline" },
+          { label: "진행 예정", labelEn: "Scheduled", note: "작업 상세 + 캘린더 — 출입 방법·숙소 정보 안내", noteEn: "Job detail + calendar — entry method and place info" },
+          { label: "진행 중", labelEn: "In progress", note: "진행 상태 표시 — 작업 중에는 추가 입력을 요구하지 않음", noteEn: "Progress shown — no extra input asked while working" },
+          { label: "검수 대기", labelEn: "Review", tag: "완료 조건", tagEn: "Completion rule", note: "전·후 사진 최소 5장 + 특이사항으로 완료 인증", noteEn: "Completion proven with 5+ before/after photos and notes" },
+          { label: "정산 대기", labelEn: "Settlement", note: "정산 상태 노출 — 청소자가 지급 시점을 화면에서 확인", noteEn: "Settlement status shown — cleaners see when they'll be paid" },
+        ],
+        caption: "기능 목록보다 상태 흐름을 먼저 확정했고, 각 상태에서 필요한 화면과 입력만 남겼습니다. 개발·QA 범위도 이 흐름을 기준으로 나눴습니다.",
+        captionEn: "I fixed the state flow before the feature list and kept only the screens and inputs each state needed. Dev and QA scope were split along the same flow.",
+      },
+    ],
+    background: [
+      {
+        text: "에어비앤비 호스트는 믿을 만한 청소 인력을 구하기 어렵고, 청소자는 일감을 안정적으로 받기 어렵습니다. 둘을 연결하는 매칭 서비스를 만들되, 해커톤처럼 만들고 끝나는 게 아니라 실제 사용자를 받는 서비스로 '운영'하는 것을 목표로 잡았습니다. (외주 · 2025.11 기획·디자인 시작 ~ 현재, 3인 팀 — 서비스명 루미클린(RumiClean), www.rumiclean.com)",
+        textEn:
+          "Airbnb hosts struggle to find reliable cleaners; cleaners struggle to get steady work. We set out to build a matching service — and to actually operate it with real users, not finish it like a hackathon project. (Client project · planning and design from Nov 2025 – present, 3-person team — service name RumiClean, www.rumiclean.com)",
+        subItems: [
+          {
+            text: "전체 PM으로 기획·디자인·릴리스 우선순위를 잡고, 청소자용 화면 전체를 직접 개발했습니다.",
+            textEn:
+              "As overall PM I own planning, design, and release priorities, and built the entire cleaner-side frontend myself.",
+          },
+        ],
+      },
+    ],
+    role: [
+      {
+        title: "운영 PM — 우선순위와 배포 의사결정",
+        titleEn: "Operating PM — Priorities & Deployment Decisions",
+        items: [
+          {
+            text: "기능 개발부터 배포까지의 우선순위를 정하고, PR 170개가 넘는 저장소의 코드 리뷰·릴리스 머지·QA 프로세스를 관리합니다.",
+            textEn:
+              "Set priorities from feature work to deployment; manage code review, release merges, and QA across a 170+ PR repository.",
+            subItems: [
+              {
+                text: "3인 팀 규모에 맞춰 배포를 k3s/ArgoCD에서 Docker Compose + Caddy로 단순화해 유지보수 부담을 줄였고, 배포 중에도 화면이 유지되도록 정적 파일을 CDN(CloudFront)으로 분리했습니다.",
+                textEn:
+                  "Simplified deployment from k3s/ArgoCD to Docker Compose + Caddy to match a 3-person team, and served static files from a CDN (CloudFront) so pages stay up during deploys.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "프로세스 기반 화면 설계",
+        titleEn: "Process-Driven Screen Design",
+        items: [
+          {
+            text: "청소 작업의 생애주기를 '수락 대기 → 진행 예정 → 진행 중 → 검수 대기 → 정산 대기' 상태 머신으로 정의하고, 각 상태에서 화면과 입력을 도출했습니다.",
+            textEn:
+              "Defined the cleaning job lifecycle as a state machine (pending → scheduled → in progress → review → settlement) and derived each screen and its inputs from the states.",
+            subItems: [
+              {
+                text: "완료 인증에 전·후 사진 최소 5장 규칙을 두어, 호스트-청소자 간 '청소가 됐는가' 분쟁의 근거를 서비스가 보관하도록 정책으로 설계했습니다.",
+                textEn:
+                  "Completion requires at least 5 before/after photos — a policy that makes the service the custodian of evidence in host-cleaner disputes.",
+              },
+            ],
+          },
+          {
+            text: "카카오맵 지도 검색, Firebase 웹 푸시 등 운영에 필요한 연동을 구현하고, 아토믹 디자인·data-testid QA 규칙으로 팀 코드 일관성을 유지합니다.",
+            textEn:
+              "Implemented production integrations (Kakao Map search, Firebase Web Push) and keep team code consistent with atomic design and data-testid QA conventions.",
+          },
+        ],
+      },
+    ],
+    troubles: [
+      {
+        title: "3인 팀이 k3s를 유지하는 비용이 기능 개발 시간을 잠식했습니다",
+        titleEn: "Keeping k3s running was eating a three-person team's feature time",
+        problem: "배포를 k3s와 ArgoCD로 구성했지만, 3인 팀이 클러스터를 유지하는 일이 기능 개발과 QA 시간을 가져갔고 배포 중에는 화면이 잠깐씩 끊겼습니다.",
+        problemEn: "Deployment ran on k3s and ArgoCD, but maintaining a cluster took a three-person team's time away from features and QA, and pages dropped briefly during deploys.",
+        solution: "운영 복잡도를 팀 크기에 맞춰 Docker Compose와 Caddy로 단순화하고, 정적 파일은 CloudFront로 분리했습니다. 배포는 GitHub Actions 자동 배포로 유지했습니다.",
+        solutionEn: "I matched ops complexity to team size by simplifying to Docker Compose and Caddy, and moved static files to CloudFront. Deploys stayed automated with GitHub Actions.",
+        result: "배포 중에도 화면이 유지되고, 인프라 유지보수 대신 기능과 QA에 시간을 쓰게 됐습니다.",
+        resultEn: "Pages stay up during deploys, and the team spends its time on features and QA instead of infrastructure upkeep.",
+      },
+      {
+        title: "기능 목록부터 쓰면 화면 수만 늘어났습니다",
+        titleEn: "Starting from a feature list only multiplied screens",
+        problem: "호스트·청소자 양쪽 요구를 기능 목록으로 받으니 화면이 계속 늘었고, 어디까지 개발하고 QA할지 범위를 정하기 어려웠습니다.",
+        problemEn: "Taking both hosts' and cleaners' needs as a feature list kept adding screens, and it was hard to agree where development and QA should stop.",
+        solution: "청소 작업을 '수락 대기 → 진행 예정 → 진행 중 → 검수 대기 → 정산 대기' 상태 머신으로 먼저 확정하고, 상태마다 필요한 화면과 입력만 남겼습니다. 컴포넌트는 아토믹 디자인으로 나누고, 테스트가 잡을 요소에는 data-testid 규칙을 두었습니다.",
+        solutionEn: "I fixed the job as a state machine first (pending → scheduled → in progress → review → settlement) and kept only the screens and inputs each state needs. Components follow atomic design, and elements tests target follow a data-testid convention.",
+        result: "청소자 화면 전체가 이 흐름에서 나왔고, 개발·QA 범위도 상태 단위로 나눠 PR 170개 이상이 오간 저장소의 릴리스를 관리하고 있습니다.",
+        resultEn: "The whole cleaner app came out of this flow, and development and QA scope are split by state, which is how I manage releases on a repo with 170+ PRs.",
+      },
+    ],
+    results: [
+      {
+        text: "GitHub Actions 자동 배포로 www.rumiclean.com에 배포했습니다. 토스 결제 연동 전이라 아직 실사용자는 받지 않고 있습니다. 기획·디자인·개발·배포·QA까지 서비스의 전 과정을 처음으로 '운영'해보고 있는 프로젝트입니다.",
+        textEn:
+          "Deployed to www.rumiclean.com with GitHub Actions auto-deployment. Toss payments are not connected yet, so it does not take real users — my first project operating the full cycle: planning, design, development, deployment, and QA.",
+      },
+    ],
+    lessons: [
+      {
+        text: "운영 복잡도는 팀 크기에 맞춰야 한다고 판단했습니다. 3인 팀이 k3s를 유지하는 비용이 기능 개발 시간을 잠식해 Docker Compose와 Caddy로 단순화했고, 도구를 바꾸는 결정이 기능을 더하는 결정보다 서비스를 더 안정시켰습니다.",
+        textEn:
+          "Ops complexity has to match team size. Keeping k3s running was eating into a three-person team's feature time, so I simplified to Docker Compose and Caddy, and swapping tools stabilized the service more than adding features would have.",
+      },
+      {
+        text: "기능 목록을 먼저 쓰면 화면 수만 늘어납니다. 상태 흐름을 먼저 확정하니 필요한 화면과 입력이 저절로 추려졌고, 개발·QA 범위 협상도 이 흐름 위에서 이뤄졌습니다.",
+        textEn:
+          "Write the feature list first and you only multiply screens. Fixing the state flow first distilled the screens and inputs we actually needed — and scope negotiations happened on top of that flow.",
       },
     ],
   },
@@ -429,224 +618,6 @@ export const careerDetailSections: CareerDetailSection[] = [
   },
 
   {
-    id: "cleanb",
-    title: "외주 에어비앤비 청소 매칭 플랫폼 운영 — CleanB",
-    titleEn: "Operating a Client's Airbnb Cleaning Matching Platform — CleanB",
-    images: [
-      "/projects/cleanb/01.png",
-      "/projects/cleanb/03.png",
-      "/projects/cleanb/05.png",
-      "/projects/cleanb/07.png",
-    ],
-    diagrams: [
-      {
-        title: "청소 작업의 상태 흐름에서 화면을 도출했습니다",
-        titleEn: "Screens derived from the cleaning job's state flow",
-        steps: [
-          { label: "수락 대기", labelEn: "Pending", note: "작업 요청 목록 — 숙소·일정·옵션·보수 확인 후 수락/거절", noteEn: "Request list — check place, date, options, pay; accept or decline" },
-          { label: "진행 예정", labelEn: "Scheduled", note: "작업 상세 + 캘린더 — 출입 방법·숙소 정보 안내", noteEn: "Job detail + calendar — entry method and place info" },
-          { label: "진행 중", labelEn: "In progress", note: "진행 상태 표시 — 작업 중에는 추가 입력을 요구하지 않음", noteEn: "Progress shown — no extra input asked while working" },
-          { label: "검수 대기", labelEn: "Review", tag: "완료 조건", tagEn: "Completion rule", note: "전·후 사진 최소 5장 + 특이사항으로 완료 인증", noteEn: "Completion proven with 5+ before/after photos and notes" },
-          { label: "정산 대기", labelEn: "Settlement", note: "정산 상태 노출 — 청소자가 지급 시점을 화면에서 확인", noteEn: "Settlement status shown — cleaners see when they'll be paid" },
-        ],
-        caption: "기능 목록보다 상태 흐름을 먼저 확정했고, 각 상태에서 필요한 화면과 입력만 남겼습니다. 개발·QA 범위도 이 흐름을 기준으로 나눴습니다.",
-        captionEn: "I fixed the state flow before the feature list and kept only the screens and inputs each state needed. Dev and QA scope were split along the same flow.",
-      },
-    ],
-    background: [
-      {
-        text: "에어비앤비 호스트는 믿을 만한 청소 인력을 구하기 어렵고, 청소자는 일감을 안정적으로 받기 어렵습니다. 둘을 연결하는 매칭 서비스를 만들되, 해커톤처럼 만들고 끝나는 게 아니라 실제 사용자를 받는 서비스로 '운영'하는 것을 목표로 잡았습니다. (외주 · 2025.11 기획·디자인 시작 ~ 현재, 3인 팀 — 서비스명 루미클린(RumiClean), www.rumiclean.com)",
-        textEn:
-          "Airbnb hosts struggle to find reliable cleaners; cleaners struggle to get steady work. We set out to build a matching service — and to actually operate it with real users, not finish it like a hackathon project. (Client project · planning and design from Nov 2025 – present, 3-person team — service name RumiClean, www.rumiclean.com)",
-        subItems: [
-          {
-            text: "전체 PM으로 기획·디자인·릴리스 우선순위를 잡고, 청소자용 화면 전체를 직접 개발했습니다.",
-            textEn:
-              "As overall PM I own planning, design, and release priorities, and built the entire cleaner-side frontend myself.",
-          },
-        ],
-      },
-    ],
-    role: [
-      {
-        title: "운영 PM — 우선순위와 배포 의사결정",
-        titleEn: "Operating PM — Priorities & Deployment Decisions",
-        items: [
-          {
-            text: "기능 개발부터 배포까지의 우선순위를 정하고, PR 170개가 넘는 저장소의 코드 리뷰·릴리스 머지·QA 프로세스를 관리합니다.",
-            textEn:
-              "Set priorities from feature work to deployment; manage code review, release merges, and QA across a 170+ PR repository.",
-            subItems: [
-              {
-                text: "3인 팀 규모에 맞춰 배포를 k3s/ArgoCD에서 Docker Compose + Caddy로 단순화해 유지보수 부담을 줄였고, 배포 중에도 화면이 유지되도록 정적 파일을 CDN(CloudFront)으로 분리했습니다.",
-                textEn:
-                  "Simplified deployment from k3s/ArgoCD to Docker Compose + Caddy to match a 3-person team, and served static files from a CDN (CloudFront) so pages stay up during deploys.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "프로세스 기반 화면 설계",
-        titleEn: "Process-Driven Screen Design",
-        items: [
-          {
-            text: "청소 작업의 생애주기를 '수락 대기 → 진행 예정 → 진행 중 → 검수 대기 → 정산 대기' 상태 머신으로 정의하고, 각 상태에서 화면과 입력을 도출했습니다.",
-            textEn:
-              "Defined the cleaning job lifecycle as a state machine (pending → scheduled → in progress → review → settlement) and derived each screen and its inputs from the states.",
-            subItems: [
-              {
-                text: "완료 인증에 전·후 사진 최소 5장 규칙을 두어, 호스트-청소자 간 '청소가 됐는가' 분쟁의 근거를 서비스가 보관하도록 정책으로 설계했습니다.",
-                textEn:
-                  "Completion requires at least 5 before/after photos — a policy that makes the service the custodian of evidence in host-cleaner disputes.",
-              },
-            ],
-          },
-          {
-            text: "카카오맵 지도 검색, Firebase 웹 푸시 등 운영에 필요한 연동을 구현하고, 아토믹 디자인·data-testid QA 규칙으로 팀 코드 일관성을 유지합니다.",
-            textEn:
-              "Implemented production integrations (Kakao Map search, Firebase Web Push) and keep team code consistent with atomic design and data-testid QA conventions.",
-          },
-        ],
-      },
-    ],
-    results: [
-      {
-        text: "GitHub Actions 자동 배포로 www.rumiclean.com에 배포했습니다. 토스 결제 연동 전이라 아직 실사용자는 받지 않고 있습니다. 기획·디자인·개발·배포·QA까지 서비스의 전 과정을 처음으로 '운영'해보고 있는 프로젝트입니다.",
-        textEn:
-          "Deployed to www.rumiclean.com with GitHub Actions auto-deployment. Toss payments are not connected yet, so it does not take real users — my first project operating the full cycle: planning, design, development, deployment, and QA.",
-      },
-    ],
-    lessons: [
-      {
-        text: "운영 복잡도는 팀 크기에 맞춰야 한다고 판단했습니다. 3인 팀이 k3s를 유지하는 비용이 기능 개발 시간을 잠식해 Docker Compose와 Caddy로 단순화했고, 도구를 바꾸는 결정이 기능을 더하는 결정보다 서비스를 더 안정시켰습니다.",
-        textEn:
-          "Ops complexity has to match team size. Keeping k3s running was eating into a three-person team's feature time, so I simplified to Docker Compose and Caddy, and swapping tools stabilized the service more than adding features would have.",
-      },
-      {
-        text: "기능 목록을 먼저 쓰면 화면 수만 늘어납니다. 상태 흐름을 먼저 확정하니 필요한 화면과 입력이 저절로 추려졌고, 개발·QA 범위 협상도 이 흐름 위에서 이뤄졌습니다.",
-        textEn:
-          "Write the feature list first and you only multiply screens. Fixing the state flow first distilled the screens and inputs we actually needed — and scope negotiations happened on top of that flow.",
-      },
-    ],
-  },
-
-  {
-    id: "songeul",
-    title: "시니어를 위한 AI-OCR 모바일 뱅킹 — 손글 (SonGeul)",
-    titleEn: "Mobile Banking for Seniors, with AI-OCR — SonGeul",
-    images: [
-      "/projects/songeul/01.png",
-      "/projects/songeul/02.png",
-      "/projects/songeul/03.png",
-      "/projects/songeul/04.png",
-      "/projects/songeul/05.png",
-      "/projects/songeul/06.png",
-    ],
-    diagrams: [
-      {
-        title: "계좌번호를 손글씨로 적던 습관을 그대로 송금 화면으로 옮겼습니다",
-        titleEn: "The habit of jotting account numbers by hand became the transfer screen",
-        steps: [
-          { label: "기존 습관", labelEn: "Existing habit", note: "계좌번호를 손글씨로 메모 — 고령층이 이미 하는 행동을 입력 수단으로", noteEn: "Writing account numbers by hand — something seniors already do, used as input" },
-          { label: "① 촬영", labelEn: "① Capture", tag: "AI-OCR", tagEn: "AI-OCR", note: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델의 가중 투표로 인식", noteEn: "Weighted vote of CLOVA OCR, Google Vision, and our fine-tuned model" },
-          { label: "② 확인", labelEn: "② Confirm", tag: "사람 확인 1", tagEn: "Human check 1", note: "인식된 수취인·계좌·금액을 큰 글씨로 본인이 확인", noteEn: "The user checks the recognized payee, account, and amount in large type" },
-          { label: "③ 승인", labelEn: "③ Approve", tag: "사람 확인 2", tagEn: "Human check 2", note: "송금이 실행되기 전에 가족이 한 번 더 확인하는 2단계 인증", noteEn: "A family member confirms once more before the transfer runs" },
-          { label: "송금 완료", labelEn: "Sent", tag: "결과", tagEn: "Result", note: "착오송금의 주요 원인인 계좌번호 직접 입력이 흐름에서 사라짐", noteEn: "Typing the account number, the main cause of mistaken transfers, is gone" },
-        ],
-        caption: "OCR 인식에는 오차가 있다는 전제에서, 송금 전에 본인과 가족이 한 번씩 확인하는 단계를 두어 인증·보안 요건을 유지했습니다.",
-        captionEn: "Starting from the premise that OCR can misread, the user and a family member each confirm once before the transfer, so authentication and security requirements stay intact.",
-      },
-    ],
-    background: [
-      {
-        text: "65세 이상 고령층의 모바일뱅킹 이용률은 53.4%로, 비고령층(95%) 대비 41.6%p 낮습니다. 2030년에는 65세 이상 인구가 1,000만 명을 넘어설 전망이며(통계청 2024), 상당수 고령층이 금융 업무를 가족에 의존하고 있습니다.",
-        textEn:
-          "Mobile banking usage among seniors 65+ is 53.4% — 41.6%p below non-seniors (95%). The senior population is expected to exceed 10M by 2030 (Statistics Korea 2024), and many seniors rely on family for financial tasks.",
-        subItems: [
-          {
-            text: "은행 점포 폐쇄와 ATM 축소로 지방 소도시 금융 접근성이 급락했고, 착오송금의 주요 원인은 '계좌번호 입력 오류'입니다. 기존 앱은 인증 절차 복잡·보안 불안감으로 고령층 진입 장벽이 높습니다.",
-            textEn:
-              "Bank branch closures and ATM reductions have devastated rural financial access. The leading cause of erroneous transfers is 'account number input error.' Existing apps have high barriers for seniors due to complex authentication and security anxiety.",
-          },
-        ],
-      },
-      {
-        text: "2025 한국정보기술전략혁신학회(KIITI) 동계 학술대회 아이디어 및 앱 개발 콘테스트 출품 작품입니다. 6인 팀(프론트엔드 3 · 백엔드 3)의 PM으로 기획·AI 설계·프론트엔드 개발을 리드했습니다.",
-        textEn:
-          "Submitted to the 2025 KIITI Winter Academic Conference App Development Contest. I led a 6-person team (3 frontend · 3 backend) as PM across planning, AI architecture, and frontend development.",
-      },
-    ],
-    role: [
-      {
-        title: "서비스 기획 및 UX 설계",
-        titleEn: "Product Planning & UX Design",
-        items: [
-          {
-            text: "'입력 제거' 개념의 UX 플로우를 설계했습니다: 촬영(손글씨 메모) → 확인(AI-OCR 인식 결과) → 승인(가족 2단계 인증) 3단계로 단순화.",
-            textEn:
-              "Designed an 'eliminate input' UX flow: capture (handwritten memo) → confirm (AI-OCR result) → approve (family 2-step auth) — simplified to 3 steps.",
-            subItems: [
-              {
-                text: "SAFE 프레임워크(Security·Assets·Family Connect·Education) 기반 부가 기능 체계화 및 가족 연동 안전망 설계.",
-                textEn:
-                  "Systematized supporting features under SAFE framework (Security · Assets · Family Connect · Education) and designed family-linked safety net structure.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "AI 시스템 설계",
-        titleEn: "AI System Design",
-        items: [
-          {
-            text: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델 앙상블(가중 투표 방식)을 설계하여 OCR 인식률의 한계를 보완했습니다. 3단계 이상 패턴 감지 로드맵(Rule → 통계 → ML·Isolation Forest·LSTM)을 수립했습니다.",
-            textEn:
-              "Designed a CLOVA OCR + Google Vision + fine-tuned model ensemble (weighted voting) to compensate for OCR accuracy limitations. Established a 3-stage anomaly detection roadmap (Rule → Statistical → ML: Isolation Forest, LSTM).",
-          },
-          {
-            text: "LLM 역할을 NLU(텍스트 의미 구조화)와 XAI(위험 설명)로 분리 설계하고, 사용자 수정 데이터를 자동 학습하는 피드백 루프를 포함했습니다.",
-            textEn:
-              "Separated LLM roles into NLU (text semantic structuring) and XAI (risk explanation), and included a feedback loop for auto-learning from user correction data.",
-          },
-        ],
-      },
-      {
-        title: "비즈니스 모델 설계",
-        titleEn: "Business Model Design",
-        items: [
-          {
-            text: "통계청 고령 인구 통계를 기반으로 시장 규모를 직접 산정하고, 4개 수익원을 설계했습니다: B2C 구독 / B2B 라이선싱(금감원 고령자 서비스 의무화 규제 활용) / Financial Brokerage / Government Grants.",
-            textEn:
-              "Sized the market directly from Statistics Korea senior population data and designed 4 revenue streams: B2C subscription / B2B licensing (leveraging the FSS senior service mandate) / financial brokerage / government grants.",
-          },
-        ],
-      },
-    ],
-    results: [
-      {
-        text: "2025 KIITI 동계 학술대회 아이디어 및 앱 개발 콘테스트 우수상 수상.",
-        textEn:
-          "Won Excellence Award at the 2025 KIITI Winter Academic Conference App Development Contest.",
-      },
-    
-    ],
-    lessons: [
-      {
-        text: "시니어에게 새로운 사용법을 가르치는 대신, 계좌번호를 손글씨로 메모하던 습관을 그대로 인터페이스로 옮겼습니다. 새로운 조작을 익히게 하는 것보다 이미 익숙한 행동을 화면으로 옮기는 편이 시니어의 부담을 줄인다고 판단했습니다.",
-        textEn:
-          "Instead of teaching seniors a new way, I turned their habit of jotting account numbers by hand into the interface. I judged that carrying a familiar behavior onto the screen asks far less of seniors than teaching them new controls.",
-      },
-      {
-        text: "OCR 인식률에는 한계가 있다는 전제에서 설계를 시작했습니다. 인식 결과를 큰 글씨로 재확인하는 단계를 넣고 앙상블로 보정했습니다. 인식이 어긋나도 잘못된 송금으로 이어지지 않게 막는 확인 단계가 금융 서비스의 신뢰를 만든다고 판단했습니다.",
-        textEn:
-          "The design started from the premise that OCR has an error rate: an oversized confirmation step for the recognized number, plus ensemble correction. I judged that a confirmation step which stops a misread from becoming a wrong transfer is what builds trust in a financial service.",
-      },
-    ],
-  },
-
-  {
     // §G-6에서 추가 (2026-09-24). HANDOFF D-8의 '결정 기록' 중 상현 확인 전(※) 문장은 넣지 않고,
     // 화면에 실제로 반영된 동작만 적었다. 배운 점은 확인된 문장이 없어 비워 둔다(상세 페이지에서 섹션을 그리지 않음).
     id: "welcomekit",
@@ -776,115 +747,83 @@ export const careerDetailSections: CareerDetailSection[] = [
   },
 
   {
-    id: "dotori",
-    title: "시각장애인을 위한 점자 교육 플랫폼 — dotori",
-    titleEn: "Braille Education Platform for the Visually Impaired — dotori",
-    // 발표 자료(3조_발표자료.pdf)에서 2400px로 렌더링. 팀원 소개(p.21)와 인터뷰이 사진·실명(p.27)은 싣지 않는다
+    id: "songeul",
+    title: "시니어를 위한 AI-OCR 모바일 뱅킹 — 손글 (SonGeul)",
+    titleEn: "Mobile Banking for Seniors, with AI-OCR — SonGeul",
     images: [
-      "/projects/dotori/01.png",
-      "/projects/dotori/02.png",
-      "/projects/dotori/03.png",
-      "/projects/dotori/04.png",
-      "/projects/dotori/05.png",
-      "/projects/dotori/06.png",
-      "/projects/dotori/07.png",
-      "/projects/dotori/08.png",
-      "/projects/dotori/09.png",
+      "/projects/songeul/01.png",
+      "/projects/songeul/02.png",
+      "/projects/songeul/03.png",
+      "/projects/songeul/04.png",
+      "/projects/songeul/05.png",
+      "/projects/songeul/06.png",
     ],
-    background: [
+    diagrams: [
       {
-        text: "점자를 모르는 시각장애인이 90.4%(보건복지부)이고, 등록 시각장애인은 1990년 14,618명에서 2020년 252,324명으로 늘었습니다(통계청). 점자 교구는 150만~777만 원대라 학습을 시작하기조차 어려웠고, 월 9,900원부터 시작하는 구독형 앱으로 비용 문턱을 낮추는 방향을 잡았습니다.",
-        textEn:
-          "90.4% of visually impaired people cannot read Braille (Ministry of Health and Welfare), and registered visually impaired people grew from 14,618 in 1990 to 252,324 in 2020 (Statistics Korea). Braille learning devices cost ₩1.5M–7.77M, so even starting was hard; we set out to lower that barrier with a subscription app from ₩9,900 a month.",
-      },
-      {
-        text: "시각장애인의 점자 교육 접근성과 학습 지속성 문제를 창업캠프 과제로 정의하고, 사회적 가치와 수익 모델을 함께 설계했습니다. 2025.06 창업캠프에서 시작해 11월 창업 BM 경진대회까지 세 차례 피칭을 거치며 고도화했습니다.",
-        textEn:
-          "Framed Braille education access and learning continuity for the visually impaired as a startup camp challenge, designing both social impact and revenue logic. Started at the June 2025 startup camp and refined it through three pitches up to the November startup BM competition.",
-      },
-    ],
-    role: [
-      {
-        title: "기획·IR 피칭 · 프론트엔드",
-        titleEn: "Planning, IR Pitching & Frontend",
-        items: [
-          {
-            text: "서비스 콘셉트·타겟·수익 모델을 정리하고 IR 피칭 경진대회에서 발표를 진행했습니다.",
-            textEn:
-              "Structured concept, target, and revenue model and delivered the pitch at the IR competition.",
-          },
+        title: "계좌번호를 손글씨로 적던 습관을 그대로 송금 화면으로 옮겼습니다",
+        titleEn: "The habit of jotting account numbers by hand became the transfer screen",
+        steps: [
+          { label: "기존 습관", labelEn: "Existing habit", note: "계좌번호를 손글씨로 메모 — 고령층이 이미 하는 행동을 입력 수단으로", noteEn: "Writing account numbers by hand — something seniors already do, used as input" },
+          { label: "① 촬영", labelEn: "① Capture", tag: "AI-OCR", tagEn: "AI-OCR", note: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델의 가중 투표로 인식", noteEn: "Weighted vote of CLOVA OCR, Google Vision, and our fine-tuned model" },
+          { label: "② 확인", labelEn: "② Confirm", tag: "사람 확인 1", tagEn: "Human check 1", note: "인식된 수취인·계좌·금액을 큰 글씨로 본인이 확인", noteEn: "The user checks the recognized payee, account, and amount in large type" },
+          { label: "③ 승인", labelEn: "③ Approve", tag: "사람 확인 2", tagEn: "Human check 2", note: "송금이 실행되기 전에 가족이 한 번 더 확인하는 2단계 인증", noteEn: "A family member confirms once more before the transfer runs" },
+          { label: "송금 완료", labelEn: "Sent", tag: "결과", tagEn: "Result", note: "착오송금의 주요 원인인 계좌번호 직접 입력이 흐름에서 사라짐", noteEn: "Typing the account number, the main cause of mistaken transfers, is gone" },
         ],
+        caption: "OCR 인식에는 오차가 있다는 전제에서, 송금 전에 본인과 가족이 한 번씩 확인하는 단계를 두어 인증·보안 요건을 유지했습니다.",
+        captionEn: "Starting from the premise that OCR can misread, the user and a family member each confirm once before the transfer, so authentication and security requirements stay intact.",
       },
-    ],
-    results: [
-      {
-        text: "2025 창업캠프 실전 IR 피칭 경진대회 최우수상 (한국외대 글로벌창업지원단, 2025.06)",
-        textEn: "Grand Prize, 2025 HUFS Startup Camp IR Pitching Competition (Jun 2025)",
-      },
-      {
-        text: "\"PICK YOUR IDEA\" IR PITCHING 우수상 (서울 AI 허브 / MOVE, 2025.07)",
-        textEn: "Excellence Award, \"PICK YOUR IDEA\" IR Pitching (Seoul AI Hub / MOVE, Jul 2025)",
-      },
-      {
-        text: "G-RISE × 경상대학 2025 창업 비즈니스 모델 경진대회 대상 (한국외대 경상대학, 2025.11)",
-        textEn: "Grand Prize, G-RISE × College of Business 2025 Startup BM Competition (Nov 2025)",
-      },
-    ],
-    lessons: [
-      {
-        text: "사회적 가치만 강조하면 공감에 그치고, 수익 모델만 강조하면 설득력이 떨어진다고 판단했습니다. 임팩트 지표와 수익 모델을 같은 슬라이드에 올렸을 때 심사위원의 반응이 달라졌습니다.",
-        textEn:
-          "I judged that social value alone earns sympathy and revenue alone sounds cold. When the impact metrics and the revenue model shared one slide, the judges' response changed.",
-      },
-    ],
-  },
-
-  {
-    id: "neurosight",
-    title: "마취 시술 보조 서비스 — NeuroSight",
-    titleEn: "Anesthesia Guidance System — NeuroSight",
-    images: [
-      "/projects/neurosight/01.png",
-      "/projects/neurosight/02.png",
-      "/projects/neurosight/03.png",
-      "/projects/neurosight/04.png",
-      "/projects/neurosight/05.png",
-      "/projects/neurosight/06.png",
-      "/projects/neurosight/07.png",
     ],
     background: [
       {
-        text: "마취는 사고가 곧 생명과 직결되는 고위험 의료행위인데, 사고 상당수가 마취 비전문의 시술 환경에서 발생합니다. 전문 마취과 의사의 부족과 높은 이탈률이 근본 원인입니다.",
+        text: "65세 이상 고령층의 모바일뱅킹 이용률은 53.4%로, 비고령층(95%) 대비 41.6%p 낮습니다. 2030년에는 65세 이상 인구가 1,000만 명을 넘어설 전망이며(통계청 2024), 상당수 고령층이 금융 업무를 가족에 의존하고 있습니다.",
         textEn:
-          "Anesthesia is a high-risk procedure where incidents directly threaten lives — and a large share of incidents occur in settings without anesthesia specialists. A chronic shortage and high turnover of anesthesiologists is the structural root cause.",
+          "Mobile banking usage among seniors 65+ is 53.4% — 41.6%p below non-seniors (95%). The senior population is expected to exceed 10M by 2030 (Statistics Korea 2024), and many seniors rely on family for financial tasks.",
         subItems: [
           {
-            text: "기존 B-mode 초음파는 주관적 해석에 의존하며 정량적 조직 분석과 마취제 확산 범위 실시간 파악이 불가합니다.",
+            text: "은행 점포 폐쇄와 ATM 축소로 지방 소도시 금융 접근성이 급락했고, 착오송금의 주요 원인은 '계좌번호 입력 오류'입니다. 기존 앱은 인증 절차 복잡·보안 불안감으로 고령층 진입 장벽이 높습니다.",
             textEn:
-              "Existing B-mode ultrasound relies on subjective interpretation, with no quantitative tissue analysis or real-time anesthetic diffusion tracking.",
+              "Bank branch closures and ATM reductions have devastated rural financial access. The leading cause of erroneous transfers is 'account number input error.' Existing apps have high barriers for seniors due to complex authentication and security anxiety.",
           },
         ],
       },
       {
-        text: "GRAFFITI 2025: AI Startup (KAIST ICISTS 주최) 해커톤으로, 6인 팀에서 비즈니스 아이디어 기획자 역할을 맡아 4일간 진행했습니다. 배럴아이의 정량적 초음파(QUS) 기술을 마취 분야에 적용하는 컨셉을 설계했습니다.",
+        text: "2025 한국정보기술전략혁신학회(KIITI) 동계 학술대회 아이디어 및 앱 개발 콘테스트 출품 작품입니다. 6인 팀(프론트엔드 3 · 백엔드 3)의 PM으로 기획·AI 설계·프론트엔드 개발을 리드했습니다.",
         textEn:
-          "GRAFFITI 2025: AI Startup (hosted by KAIST ICISTS) hackathon — served as business idea planner in a 6-person team over 4 days. Designed the concept of applying Barrel Eye's QUS technology to anesthesia.",
+          "Submitted to the 2025 KIITI Winter Academic Conference App Development Contest. I led a 6-person team (3 frontend · 3 backend) as PM across planning, AI architecture, and frontend development.",
       },
     ],
     role: [
       {
-        title: "시장 조사 및 문제 분석",
-        titleEn: "Market Research & Problem Analysis",
+        title: "서비스 기획 및 UX 설계",
+        titleEn: "Product Planning & UX Design",
         items: [
           {
-            text: "마취 의료 사고 현황 및 비전문의 의존 문제의 원인을 분석했습니다. 글로벌 의료 AI 시장의 성장성을 조사하고 진입 기회를 도출했습니다.",
+            text: "'입력 제거' 개념의 UX 플로우를 설계했습니다: 촬영(손글씨 메모) → 확인(AI-OCR 인식 결과) → 승인(가족 2단계 인증) 3단계로 단순화.",
             textEn:
-              "Analyzed anesthesia incident trends and the structural over-reliance on non-specialists. Researched the growth of the global medical AI market and identified entry opportunities.",
+              "Designed an 'eliminate input' UX flow: capture (handwritten memo) → confirm (AI-OCR result) → approve (family 2-step auth) — simplified to 3 steps.",
+            subItems: [
+              {
+                text: "SAFE 프레임워크(Security·Assets·Family Connect·Education) 기반 부가 기능 체계화 및 가족 연동 안전망 설계.",
+                textEn:
+                  "Systematized supporting features under SAFE framework (Security · Assets · Family Connect · Education) and designed family-linked safety net structure.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "AI 시스템 설계",
+        titleEn: "AI System Design",
+        items: [
+          {
+            text: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델 앙상블(가중 투표 방식)을 설계하여 OCR 인식률의 한계를 보완했습니다. 3단계 이상 패턴 감지 로드맵(Rule → 통계 → ML·Isolation Forest·LSTM)을 수립했습니다.",
+            textEn:
+              "Designed a CLOVA OCR + Google Vision + fine-tuned model ensemble (weighted voting) to compensate for OCR accuracy limitations. Established a 3-stage anomaly detection roadmap (Rule → Statistical → ML: Isolation Forest, LSTM).",
           },
           {
-            text: "배럴아이 QUS 기술의 동향을 연구하고 마취 분야 적용 가능성을 검토하여 세계 최초 정량적 초음파 기반 마취 보조 시스템이라는 포지셔닝을 수립했습니다.",
+            text: "LLM 역할을 NLU(텍스트 의미 구조화)와 XAI(위험 설명)로 분리 설계하고, 사용자 수정 데이터를 자동 학습하는 피드백 루프를 포함했습니다.",
             textEn:
-              "Researched Barrel Eye's QUS technology trends and evaluated applicability to anesthesia, establishing positioning as the world's first QUS-based anesthesia guidance system.",
+              "Separated LLM roles into NLU (text semantic structuring) and XAI (risk explanation), and included a feedback loop for auto-learning from user correction data.",
           },
         ],
       },
@@ -893,151 +832,119 @@ export const careerDetailSections: CareerDetailSection[] = [
         titleEn: "Business Model Design",
         items: [
           {
-            text: "B2B SaaS(병원 대상 구독) + OEM 파트너십(GE·Philips·Siemens 등 의료기기 제조사 대상 기술 라이선스) 하이브리드 수익 모델을 설계했습니다.",
+            text: "통계청 고령 인구 통계를 기반으로 시장 규모를 직접 산정하고, 4개 수익원을 설계했습니다: B2C 구독 / B2B 라이선싱(금감원 고령자 서비스 의무화 규제 활용) / Financial Brokerage / Government Grants.",
             textEn:
-              "Designed a hybrid revenue model: B2B SaaS (hospital subscriptions) + OEM partnership (technology licensing to medical device manufacturers such as GE, Philips, and Siemens).",
-            subItems: [
-              {
-                text: "OEM 파트너십으로 FDA·CE 규제 리스크를 분산하는 시장 진입 전략을 수립했습니다. Phase 1(북미 3% 점유율) → Phase 2(OEM 글로벌 확대) → Phase 3(아시아·유럽).",
-                textEn:
-                  "Established a market entry strategy that distributes FDA/CE regulatory risk through OEM partnerships. Phase 1 (3% North American market share) → Phase 2 (global OEM expansion) → Phase 3 (Asia/Europe).",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "솔루션 컨셉 설계 및 피칭",
-        titleEn: "Solution Concept Design & Pitching",
-        items: [
-          {
-            text: "CNN + PINN + Transformer 멀티모달 AI 아키텍처 활용 방안을 연구하고, 의료진 페르소나와 User Scenario를 작성했습니다. 해커톤 발표자료를 제작하고 아이디어 피칭을 직접 담당했습니다.",
-            textEn:
-              "Researched CNN + PINN + Transformer multimodal AI architecture use cases, defined medical personnel persona and user scenarios. Created pitch deck and personally delivered the idea pitch.",
+              "Sized the market directly from Statistics Korea senior population data and designed 4 revenue streams: B2C subscription / B2B licensing (leveraging the FSS senior service mandate) / financial brokerage / government grants.",
           },
         ],
       },
     ],
     results: [
       {
-        text: "4일 안에 의료 AI 기술·규제·시장을 학습하고, FDA/CE 규제를 수익원으로 뒤집은 OEM 하이브리드 사업화 전략까지 제안했습니다. (GRAFFITI 2025 AI Startup, KAIST ICISTS 주최)",
+        text: "2025 KIITI 동계 학술대회 아이디어 및 앱 개발 콘테스트 우수상 수상.",
         textEn:
-          "In 4 days, learned medical AI technology, regulation, and market dynamics, and proposed an OEM hybrid commercialization strategy that turned FDA/CE regulation into a revenue source. (GRAFFITI 2025 AI Startup, hosted by KAIST ICISTS)",
+          "Won Excellence Award at the 2025 KIITI Winter Academic Conference App Development Contest.",
       },
+    
     ],
     lessons: [
       {
-        text: "의료 AI는 4일짜리 해커톤으로 기술을 이해할 수 있는 분야가 아니었습니다. 대신 '마취 사고'라는 문제에서 출발해 누가, 언제, 왜 위험해지는지를 파고들었고, 기술(QUS)은 그 답에 맞춰 배치했습니다. 문제가 선명하면 기술 이해가 얕아도 기획이 섭니다.",
+        text: "시니어에게 새로운 사용법을 가르치는 대신, 계좌번호를 손글씨로 메모하던 습관을 그대로 인터페이스로 옮겼습니다. 새로운 조작을 익히게 하는 것보다 이미 익숙한 행동을 화면으로 옮기는 편이 시니어의 부담을 줄인다고 판단했습니다.",
         textEn:
-          "Four days isn't enough to understand medical AI tech. So we started from the problem — who gets hurt, when, and why — and placed the technology (QUS) around that answer. A sharp problem carries a plan even when tech depth is shallow.",
+          "Instead of teaching seniors a new way, I turned their habit of jotting account numbers by hand into the interface. I judged that carrying a familiar behavior onto the screen asks far less of seniors than teaching them new controls.",
       },
       {
-        text: "FDA/CE 규제를 리스크 목록에 넣는 대신 OEM 파트너십의 수익원으로 뒤집어 제시했을 때 반응이 달라졌습니다. 규제는 피하는 게 아니라 설계에 넣는 것이었습니다.",
+        text: "OCR 인식률에는 한계가 있다는 전제에서 설계를 시작했습니다. 인식 결과를 큰 글씨로 재확인하는 단계를 넣고 앙상블로 보정했습니다. 인식이 어긋나도 잘못된 송금으로 이어지지 않게 막는 확인 단계가 금융 서비스의 신뢰를 만든다고 판단했습니다.",
         textEn:
-          "The response changed when we flipped FDA/CE regulation from a risk item into an OEM revenue source. Regulation isn't something to dodge — it's something to design in.",
+          "The design started from the premise that OCR has an error rate: an oversized confirmation step for the recognized number, plus ensemble correction. I judged that a confirmation step which stops a misread from becoming a wrong transfer is what builds trust in a financial service.",
       },
     ],
   },
 
   {
-    id: "tcp",
+    id: "rzi",
+    title: "알뜰 지출관리 플랫폼 — RZi",
+    titleEn: "Smart Expense Manager — RZi",
     images: [
-      "/projects/tcp/01.png",
-      "/projects/tcp/02.png",
-      "/projects/tcp/03.png",
-      "/projects/tcp/04.png",
-      "/projects/tcp/05.png",
-      "/projects/tcp/06.png",
+      "/projects/rzi/01.png",
+      "/projects/rzi/02.png",
+      "/projects/rzi/03.png",
+      "/projects/rzi/04.png",
+      "/projects/rzi/05.png",
+      "/projects/rzi/06.png",
     ],
-    title: "약관 위험 알림 서비스 — TCP",
-    titleEn: "Terms-of-Service Risk Alerts — TCP",
     background: [
       {
-        text: "131명 설문조사 결과 93%가 약관을 제대로 읽지 않는다는 것을 확인했습니다. SKT 유심 해킹 사태를 계기로 약관을 읽지 않아 발생하는 소비자 피해가 사회적 문제로 부각되었습니다.",
+        text: "K-HTML 해커톤(서울시 동대문구청 × 경희대학교 공동 주최)의 과제로 시작했습니다. 동대문구에 21,343명의 인구가 신규 유입될 것으로 예상되지만, 청년층의 전통시장 이용률은 8.2%에 불과함을 데이터로 확인했습니다.",
         textEn:
-          "A survey of 131 people revealed that 93% don't read terms of service properly. The SKT SIM hacking incident brought consumer damage from unread ToS to the forefront as a social issue.",
+          "Initiated as a challenge for the K-HTML Hackathon (co-hosted by Seoul Dongdaemun-gu and KHU). Data confirmed that while 21,343 new residents are expected to move into Dongdaemun-gu, traditional market usage among youth stands at just 8.2%.",
         subItems: [
           {
-            text: "국내에는 아직 자동화된 실시간 약관 분석 서비스가 없다는 점을 확인하고, 그 공백이 왜 생겼는지부터 검증했습니다.",
+            text: "전통시장 6대 불편 요소를 분석했습니다: 가격 불투명, 복잡한 동선, 현금결제 의존, 재고 정보 부재, 디지털 검색 불가, 주차 불편. 이 중 '가격 불투명'과 '상품 탐색 어려움'이 핵심 진입 장벽임을 파악했습니다.",
             textEn:
-              "Confirmed that no automated real-time ToS analysis service exists in Korea yet — and started by verifying why that gap exists.",
+              "Analyzed 6 major pain points of traditional markets: price opacity, complex layout, cash-only payment, no inventory info, unsearchable online, poor parking. Identified 'price opacity' and 'product discovery difficulty' as the core entry barriers.",
           },
         ],
       },
       {
-        text: "기존 약관 검토 서비스는 사용자가 직접 텍스트를 복사해 붙여넣는 방식으로, 복잡한 법률 용어를 쉽게 이해할 수 있는 수단이 없었습니다. 백그라운드에서 자동으로 감지·분석하는 것이 차별점이 될 수 있다고 판단했습니다.",
+        text: "B2C 개인 사용자 → B2G 지자체 협력 모델로 확장하는 3단계 전략을 수립했습니다. 전통시장 상인회와의 파트너십을 통해 데이터를 축적하고, 지자체에 지역 경제 활성화 인사이트를 제공하는 모델을 구상했습니다.",
         textEn:
-          "Existing review services required users to manually copy-paste text, with no tools to understand complex legal language. Concluded that background auto-detection and analysis would be the key differentiator.",
+          "Established a 3-phase expansion strategy: B2C individual users → B2G local government partnership. Conceived a model to accumulate data through merchant association partnerships and provide local economic revitalization insights to local governments.",
       },
     ],
     role: [
       {
-        title: "서비스 기획 및 BM 설계",
-        titleEn: "Product Planning & Business Model Design",
+        title: "기획 및 프로덕트 설계",
+        titleEn: "Planning & Product Design",
         items: [
           {
-            text: "스크린 오버레이 기술을 활용해 사용자가 약관에 동의하는 순간 백그라운드에서 자동으로 내용을 감지하고 분석하는 시스템을 기획했습니다.",
+            text: "OCR 기술과 AI 추천을 결합한 종합 쇼핑 도우미 PWA의 전체 서비스 플로우를 기획했습니다.",
             textEn:
-              "Planned a system that automatically detects and analyzes ToS content in the background at the moment of user agreement, using screen overlay technology.",
+              "Planned the complete service flow of a comprehensive shopping assistant PWA combining OCR technology and AI recommendations.",
             subItems: [
               {
-                text: "BERT·GPT 기반 NLP 모델을 법률 특화 데이터셋으로 미세조정하여 핵심 조항과 위험 요소를 자동 추출하는 기술 방향성을 설계했습니다.",
+                text: "실시간 가격비교(전통시장 vs 대형마트), OCR 영수증 스캔, Google Maps 연동 경로안내, AI 상품 대체 추천 등 4가지 핵심 기능을 정의했습니다.",
                 textEn:
-                  "Designed the technical direction: fine-tuning BERT/GPT-based NLP models on legal-domain datasets to auto-extract key clauses and risk factors.",
-              },
-              {
-                text: "복잡한 약관을 쉬운 언어로 요약하고, 위험 조항을 시각적으로 강조(하이라이트·경고 아이콘)하는 UX를 기획했습니다.",
-                textEn:
-                  "Planned UX to summarize complex ToS in plain language and visually highlight risky clauses with highlights and warning icons.",
+                  "Defined 4 core features: real-time price comparison (traditional market vs. large mart), OCR receipt scanning, Google Maps-integrated navigation, and AI alternative product recommendations.",
               },
             ],
-          },
-          {
-            text: "5가지 수익원을 구조화했습니다: 프리미엄 구독제(B2C), 기업용 API(B2B), 법무법인·핀테크 파트너십, 익명화 데이터 인사이트 판매, 집단대응 중개 서비스.",
-            textEn:
-              "Structured 5 revenue streams: premium subscription (B2C), enterprise API (B2B), law firm & fintech partnerships, anonymized data insight sales, and collective action brokerage.",
           },
         ],
       },
       {
-        title: "시장 조사 및 경쟁 분석",
-        titleEn: "Market Research & Competitive Analysis",
+        title: "아키텍처 설계 및 개발 리드",
+        titleEn: "Architecture Design & Development Lead",
         items: [
           {
-            text: "국내외 리걸테크 서비스(DoNotPay, Ironclad 등)를 벤치마킹하여 백그라운드 자동 감지 기능의 차별성을 도출했습니다.",
+            text: "Next.js 15 + React 19 기반 PWA 아키텍처를 설계하여 오프라인 지원, 홈 화면 추가, 빠른 로딩 등 PWA 핵심 기능을 구현했습니다.",
             textEn:
-              "Benchmarked domestic and overseas legaltech services (DoNotPay, Ironclad, etc.) to establish the differentiation of background auto-detection.",
+              "Designed a Next.js 15 + React 19-based PWA architecture and implemented core PWA features: offline support, home screen installation, and fast loading.",
           },
           {
-            text: "주요 타겟을 '디지털 서비스를 자주 구독하는 20~40대'로 설정하고, B2B 확장 단계에서 금융·구독 플랫폼 기업을 주요 파트너로 정의했습니다.",
+            text: "팀 전체 기획부터 개발, 디자인, 팀 관리까지 프로젝트 리드 역할을 수행했습니다.",
             textEn:
-              "Defined primary target as '20s–40s who frequently subscribe to digital services,' with financial and subscription platform companies as key B2B partners in the expansion phase.",
+              "Served as project lead covering the entire team — from planning and development to design and team management.",
           },
         ],
       },
     ],
     results: [
       {
-        text: "교내 아이디어톤 최우수상 수상 — 직접 진행한 131명 설문 데이터(93%)로 문제의 심각성과 사업성을 입증했습니다.",
+        text: "K-HTML 해커톤(2025.07.16 ~ 2025.08.30)을 수료하고, OCR+AI+Google Maps가 통합된 실용적인 지역사회 문제 해결 서비스를 완성했습니다.",
         textEn:
-          "Won campus Ideathon Grand Prize — our own 131-person survey data (93%) proved both the severity of the problem and the business case.",
-      },
-      {
-        text: "전국 해커톤 2차 예선 진출 — 기술 구현 가능성(BERT/GPT fine-tuning, 스크린 오버레이)과 수익 모델의 구체성이 심사위원에게 높은 평가를 받았습니다.",
-        textEn:
-          "Advanced to 2nd round of national hackathon — technical feasibility (BERT/GPT fine-tuning, screen overlay) and specificity of the revenue model received high marks from judges.",
+          "Completed K-HTML Hackathon (Jul 16 – Aug 30, 2025) and delivered a practical community service integrating OCR, AI, and Google Maps.",
       },
     ],
     lessons: [
       {
-        text: "131명 설문에서 나온 '93%가 약관을 읽지 않는다'는 수치를 발표의 출발점으로 삼았습니다. 문제의 크기는 주장보다 설문 데이터로 보여줄 때 심사위원에게 더 분명하게 전달된다고 판단했습니다.",
+        text: "기능 목록보다 '가격 비교 → 탐색 → 구매'라는 행동 흐름을 먼저 그렸고, 그 흐름에 필요한 기능만 남겼습니다. OCR과 AI는 이 흐름을 매끄럽게 만드는 수단으로 배치했습니다.",
         textEn:
-          "We built the pitch on one figure from our 131-person survey: '93% don't read the terms.' I judged that survey data shows the size of a problem to judges more clearly than any claim.",
+          "I drew the behavior flow first — compare price, explore, buy — and kept only the features that flow needed. OCR and AI were placed as the means to make that flow smooth.",
       },
       {
-        text: "'왜 지금까지 이런 서비스가 없었지?'를 파는 과정에서 더 많이 배웠습니다. 없는 데는 이유가 있었고(법률 해석 리스크, 약관 텍스트 접근성), 그 이유를 하나씩 반박할 수 있을 때에만 블루오션이라 부를 수 있었습니다.",
+        text: "지자체·상인회·소비자가 원하는 게 전부 달랐습니다. 셋을 동시에 만족시키는 기능은 없어서, B2C에서 시작해 B2G로 넓히는 3단계 확장 전략으로 순서를 나눠 풀었습니다.",
         textEn:
-          "Digging into 'why doesn't this exist yet?' taught us more. There were reasons (legal-interpretation risk, access to terms text) — and only after rebutting each one could we call it a blue ocean.",
+          "The district office, merchants, and consumers all wanted different things. No single feature satisfied all three, so we sequenced it: a three-stage expansion from B2C to B2G.",
       },
     ],
   },
@@ -1138,74 +1045,6 @@ export const careerDetailSections: CareerDetailSection[] = [
         text: "시장 테스트에서 38.5%가 가격이 부담된다고 답해 구독료를 내렸습니다. 26명 규모의 테스트였지만 가설보다 사용자 응답을 우선해 가격을 조정했습니다.",
         textEn:
           "38.5% of testers said the price was a burden, so we lowered the subscription fee. It was a 26-person test, but we put user responses ahead of our own hypothesis and adjusted the price.",
-      },
-    ],
-  },
-
-  {
-    id: "hai",
-    title: "개인 맞춤형 커리어 멘토링 서비스 — hai",
-    titleEn: "Personalized Career Mentoring Service — hai",
-    images: [
-      "/projects/hai/01.png",
-      "/projects/hai/02.png",
-      "/projects/hai/03.png",
-      "/projects/hai/04.png",
-      "/projects/hai/05.png",
-      "/projects/hai/06.png",
-    ],
-    background: [
-      {
-        text: "취업 준비생들이 자신의 강점과 적합한 직무를 파악하지 못한 채 무분별하게 지원하는 문제, 그리고 1:1 커리어 멘토링을 받기 어려운 비용·접근성 문제를 확인했습니다.",
-        textEn:
-          "Identified that job seekers often apply indiscriminately without knowing their strengths or best-fit roles, and face cost and accessibility barriers to 1:1 career mentoring.",
-        subItems: [
-          {
-            text: "CHALLKATHON(한국외국어대학교 컴퓨터공학부 × UMC 공동 주최 해커톤)에서 기획·개발한 프로젝트입니다. 제한된 시간 안에 빠르게 기획하고 구현하는 능력이 요구되는 환경이었습니다.",
-            textEn:
-              "Planned and developed at CHALLKATHON (joint hackathon by HUFS CS Dept × UMC). An environment requiring rapid planning and implementation within a constrained timeframe.",
-          },
-        ],
-      },
-    ],
-    role: [
-      {
-        title: "기획 및 프론트엔드 개발",
-        titleEn: "Planning & Frontend Development",
-        items: [
-          {
-            text: "사용자의 경험·역량·관심사를 입력받아 AI가 맞춤형 커리어 로드맵과 취업 전략을 제안하는 서비스 흐름을 기획했습니다.",
-            textEn:
-              "Planned a service structure where AI proposes personalized career roadmaps and job strategies based on user-inputted experience, competencies, and interests.",
-            subItems: [
-              {
-                text: "AI 멘토와의 대화형 인터페이스를 설계하여 딱딱한 분석 결과 대신 자연스러운 멘토링 경험을 제공하는 UX를 기획했습니다.",
-                textEn:
-                  "Designed a conversational interface with an AI mentor so the guidance reads as a natural mentoring conversation instead of a rigid analytical report.",
-              },
-            ],
-          },
-          {
-            text: "해커톤의 시간 제약 안에서 기획·설계·개발 우선순위를 빠르게 결정하고 팀 전체의 방향을 이끌었습니다.",
-            textEn:
-              "Quickly prioritized planning, design, and development within hackathon time constraints and led the overall team direction.",
-          },
-        ],
-      },
-    ],
-    results: [
-      {
-        text: "해커톤 기간 안에 동작하는 AI 커리어 멘토링 서비스를 완성해 배포했습니다. (CHALLKATHON)",
-        textEn:
-          "Shipped a working AI career mentoring service within the hackathon period. (CHALLKATHON)",
-      },
-    ],
-    lessons: [
-      // TODO(상현): 실제로 잘라낸 기능이 뭐였는지 기억나면 괄호로 추가
-      {
-        text: "마감 몇 시간을 앞두고 기능을 더 붙일지, 있는 걸 다듬을지 골라야 했습니다. 붙이고 싶은 기능 목록을 지우고 핵심 플로우 하나를 끝까지 다듬는 쪽을 택했고, 그게 완성도로 이어졌습니다.",
-        textEn:
-          "Hours before the deadline we had to choose: add features or polish what exists. We deleted the wishlist and polished one core flow to the end — that became the finish quality.",
       },
     ],
   },
@@ -1315,148 +1154,69 @@ export const careerDetailSections: CareerDetailSection[] = [
   },
 
   {
-    id: "rzi",
-    title: "알뜰 지출관리 플랫폼 — RZi",
-    titleEn: "Smart Expense Manager — RZi",
+    id: "hai",
+    title: "개인 맞춤형 커리어 멘토링 서비스 — hai",
+    titleEn: "Personalized Career Mentoring Service — hai",
     images: [
-      "/projects/rzi/01.png",
-      "/projects/rzi/02.png",
-      "/projects/rzi/03.png",
-      "/projects/rzi/04.png",
-      "/projects/rzi/05.png",
-      "/projects/rzi/06.png",
+      "/projects/hai/01.png",
+      "/projects/hai/02.png",
+      "/projects/hai/03.png",
+      "/projects/hai/04.png",
+      "/projects/hai/05.png",
+      "/projects/hai/06.png",
     ],
     background: [
       {
-        text: "K-HTML 해커톤(서울시 동대문구청 × 경희대학교 공동 주최)의 과제로 시작했습니다. 동대문구에 21,343명의 인구가 신규 유입될 것으로 예상되지만, 청년층의 전통시장 이용률은 8.2%에 불과함을 데이터로 확인했습니다.",
+        text: "취업 준비생들이 자신의 강점과 적합한 직무를 파악하지 못한 채 무분별하게 지원하는 문제, 그리고 1:1 커리어 멘토링을 받기 어려운 비용·접근성 문제를 확인했습니다.",
         textEn:
-          "Initiated as a challenge for the K-HTML Hackathon (co-hosted by Seoul Dongdaemun-gu and KHU). Data confirmed that while 21,343 new residents are expected to move into Dongdaemun-gu, traditional market usage among youth stands at just 8.2%.",
+          "Identified that job seekers often apply indiscriminately without knowing their strengths or best-fit roles, and face cost and accessibility barriers to 1:1 career mentoring.",
         subItems: [
           {
-            text: "전통시장 6대 불편 요소를 분석했습니다: 가격 불투명, 복잡한 동선, 현금결제 의존, 재고 정보 부재, 디지털 검색 불가, 주차 불편. 이 중 '가격 불투명'과 '상품 탐색 어려움'이 핵심 진입 장벽임을 파악했습니다.",
+            text: "CHALLKATHON(한국외국어대학교 컴퓨터공학부 × UMC 공동 주최 해커톤)에서 기획·개발한 프로젝트입니다. 제한된 시간 안에 빠르게 기획하고 구현하는 능력이 요구되는 환경이었습니다.",
             textEn:
-              "Analyzed 6 major pain points of traditional markets: price opacity, complex layout, cash-only payment, no inventory info, unsearchable online, poor parking. Identified 'price opacity' and 'product discovery difficulty' as the core entry barriers.",
-          },
-        ],
-      },
-      {
-        text: "B2C 개인 사용자 → B2G 지자체 협력 모델로 확장하는 3단계 전략을 수립했습니다. 전통시장 상인회와의 파트너십을 통해 데이터를 축적하고, 지자체에 지역 경제 활성화 인사이트를 제공하는 모델을 구상했습니다.",
-        textEn:
-          "Established a 3-phase expansion strategy: B2C individual users → B2G local government partnership. Conceived a model to accumulate data through merchant association partnerships and provide local economic revitalization insights to local governments.",
-      },
-    ],
-    role: [
-      {
-        title: "기획 및 프로덕트 설계",
-        titleEn: "Planning & Product Design",
-        items: [
-          {
-            text: "OCR 기술과 AI 추천을 결합한 종합 쇼핑 도우미 PWA의 전체 서비스 플로우를 기획했습니다.",
-            textEn:
-              "Planned the complete service flow of a comprehensive shopping assistant PWA combining OCR technology and AI recommendations.",
-            subItems: [
-              {
-                text: "실시간 가격비교(전통시장 vs 대형마트), OCR 영수증 스캔, Google Maps 연동 경로안내, AI 상품 대체 추천 등 4가지 핵심 기능을 정의했습니다.",
-                textEn:
-                  "Defined 4 core features: real-time price comparison (traditional market vs. large mart), OCR receipt scanning, Google Maps-integrated navigation, and AI alternative product recommendations.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "아키텍처 설계 및 개발 리드",
-        titleEn: "Architecture Design & Development Lead",
-        items: [
-          {
-            text: "Next.js 15 + React 19 기반 PWA 아키텍처를 설계하여 오프라인 지원, 홈 화면 추가, 빠른 로딩 등 PWA 핵심 기능을 구현했습니다.",
-            textEn:
-              "Designed a Next.js 15 + React 19-based PWA architecture and implemented core PWA features: offline support, home screen installation, and fast loading.",
-          },
-          {
-            text: "팀 전체 기획부터 개발, 디자인, 팀 관리까지 프로젝트 리드 역할을 수행했습니다.",
-            textEn:
-              "Served as project lead covering the entire team — from planning and development to design and team management.",
-          },
-        ],
-      },
-    ],
-    results: [
-      {
-        text: "K-HTML 해커톤(2025.07.16 ~ 2025.08.30)을 수료하고, OCR+AI+Google Maps가 통합된 실용적인 지역사회 문제 해결 서비스를 완성했습니다.",
-        textEn:
-          "Completed K-HTML Hackathon (Jul 16 – Aug 30, 2025) and delivered a practical community service integrating OCR, AI, and Google Maps.",
-      },
-    ],
-    lessons: [
-      {
-        text: "기능 목록보다 '가격 비교 → 탐색 → 구매'라는 행동 흐름을 먼저 그렸고, 그 흐름에 필요한 기능만 남겼습니다. OCR과 AI는 이 흐름을 매끄럽게 만드는 수단으로 배치했습니다.",
-        textEn:
-          "I drew the behavior flow first — compare price, explore, buy — and kept only the features that flow needed. OCR and AI were placed as the means to make that flow smooth.",
-      },
-      {
-        text: "지자체·상인회·소비자가 원하는 게 전부 달랐습니다. 셋을 동시에 만족시키는 기능은 없어서, B2C에서 시작해 B2G로 넓히는 3단계 확장 전략으로 순서를 나눠 풀었습니다.",
-        textEn:
-          "The district office, merchants, and consumers all wanted different things. No single feature satisfied all three, so we sequenced it: a three-stage expansion from B2C to B2G.",
-      },
-    ],
-  },
-
-  {
-    id: "artliving",
-    title: "AR 기반 가구 추천 플랫폼 — ARtliving",
-    titleEn: "AR-Powered Furniture Recommendation Platform — ARtliving",
-    background: [
-      {
-        text: "가구 구매 시 '실제 내 공간에 놓으면 어떻게 보일까'를 미리 확인할 수 없다는 불편함이 반품률 증가와 구매 결정 지연의 주요 원인임을 확인했습니다.",
-        textEn:
-          "Confirmed that the inability to preview 'how will this look in my actual space' before buying furniture is a primary cause of high return rates and delayed purchase decisions.",
-        subItems: [
-          {
-            text: "2025학년도 1학기 HUFS H-UP 진로탐색학점제 참가 프로젝트입니다.",
-            textEn:
-              "A 2025 Spring HUFS H-UP Career Exploration Program project.",
+              "Planned and developed at CHALLKATHON (joint hackathon by HUFS CS Dept × UMC). An environment requiring rapid planning and implementation within a constrained timeframe.",
           },
         ],
       },
     ],
     role: [
       {
-        title: "서비스 기획",
-        titleEn: "Product Planning",
+        title: "기획 및 프론트엔드 개발",
+        titleEn: "Planning & Frontend Development",
         items: [
           {
-            text: "AR 기술을 활용해 사용자가 스마트폰 카메라로 실제 공간을 비추면 가상 가구가 실시간으로 배치되는 서비스 컨셉을 기획했습니다.",
+            text: "사용자의 경험·역량·관심사를 입력받아 AI가 맞춤형 커리어 로드맵과 취업 전략을 제안하는 서비스 흐름을 기획했습니다.",
             textEn:
-              "Planned a service concept where users point their smartphone camera at their actual space and virtual furniture is placed in real time using AR technology.",
+              "Planned a service structure where AI proposes personalized career roadmaps and job strategies based on user-inputted experience, competencies, and interests.",
             subItems: [
               {
-                text: "사용자의 인테리어 취향, 공간 크기, 예산 데이터를 결합한 AI 맞춤 가구 추천 알고리즘 기획을 설계했습니다.",
+                text: "AI 멘토와의 대화형 인터페이스를 설계하여 딱딱한 분석 결과 대신 자연스러운 멘토링 경험을 제공하는 UX를 기획했습니다.",
                 textEn:
-                  "Designed an AI personalized furniture recommendation algorithm that combines user interior preferences, space dimensions, and budget data.",
-              },
-              {
-                text: "B2C 직접 판매 → 가구 브랜드 B2B 파트너십으로 확장하는 비즈니스 모델을 수립했습니다.",
-                textEn:
-                  "Established a business model expanding from B2C direct sales to B2B furniture brand partnerships.",
+                  "Designed a conversational interface with an AI mentor so the guidance reads as a natural mentoring conversation instead of a rigid analytical report.",
               },
             ],
+          },
+          {
+            text: "해커톤의 시간 제약 안에서 기획·설계·개발 우선순위를 빠르게 결정하고 팀 전체의 방향을 이끌었습니다.",
+            textEn:
+              "Quickly prioritized planning, design, and development within hackathon time constraints and led the overall team direction.",
           },
         ],
       },
     ],
     results: [
       {
-        text: "2025 HUFS H-UP 진로탐색학점제에서 진리상(최우수상)을 수상했습니다. AR과 AI 추천의 결합이 실질적인 소비자 문제를 해결한다는 점을 심사위원에게 인정받았습니다.",
+        text: "해커톤 기간 안에 동작하는 AI 커리어 멘토링 서비스를 완성해 배포했습니다. (CHALLKATHON)",
         textEn:
-          "Won the Grand Prize (Truth Award) at the 2025 HUFS H-UP Career Exploration Program. Judges recognized that the combination of AR and AI recommendation addresses a real consumer problem.",
+          "Shipped a working AI career mentoring service within the hackathon period. (CHALLKATHON)",
       },
     ],
     lessons: [
+      // TODO(상현): 실제로 잘라낸 기능이 뭐였는지 기억나면 괄호로 추가
       {
-        text: "AR이라는 기술이 먼저 있었고 문제를 나중에 찾은 프로젝트라 초반에 방향이 계속 흔들렸습니다. '구매 전에 내 방에 놓아보고 싶다'는 문제 문장을 확정한 뒤에야 기획이 섰습니다. 기술 주도로 시작하면 문제 정의로 되돌아오는 비용이 큽니다.",
+        text: "마감 몇 시간을 앞두고 기능을 더 붙일지, 있는 걸 다듬을지 골라야 했습니다. 붙이고 싶은 기능 목록을 지우고 핵심 플로우 하나를 끝까지 다듬는 쪽을 택했고, 그게 완성도로 이어졌습니다.",
         textEn:
-          "The tech (AR) came first and the problem later, so the direction kept wobbling early on. Only after fixing the problem statement — 'I want to place it in my room before buying' — did the plan stand. Starting tech-first makes the trip back to problem definition expensive.",
+          "Hours before the deadline we had to choose: add features or polish what exists. We deleted the wishlist and polished one core flow to the end — that became the finish quality.",
       },
     ],
   },
@@ -1555,6 +1315,381 @@ export const careerDetailSections: CareerDetailSection[] = [
   },
 
   {
+    id: "16play",
+    title: "MBTI 커뮤니티 — 16P!ay",
+    titleEn: "MBTI Community — 16P!ay",
+    // 발표 자료(16P!ay(3팀).pdf)에서 2400px로 렌더링. 목차·개발 환경·명세서(글씨가 읽히지 않음)·Q&A는 뺐다
+    images: [
+      "/projects/16play/01.png",
+      "/projects/16play/02.png",
+      "/projects/16play/03.png",
+      "/projects/16play/04.png",
+      "/projects/16play/05.png",
+      "/projects/16play/06.png",
+      "/projects/16play/07.png",
+    ],
+    background: [
+      {
+        text: "멋쟁이사자처럼 13기 운영진으로서 아기사자(13기 부원)들과 함께 MBTI 기반 커뮤니티를 기획·디자인·개발한 미니프로젝트입니다.",
+        textEn:
+          "A mini project where, as 13th-cohort staff, I planned, designed, and built an MBTI-based community together with the cohort's members.",
+      },
+    ],
+    role: [
+      {
+        title: "PM · 기획·디자인·프론트엔드",
+        titleEn: "PM · Planning, Design & Frontend",
+        items: [
+          {
+            text: "MBTI별 게시판, 밸런스 게임, 단점 보완 체크, 책 추천, 마이페이지로 이어지는 화면 흐름(UX Flow)과 기능·API 명세서를 정리하고, 화면 디자인과 프론트엔드를 맡았습니다.",
+            textEn:
+              "Laid out the screen flow (UX Flow) and feature/API specs across the MBTI boards, balance game, weakness checklist, book recommendations, and my page, and handled the UI design and frontend.",
+          },
+        ],
+      },
+    ],
+    results: [
+      {
+        text: "멋쟁이사자처럼 13기 미니프로젝트 최우수상",
+        textEn: "Grand Prize in Likelion 13th cohort mini project",
+      },
+    ],
+    lessons: [
+      {
+        text: "짧은 기간에 완성도를 만든 방법은 기능을 줄이는 것이었습니다. 처음 그린 화면 흐름에서 곁가지를 계속 쳐냈고, 단순하게 남긴 흐름이 미니프로젝트 최우수상으로 이어졌습니다.",
+        textEn:
+          "The way to reach polish in a short period was cutting features. I kept pruning branches off the initial flow, and the simplicity that remained is what won the top prize.",
+      },
+    ],
+  },
+
+  {
+    id: "dotori",
+    title: "시각장애인을 위한 점자 교육 플랫폼 — dotori",
+    titleEn: "Braille Education Platform for the Visually Impaired — dotori",
+    // 발표 자료(3조_발표자료.pdf)에서 2400px로 렌더링. 팀원 소개(p.21)와 인터뷰이 사진·실명(p.27)은 싣지 않는다
+    images: [
+      "/projects/dotori/01.png",
+      "/projects/dotori/02.png",
+      "/projects/dotori/03.png",
+      "/projects/dotori/04.png",
+      "/projects/dotori/05.png",
+      "/projects/dotori/06.png",
+      "/projects/dotori/07.png",
+      "/projects/dotori/08.png",
+      "/projects/dotori/09.png",
+    ],
+    background: [
+      {
+        text: "점자를 모르는 시각장애인이 90.4%(보건복지부)이고, 등록 시각장애인은 1990년 14,618명에서 2020년 252,324명으로 늘었습니다(통계청). 점자 교구는 150만~777만 원대라 학습을 시작하기조차 어려웠고, 월 9,900원부터 시작하는 구독형 앱으로 비용 문턱을 낮추는 방향을 잡았습니다.",
+        textEn:
+          "90.4% of visually impaired people cannot read Braille (Ministry of Health and Welfare), and registered visually impaired people grew from 14,618 in 1990 to 252,324 in 2020 (Statistics Korea). Braille learning devices cost ₩1.5M–7.77M, so even starting was hard; we set out to lower that barrier with a subscription app from ₩9,900 a month.",
+      },
+      {
+        text: "시각장애인의 점자 교육 접근성과 학습 지속성 문제를 창업캠프 과제로 정의하고, 사회적 가치와 수익 모델을 함께 설계했습니다. 2025.06 창업캠프에서 시작해 11월 창업 BM 경진대회까지 세 차례 피칭을 거치며 고도화했습니다.",
+        textEn:
+          "Framed Braille education access and learning continuity for the visually impaired as a startup camp challenge, designing both social impact and revenue logic. Started at the June 2025 startup camp and refined it through three pitches up to the November startup BM competition.",
+      },
+    ],
+    role: [
+      {
+        title: "기획·IR 피칭 · 프론트엔드",
+        titleEn: "Planning, IR Pitching & Frontend",
+        items: [
+          {
+            text: "서비스 콘셉트·타겟·수익 모델을 정리하고 IR 피칭 경진대회에서 발표를 진행했습니다.",
+            textEn:
+              "Structured concept, target, and revenue model and delivered the pitch at the IR competition.",
+          },
+        ],
+      },
+    ],
+    results: [
+      {
+        text: "2025 창업캠프 실전 IR 피칭 경진대회 최우수상 (한국외대 글로벌창업지원단, 2025.06)",
+        textEn: "Grand Prize, 2025 HUFS Startup Camp IR Pitching Competition (Jun 2025)",
+      },
+      {
+        text: "\"PICK YOUR IDEA\" IR PITCHING 우수상 (서울 AI 허브 / MOVE, 2025.07)",
+        textEn: "Excellence Award, \"PICK YOUR IDEA\" IR Pitching (Seoul AI Hub / MOVE, Jul 2025)",
+      },
+      {
+        text: "G-RISE × 경상대학 2025 창업 비즈니스 모델 경진대회 대상 (한국외대 경상대학, 2025.11)",
+        textEn: "Grand Prize, G-RISE × College of Business 2025 Startup BM Competition (Nov 2025)",
+      },
+    ],
+    lessons: [
+      {
+        text: "사회적 가치만 강조하면 공감에 그치고, 수익 모델만 강조하면 설득력이 떨어진다고 판단했습니다. 임팩트 지표와 수익 모델을 같은 슬라이드에 올렸을 때 심사위원의 반응이 달라졌습니다.",
+        textEn:
+          "I judged that social value alone earns sympathy and revenue alone sounds cold. When the impact metrics and the revenue model shared one slide, the judges' response changed.",
+      },
+    ],
+  },
+
+  {
+    id: "tcp",
+    images: [
+      "/projects/tcp/01.png",
+      "/projects/tcp/02.png",
+      "/projects/tcp/03.png",
+      "/projects/tcp/04.png",
+      "/projects/tcp/05.png",
+      "/projects/tcp/06.png",
+    ],
+    title: "약관 위험 알림 서비스 — TCP",
+    titleEn: "Terms-of-Service Risk Alerts — TCP",
+    background: [
+      {
+        text: "131명 설문조사 결과 93%가 약관을 제대로 읽지 않는다는 것을 확인했습니다. SKT 유심 해킹 사태를 계기로 약관을 읽지 않아 발생하는 소비자 피해가 사회적 문제로 부각되었습니다.",
+        textEn:
+          "A survey of 131 people revealed that 93% don't read terms of service properly. The SKT SIM hacking incident brought consumer damage from unread ToS to the forefront as a social issue.",
+        subItems: [
+          {
+            text: "국내에는 아직 자동화된 실시간 약관 분석 서비스가 없다는 점을 확인하고, 그 공백이 왜 생겼는지부터 검증했습니다.",
+            textEn:
+              "Confirmed that no automated real-time ToS analysis service exists in Korea yet — and started by verifying why that gap exists.",
+          },
+        ],
+      },
+      {
+        text: "기존 약관 검토 서비스는 사용자가 직접 텍스트를 복사해 붙여넣는 방식으로, 복잡한 법률 용어를 쉽게 이해할 수 있는 수단이 없었습니다. 백그라운드에서 자동으로 감지·분석하는 것이 차별점이 될 수 있다고 판단했습니다.",
+        textEn:
+          "Existing review services required users to manually copy-paste text, with no tools to understand complex legal language. Concluded that background auto-detection and analysis would be the key differentiator.",
+      },
+    ],
+    role: [
+      {
+        title: "서비스 기획 및 BM 설계",
+        titleEn: "Product Planning & Business Model Design",
+        items: [
+          {
+            text: "스크린 오버레이 기술을 활용해 사용자가 약관에 동의하는 순간 백그라운드에서 자동으로 내용을 감지하고 분석하는 시스템을 기획했습니다.",
+            textEn:
+              "Planned a system that automatically detects and analyzes ToS content in the background at the moment of user agreement, using screen overlay technology.",
+            subItems: [
+              {
+                text: "BERT·GPT 기반 NLP 모델을 법률 특화 데이터셋으로 미세조정하여 핵심 조항과 위험 요소를 자동 추출하는 기술 방향성을 설계했습니다.",
+                textEn:
+                  "Designed the technical direction: fine-tuning BERT/GPT-based NLP models on legal-domain datasets to auto-extract key clauses and risk factors.",
+              },
+              {
+                text: "복잡한 약관을 쉬운 언어로 요약하고, 위험 조항을 시각적으로 강조(하이라이트·경고 아이콘)하는 UX를 기획했습니다.",
+                textEn:
+                  "Planned UX to summarize complex ToS in plain language and visually highlight risky clauses with highlights and warning icons.",
+              },
+            ],
+          },
+          {
+            text: "5가지 수익원을 구조화했습니다: 프리미엄 구독제(B2C), 기업용 API(B2B), 법무법인·핀테크 파트너십, 익명화 데이터 인사이트 판매, 집단대응 중개 서비스.",
+            textEn:
+              "Structured 5 revenue streams: premium subscription (B2C), enterprise API (B2B), law firm & fintech partnerships, anonymized data insight sales, and collective action brokerage.",
+          },
+        ],
+      },
+      {
+        title: "시장 조사 및 경쟁 분석",
+        titleEn: "Market Research & Competitive Analysis",
+        items: [
+          {
+            text: "국내외 리걸테크 서비스(DoNotPay, Ironclad 등)를 벤치마킹하여 백그라운드 자동 감지 기능의 차별성을 도출했습니다.",
+            textEn:
+              "Benchmarked domestic and overseas legaltech services (DoNotPay, Ironclad, etc.) to establish the differentiation of background auto-detection.",
+          },
+          {
+            text: "주요 타겟을 '디지털 서비스를 자주 구독하는 20~40대'로 설정하고, B2B 확장 단계에서 금융·구독 플랫폼 기업을 주요 파트너로 정의했습니다.",
+            textEn:
+              "Defined primary target as '20s–40s who frequently subscribe to digital services,' with financial and subscription platform companies as key B2B partners in the expansion phase.",
+          },
+        ],
+      },
+    ],
+    results: [
+      {
+        text: "교내 아이디어톤 최우수상 수상 — 직접 진행한 131명 설문 데이터(93%)로 문제의 심각성과 사업성을 입증했습니다.",
+        textEn:
+          "Won campus Ideathon Grand Prize — our own 131-person survey data (93%) proved both the severity of the problem and the business case.",
+      },
+      {
+        text: "전국 해커톤 2차 예선 진출 — 기술 구현 가능성(BERT/GPT fine-tuning, 스크린 오버레이)과 수익 모델의 구체성이 심사위원에게 높은 평가를 받았습니다.",
+        textEn:
+          "Advanced to 2nd round of national hackathon — technical feasibility (BERT/GPT fine-tuning, screen overlay) and specificity of the revenue model received high marks from judges.",
+      },
+    ],
+    lessons: [
+      {
+        text: "131명 설문에서 나온 '93%가 약관을 읽지 않는다'는 수치를 발표의 출발점으로 삼았습니다. 문제의 크기는 주장보다 설문 데이터로 보여줄 때 심사위원에게 더 분명하게 전달된다고 판단했습니다.",
+        textEn:
+          "We built the pitch on one figure from our 131-person survey: '93% don't read the terms.' I judged that survey data shows the size of a problem to judges more clearly than any claim.",
+      },
+      {
+        text: "'왜 지금까지 이런 서비스가 없었지?'를 파는 과정에서 더 많이 배웠습니다. 없는 데는 이유가 있었고(법률 해석 리스크, 약관 텍스트 접근성), 그 이유를 하나씩 반박할 수 있을 때에만 블루오션이라 부를 수 있었습니다.",
+        textEn:
+          "Digging into 'why doesn't this exist yet?' taught us more. There were reasons (legal-interpretation risk, access to terms text) — and only after rebutting each one could we call it a blue ocean.",
+      },
+    ],
+  },
+
+  {
+    id: "neurosight",
+    title: "마취 시술 보조 서비스 — NeuroSight",
+    titleEn: "Anesthesia Guidance System — NeuroSight",
+    images: [
+      "/projects/neurosight/01.png",
+      "/projects/neurosight/02.png",
+      "/projects/neurosight/03.png",
+      "/projects/neurosight/04.png",
+      "/projects/neurosight/05.png",
+      "/projects/neurosight/06.png",
+      "/projects/neurosight/07.png",
+    ],
+    background: [
+      {
+        text: "마취는 사고가 곧 생명과 직결되는 고위험 의료행위인데, 사고 상당수가 마취 비전문의 시술 환경에서 발생합니다. 전문 마취과 의사의 부족과 높은 이탈률이 근본 원인입니다.",
+        textEn:
+          "Anesthesia is a high-risk procedure where incidents directly threaten lives — and a large share of incidents occur in settings without anesthesia specialists. A chronic shortage and high turnover of anesthesiologists is the structural root cause.",
+        subItems: [
+          {
+            text: "기존 B-mode 초음파는 주관적 해석에 의존하며 정량적 조직 분석과 마취제 확산 범위 실시간 파악이 불가합니다.",
+            textEn:
+              "Existing B-mode ultrasound relies on subjective interpretation, with no quantitative tissue analysis or real-time anesthetic diffusion tracking.",
+          },
+        ],
+      },
+      {
+        text: "GRAFFITI 2025: AI Startup (KAIST ICISTS 주최) 해커톤으로, 6인 팀에서 비즈니스 아이디어 기획자 역할을 맡아 4일간 진행했습니다. 배럴아이의 정량적 초음파(QUS) 기술을 마취 분야에 적용하는 컨셉을 설계했습니다.",
+        textEn:
+          "GRAFFITI 2025: AI Startup (hosted by KAIST ICISTS) hackathon — served as business idea planner in a 6-person team over 4 days. Designed the concept of applying Barrel Eye's QUS technology to anesthesia.",
+      },
+    ],
+    role: [
+      {
+        title: "시장 조사 및 문제 분석",
+        titleEn: "Market Research & Problem Analysis",
+        items: [
+          {
+            text: "마취 의료 사고 현황 및 비전문의 의존 문제의 원인을 분석했습니다. 글로벌 의료 AI 시장의 성장성을 조사하고 진입 기회를 도출했습니다.",
+            textEn:
+              "Analyzed anesthesia incident trends and the structural over-reliance on non-specialists. Researched the growth of the global medical AI market and identified entry opportunities.",
+          },
+          {
+            text: "배럴아이 QUS 기술의 동향을 연구하고 마취 분야 적용 가능성을 검토하여 세계 최초 정량적 초음파 기반 마취 보조 시스템이라는 포지셔닝을 수립했습니다.",
+            textEn:
+              "Researched Barrel Eye's QUS technology trends and evaluated applicability to anesthesia, establishing positioning as the world's first QUS-based anesthesia guidance system.",
+          },
+        ],
+      },
+      {
+        title: "비즈니스 모델 설계",
+        titleEn: "Business Model Design",
+        items: [
+          {
+            text: "B2B SaaS(병원 대상 구독) + OEM 파트너십(GE·Philips·Siemens 등 의료기기 제조사 대상 기술 라이선스) 하이브리드 수익 모델을 설계했습니다.",
+            textEn:
+              "Designed a hybrid revenue model: B2B SaaS (hospital subscriptions) + OEM partnership (technology licensing to medical device manufacturers such as GE, Philips, and Siemens).",
+            subItems: [
+              {
+                text: "OEM 파트너십으로 FDA·CE 규제 리스크를 분산하는 시장 진입 전략을 수립했습니다. Phase 1(북미 3% 점유율) → Phase 2(OEM 글로벌 확대) → Phase 3(아시아·유럽).",
+                textEn:
+                  "Established a market entry strategy that distributes FDA/CE regulatory risk through OEM partnerships. Phase 1 (3% North American market share) → Phase 2 (global OEM expansion) → Phase 3 (Asia/Europe).",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "솔루션 컨셉 설계 및 피칭",
+        titleEn: "Solution Concept Design & Pitching",
+        items: [
+          {
+            text: "CNN + PINN + Transformer 멀티모달 AI 아키텍처 활용 방안을 연구하고, 의료진 페르소나와 User Scenario를 작성했습니다. 해커톤 발표자료를 제작하고 아이디어 피칭을 직접 담당했습니다.",
+            textEn:
+              "Researched CNN + PINN + Transformer multimodal AI architecture use cases, defined medical personnel persona and user scenarios. Created pitch deck and personally delivered the idea pitch.",
+          },
+        ],
+      },
+    ],
+    results: [
+      {
+        text: "4일 안에 의료 AI 기술·규제·시장을 학습하고, FDA/CE 규제를 수익원으로 뒤집은 OEM 하이브리드 사업화 전략까지 제안했습니다. (GRAFFITI 2025 AI Startup, KAIST ICISTS 주최)",
+        textEn:
+          "In 4 days, learned medical AI technology, regulation, and market dynamics, and proposed an OEM hybrid commercialization strategy that turned FDA/CE regulation into a revenue source. (GRAFFITI 2025 AI Startup, hosted by KAIST ICISTS)",
+      },
+    ],
+    lessons: [
+      {
+        text: "의료 AI는 4일짜리 해커톤으로 기술을 이해할 수 있는 분야가 아니었습니다. 대신 '마취 사고'라는 문제에서 출발해 누가, 언제, 왜 위험해지는지를 파고들었고, 기술(QUS)은 그 답에 맞춰 배치했습니다. 문제가 선명하면 기술 이해가 얕아도 기획이 섭니다.",
+        textEn:
+          "Four days isn't enough to understand medical AI tech. So we started from the problem — who gets hurt, when, and why — and placed the technology (QUS) around that answer. A sharp problem carries a plan even when tech depth is shallow.",
+      },
+      {
+        text: "FDA/CE 규제를 리스크 목록에 넣는 대신 OEM 파트너십의 수익원으로 뒤집어 제시했을 때 반응이 달라졌습니다. 규제는 피하는 게 아니라 설계에 넣는 것이었습니다.",
+        textEn:
+          "The response changed when we flipped FDA/CE regulation from a risk item into an OEM revenue source. Regulation isn't something to dodge — it's something to design in.",
+      },
+    ],
+  },
+
+  {
+    id: "artliving",
+    title: "AR 기반 가구 추천 플랫폼 — ARtliving",
+    titleEn: "AR-Powered Furniture Recommendation Platform — ARtliving",
+    background: [
+      {
+        text: "가구 구매 시 '실제 내 공간에 놓으면 어떻게 보일까'를 미리 확인할 수 없다는 불편함이 반품률 증가와 구매 결정 지연의 주요 원인임을 확인했습니다.",
+        textEn:
+          "Confirmed that the inability to preview 'how will this look in my actual space' before buying furniture is a primary cause of high return rates and delayed purchase decisions.",
+        subItems: [
+          {
+            text: "2025학년도 1학기 HUFS H-UP 진로탐색학점제 참가 프로젝트입니다.",
+            textEn:
+              "A 2025 Spring HUFS H-UP Career Exploration Program project.",
+          },
+        ],
+      },
+    ],
+    role: [
+      {
+        title: "서비스 기획",
+        titleEn: "Product Planning",
+        items: [
+          {
+            text: "AR 기술을 활용해 사용자가 스마트폰 카메라로 실제 공간을 비추면 가상 가구가 실시간으로 배치되는 서비스 컨셉을 기획했습니다.",
+            textEn:
+              "Planned a service concept where users point their smartphone camera at their actual space and virtual furniture is placed in real time using AR technology.",
+            subItems: [
+              {
+                text: "사용자의 인테리어 취향, 공간 크기, 예산 데이터를 결합한 AI 맞춤 가구 추천 알고리즘 기획을 설계했습니다.",
+                textEn:
+                  "Designed an AI personalized furniture recommendation algorithm that combines user interior preferences, space dimensions, and budget data.",
+              },
+              {
+                text: "B2C 직접 판매 → 가구 브랜드 B2B 파트너십으로 확장하는 비즈니스 모델을 수립했습니다.",
+                textEn:
+                  "Established a business model expanding from B2C direct sales to B2B furniture brand partnerships.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    results: [
+      {
+        text: "2025 HUFS H-UP 진로탐색학점제에서 진리상(최우수상)을 수상했습니다. AR과 AI 추천의 결합이 실질적인 소비자 문제를 해결한다는 점을 심사위원에게 인정받았습니다.",
+        textEn:
+          "Won the Grand Prize (Truth Award) at the 2025 HUFS H-UP Career Exploration Program. Judges recognized that the combination of AR and AI recommendation addresses a real consumer problem.",
+      },
+    ],
+    lessons: [
+      {
+        text: "AR이라는 기술이 먼저 있었고 문제를 나중에 찾은 프로젝트라 초반에 방향이 계속 흔들렸습니다. '구매 전에 내 방에 놓아보고 싶다'는 문제 문장을 확정한 뒤에야 기획이 섰습니다. 기술 주도로 시작하면 문제 정의로 되돌아오는 비용이 큽니다.",
+        textEn:
+          "The tech (AR) came first and the problem later, so the direction kept wobbling early on. Only after fixing the problem statement — 'I want to place it in my room before buying' — did the plan stand. Starting tech-first makes the trip back to problem definition expensive.",
+      },
+    ],
+  },
+
+  {
     id: "huriup",
     title: "웹캠 기반 자세 교정 서비스 — 허리UP!",
     titleEn: "Webcam-Based Posture Correction Service — HuriUP!",
@@ -1644,54 +1779,4 @@ export const careerDetailSections: CareerDetailSection[] = [
       },
     ],
   },
-
-  {
-    id: "16play",
-    title: "MBTI 커뮤니티 — 16P!ay",
-    titleEn: "MBTI Community — 16P!ay",
-    // 발표 자료(16P!ay(3팀).pdf)에서 2400px로 렌더링. 목차·개발 환경·명세서(글씨가 읽히지 않음)·Q&A는 뺐다
-    images: [
-      "/projects/16play/01.png",
-      "/projects/16play/02.png",
-      "/projects/16play/03.png",
-      "/projects/16play/04.png",
-      "/projects/16play/05.png",
-      "/projects/16play/06.png",
-      "/projects/16play/07.png",
-    ],
-    background: [
-      {
-        text: "멋쟁이사자처럼 13기 운영진으로서 아기사자(13기 부원)들과 함께 MBTI 기반 커뮤니티를 기획·디자인·개발한 미니프로젝트입니다.",
-        textEn:
-          "A mini project where, as 13th-cohort staff, I planned, designed, and built an MBTI-based community together with the cohort's members.",
-      },
-    ],
-    role: [
-      {
-        title: "PM · 기획·디자인·프론트엔드",
-        titleEn: "PM · Planning, Design & Frontend",
-        items: [
-          {
-            text: "MBTI별 게시판, 밸런스 게임, 단점 보완 체크, 책 추천, 마이페이지로 이어지는 화면 흐름(UX Flow)과 기능·API 명세서를 정리하고, 화면 디자인과 프론트엔드를 맡았습니다.",
-            textEn:
-              "Laid out the screen flow (UX Flow) and feature/API specs across the MBTI boards, balance game, weakness checklist, book recommendations, and my page, and handled the UI design and frontend.",
-          },
-        ],
-      },
-    ],
-    results: [
-      {
-        text: "멋쟁이사자처럼 13기 미니프로젝트 최우수상",
-        textEn: "Grand Prize in Likelion 13th cohort mini project",
-      },
-    ],
-    lessons: [
-      {
-        text: "짧은 기간에 완성도를 만든 방법은 기능을 줄이는 것이었습니다. 처음 그린 화면 흐름에서 곁가지를 계속 쳐냈고, 단순하게 남긴 흐름이 미니프로젝트 최우수상으로 이어졌습니다.",
-        textEn:
-          "The way to reach polish in a short period was cutting features. I kept pruning branches off the initial flow, and the simplicity that remained is what won the top prize.",
-      },
-    ],
-  }
-
 ];
