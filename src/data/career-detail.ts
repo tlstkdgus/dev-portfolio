@@ -33,6 +33,10 @@ export interface Trouble {
   resultEn: string;
   /** 근거 코드 경로 (예: lib/state.ts) — 저장소 링크 옆에 작게 보여 준다 */
   files?: string[];
+  /** files가 프로젝트 대표 저장소가 아닌 곳에 있을 때 (해커톤 FAQ 봇 · 제출물 검사) */
+  repo?: string;
+  /** 파일 링크를 만들 브랜치. 기본 main (AInterview는 develop, 웰컴키트 포크는 dev) */
+  branch?: string;
 }
 
 export interface CareerDetailSection {
@@ -266,6 +270,30 @@ export const careerDetailSections: CareerDetailSection[] = [
         result: "본선 8팀 토너먼트를 이 콘솔로 끝까지 진행했고, 콘솔 조작이 무대 스크린에 반영되기까지 실측 2.2초였습니다.",
         resultEn: "The console ran the 8-team finals to the end, with a measured 2.2 seconds from console action to stage screen.",
         files: ["lib/tournament.ts", "lib/auth.ts", "docs/SPEC.md"],
+      },
+      {
+        title: "마감 후 검사만으로는 force-push를 잡을 수 없었습니다",
+        titleEn: "Checking after the deadline couldn't catch force-pushes",
+        problem: "커밋 시각만 보는 사후 검사로는 히스토리를 다시 쓴 force-push나 삭제된 브랜치가 드러나지 않고, 커밋 날짜도 위조할 수 있었습니다. 마감 시각에 562개 레포를 한 번에 훑어야 했지만 토큰으로도 GitHub API는 시간당 5,000회로 제한됩니다.",
+        problemEn: "A post-hoc check of commit times can't reveal a force-push that rewrote history or a deleted branch, and commit dates can be forged. All 562 repos had to be swept right at the deadline, while the GitHub API allows 5,000 calls an hour even with a token.",
+        solution: "마감 직후 모든 레포의 전 브랜치 SHA와 pushed_at을 스냅샷 JSON으로 찍고, 이후 대조로 추가 커밋 · force-push · 브랜치 삭제를 가려냈습니다. 표준 라이브러리만으로 스레드 8개를 동시에 돌리고, 2차 레이트리밋의 Retry-After를 받으면 모든 워커가 함께 멈췄다 재개하며, 50개마다 중간 저장해 --resume으로 이어서 돌게 했습니다. 스냅샷을 찍는 1~2분 사이에 푸시한 레포는 pushed_at으로 따로 세어 사람이 확인하게 했습니다.",
+        solutionEn: "Right after the deadline it snapshots every branch SHA and pushed_at of every repo to JSON, and later comparison exposes added commits, force-pushes, and deleted branches. Using only the standard library it runs 8 threads; on a secondary rate limit's Retry-After every worker pauses and resumes together, and it checkpoints every 50 repos so --resume can pick up. Repos pushed during the 1–2 minutes the snapshot takes are counted separately from pushed_at for a person to check.",
+        result: "실측 40개에 8초 속도로 562개 레포를 전수 검사해 위반 5팀을 찾았고, 판정은 검사 전에 합의한 기준으로 운영진이 내렸습니다. 입력 파싱과 대조 로직은 단위 테스트 34개로 고정했습니다.",
+        resultEn: "At a measured 40 repos per 8 seconds it swept all 562 repos and found 5 violating teams, which the staff ruled on by criteria agreed before the scan. Input parsing and comparison are pinned by 34 unit tests.",
+        files: ["check.py", "test_check.py"],
+        repo: "https://github.com/tlstkdgus/hackathon-commit-check",
+      },
+      {
+        title: "키워드 하나가 조용히 오답을 만들 수 있었습니다",
+        titleEn: "A single keyword could quietly produce a wrong answer",
+        problem: "FAQ 봇은 키워드 매칭을 먼저 쓰는데, '상'(상금) 같은 1글자 키워드가 '7인 이상'을 가로채거나 '발표'가 엉뚱한 항목을 끌어오는 일이 운영 중에 나왔습니다. 전각 문자로 입력하는 학생도 있었고, LLM 백엔드 하나가 실패하면 답이 끊겼습니다.",
+        problemEn: "The FAQ bot matches keywords first, and during operation one-letter keywords like '상' (prize) hijacked '7인 이상' (7 or more), and '발표' pulled in the wrong entry. Some students typed full-width characters, and a single failing LLM backend cut answers off.",
+        solution: "입력을 NFKC로 정규화하고, 점수가 동점이면 찍지 않고 LLM에 넘기며, OpenAI와 Claude를 같은 인터페이스로 두어 한쪽이 실패하면 다른 쪽으로 자동 전환했습니다. 질문별로 어느 항목에 가야 하는지를 라우팅 표 형태의 회귀 테스트로 고정하고, 미답변 리포트(digest.py)는 제안만 하고 faq.md는 사람이 고치게 했습니다. 배포는 GitHub Actions가 서버에서 update.sh를 돌리고, 저널에 '로그인 성공'이 찍힐 때까지 기다려 확인합니다.",
+        solutionEn: "Input is NFKC-normalized, ties go to the LLM instead of guessing, and OpenAI and Claude sit behind one interface so a failure on one switches to the other. Which entry each question should reach is pinned as a routing-table regression test, and the unanswered-question report (digest.py) only suggests while people edit faq.md. On deploy, GitHub Actions runs update.sh on the server and waits for 'login succeeded' in the journal.",
+        result: "한 달간 229건 중 80.8%를 키워드로 즉답(API 비용 0)하고 미응답은 0건이었습니다. 키워드를 늘릴 때마다 인접 주제를 가로채는지 테스트 62개가 바로 잡아냈습니다.",
+        resultEn: "Over a month, 80.8% of 229 questions got an instant keyword answer (zero API cost), with none unanswered. Each time keywords grew, 62 tests immediately caught any hijacking of neighboring topics.",
+        files: ["faq_engine.py", "llm.py", "test_faq_matching.py", "deploy/lib.sh"],
+        repo: "https://github.com/tlstkdgus/hackathon-faq-bot",
       },
     ],
     results: [
@@ -569,13 +597,46 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     role: [
       {
-        title: "서비스 기획 및 디자인",
-        titleEn: "Product Planning & Design",
+        title: "프론트엔드 개발 — 저장소 커밋 209개 중 184개",
+        titleEn: "Frontend Development — 184 of the Repo's 209 Commits",
         items: [
           {
-            text: "사용자의 현재 위치, 소비 패턴, 카테고리 선호도를 분석하여 맞춤형 가맹점을 추천하는 AI 기능을 기획했습니다.",
+            text: "프론트엔드 저장소는 2명이 작업했고, 커밋 209개 중 184개와 PR 머지 77건이 제 것입니다(git blame 기준 데이터 파일을 뺀 코드의 약 76%). Vite · React 19 · TypeScript · styled-components · React Router 7로 만들었습니다.",
             textEn:
-              "Planned an AI feature that analyzes user's current location, spending patterns, and category preferences to recommend personalized merchants.",
+              "Two people worked on the frontend repo; 184 of its 209 commits and 77 merged PRs are mine (about 76% of the code by git blame, excluding a data file). Built with Vite, React 19, TypeScript, styled-components, and React Router 7.",
+            subItems: [
+              {
+                text: "API 계층: Bearer 토큰과 사용자 헤더를 붙이고 응답 형식(JSON/텍스트)을 판별하는 ApiClient 클래스에, 403을 포함한 실패를 1초·2초 간격으로 최대 3회 재시도하는 로직을 넣었습니다. 사용자·선호·가맹점·북마크·리뷰 도메인 훅(useApi)은 로딩·성공·오류 상태를 같은 형태로 공유합니다.",
+                textEn:
+                  "API layer: an ApiClient class that attaches the Bearer token and user header, detects JSON vs text responses, and retries failures, 403 included, up to 3 times at 1 s and 2 s intervals. Domain hooks (useApi) for users, preferences, stores, bookmarks, and reviews share one loading/success/error state shape.",
+              },
+              {
+                text: "지도: Google Maps에 카테고리별 SVG 마커를 두고 MarkerClusterer로 묶었으며(99+ 표시는 직접 만든 렌더러), 현재 위치 반경 500m 가맹점을 불러옵니다. 지도를 150m 이상 움직이면 하버사인 거리로 판단해 '이 지역 검색' 버튼을 띄웁니다.",
+                textEn:
+                  "Map: category SVG markers on Google Maps grouped by MarkerClusterer (with a custom renderer for the 99+ badge), loading stores within 500 m of the current location. When the map moves more than 150 m by Haversine distance, a 'search this area' button appears.",
+              },
+              {
+                text: "바텀시트를 라이브러리 없이 만들었습니다 — 터치·마우스 드래그, 30% · 60% · 90% 스냅 지점, 놓았을 때 가장 가까운 지점으로 붙고 95% 아래로 내리면 닫힘. 지도 목록과 마커 상세가 이 컴포넌트를 씁니다.",
+                textEn:
+                  "Built the bottom sheet without a library — touch and mouse drag, snap points at 30%, 60%, and 90%, snapping to the nearest point on release and closing when pulled past 95%. The map list and marker detail both use it.",
+              },
+              {
+                text: "리뷰 작성 모달, 이모지 북마크 폴더를 지도 마커로 바꾸는 유틸, 확인·알림 모달, 이미지 갤러리, 회원가입·로그인·설정 화면과 vite-plugin-pwa 설정(자동 업데이트)을 맡았습니다.",
+                textEn:
+                  "I also built the review-writing modal, a utility that turns emoji bookmark folders into map markers, confirm and alert modals, the image gallery, the sign-up, login, and settings screens, and the vite-plugin-pwa setup (auto update).",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "서비스 기획 및 디자인",
+        titleEn: "Service Planning & Design",
+        items: [
+          {
+            text: "사용자의 현재 위치, 소비 패턴, 카테고리 선호도로 맞춤형 가맹점을 추천하는 기능을 기획했습니다. 추천 결과는 백엔드 API(/api/v1/recommendations)에서 받아 화면에 그립니다.",
+            textEn:
+              "Planned recommendations based on the user's location, spending patterns, and category preferences. The frontend renders results from the backend API (/api/v1/recommendations).",
           },
           {
             text: "Figma로 전체 UI/UX를 설계하고, 지역 소상공인 홍보 효과와 사용자 혜택을 동시에 달성하는 서비스 흐름을 설계했습니다.",
@@ -584,16 +645,40 @@ export const careerDetailSections: CareerDetailSection[] = [
           },
         ],
       },
+    ],
+    troubles: [
       {
-        title: "프론트엔드 개발",
-        titleEn: "Frontend Development",
-        items: [
-          {
-            text: "React + TypeScript + Tailwind CSS 기반의 반응형 UI를 개발했습니다. 위치 기반 가맹점 지도, AI 추천 리스트, 카테고리 필터 등 핵심 화면을 구현했습니다.",
-            textEn:
-              "Developed responsive UI in React + TypeScript + Tailwind CSS. Implemented core screens: location-based merchant map, AI recommendation list, and category filters.",
-          },
-        ],
+        title: "GPS 정확도가 낮으면 주변 가맹점 검색의 기준점이 흔들렸습니다",
+        titleEn: "Low GPS accuracy made the nearby-store search drift",
+        problem: "주변 가맹점은 현재 위치 반경 500m로 불러오는데, 브라우저 위치(navigator.geolocation)는 기기와 환경에 따라 정확도가 크게 달라 반경 검색의 기준점으로 그대로 쓰기 어려웠습니다.",
+        problemEn: "Nearby stores load within 500 m of the current location, but browser geolocation (navigator.geolocation) varies widely in accuracy by device and environment, so it couldn't be trusted as-is as the center of a radius search.",
+        solution: "고정밀 모드로 GPS를 먼저 요청하고, 보고된 정확도가 100m 미만일 때만 그 값을 씁니다. 그보다 부정확하거나 실패하면 Google Geolocation API로 위치를 다시 받습니다.",
+        solutionEn: "It asks for GPS in high-accuracy mode first and uses it only when the reported accuracy is under 100 m. If it's less accurate or fails, it falls back to the Google Geolocation API.",
+        result: "반경 검색은 정확도가 확인된 위치를 기준으로 돌고, GPS를 못 쓰는 환경에서도 지도가 위치를 잡습니다.",
+        resultEn: "The radius search runs from a location with known accuracy, and the map still finds a position where GPS isn't available.",
+        files: ["ywave-vite/src/Pages/Map/Map.tsx"],
+      },
+      {
+        title: "마커가 몰리면 지도를 읽을 수 없고, 조금만 움직여도 다시 검색하면 요청이 늘었습니다",
+        titleEn: "Crowded markers made the map unreadable, and re-searching on every nudge added requests",
+        problem: "가맹점이 밀집한 지역에서는 마커가 겹쳐 지도가 읽히지 않았고, 지도를 움직일 때마다 자동으로 다시 검색하면 작은 이동에도 요청이 나갑니다.",
+        problemEn: "In dense areas markers overlapped until the map was unreadable, and automatically re-searching on every move would fire a request for even small nudges.",
+        solution: "MarkerClusterer로 가까운 마커를 묶고 개수를 직접 만든 SVG 배지로 보여 줬습니다. 재검색은 자동으로 하지 않고, 지도가 멈췄을 때 이전 중심에서 하버사인 거리 150m 이상 움직였을 때만 '이 지역 검색' 버튼을 띄웠습니다.",
+        solutionEn: "MarkerClusterer groups nearby markers and shows the count in a custom SVG badge. Re-search isn't automatic: when the map goes idle, a 'search this area' button appears only if the center moved more than 150 m by Haversine distance.",
+        result: "밀집 지역에서도 지도가 읽히고, 검색 요청은 사용자가 원할 때만 나갑니다.",
+        resultEn: "The map stays readable in dense areas, and searches go out only when the user asks.",
+        files: ["ywave-vite/src/Pages/Map/Map.tsx", "ywave-vite/src/utils/distance.ts"],
+      },
+      {
+        title: "API 실패를 화면마다 따로 처리하면 동작이 제각각이었습니다",
+        titleEn: "Handling API failures per screen made behavior inconsistent",
+        problem: "가맹점 · 북마크 · 리뷰 등 API를 부르는 화면이 많아, 인증 헤더와 403 같은 실패 처리를 화면마다 두면 같은 실패에도 화면마다 다르게 동작합니다.",
+        problemEn: "Many screens call APIs (stores, bookmarks, reviews, and more), so putting auth headers and failure handling such as 403s in each screen makes the same failure behave differently from screen to screen.",
+        solution: "요청을 ApiClient 한 곳으로 모아 인증 헤더와 응답 파싱을 통일하고, 403을 포함한 실패를 1초·2초 간격으로 최대 3회 재시도하게 했습니다. 도메인별 훅이 같은 로딩·오류 상태를 돌려주게 해 화면은 그 상태만 보고 그립니다.",
+        solutionEn: "I routed requests through one ApiClient that unifies auth headers and response parsing, retrying failures, 403 included, up to 3 times at 1 s and 2 s intervals. Domain hooks return the same loading/error state, so screens render from that state alone.",
+        result: "일시적인 실패는 재시도로 넘기고, 끝내 실패하면 모든 화면이 같은 방식으로 오류를 보여 줍니다.",
+        resultEn: "Transient failures are absorbed by retries, and a final failure shows up the same way on every screen.",
+        files: ["ywave-vite/src/api/client.ts", "ywave-vite/src/hooks/useApi.ts"],
       },
     ],
     results: [
@@ -625,7 +710,7 @@ export const careerDetailSections: CareerDetailSection[] = [
     titleEn: "A Club App Used by 45 Members — WelcomeKit",
     background: [
       {
-        text: "한국외대 멋쟁이사자처럼 13기 부원 45명의 세션 출석을 운영진이 수기 출석부로 관리하고 있었습니다. 13기 운영진으로 출석과 팀 빙고 미션을 한 앱에서 처리하는 PWA를 기획하고 프론트엔드 개발을 이끌었습니다. (2025.03 ~ 2025.09)",
+        text: "한국외대 멋쟁이사자처럼 13기 부원 45명의 세션 출석을 운영진이 수기 출석부로 관리하고 있었습니다. 13기 운영진으로 출석과 팀 빙고 미션을 한 앱에서 처리하는 PWA를 기획하고 프론트엔드 개발을 이끌었습니다. 프론트엔드 저장소 커밋 98개 중 60개가 제 커밋입니다. (2025.03 ~ 2025.09)",
         textEn:
           "Attendance for the 45 members of HUFS LIKELION's 13th cohort was kept by staff on a paper roll. As 13th-cohort staff, I planned a PWA that handled attendance and team bingo missions in one app, and led its frontend development. (Mar 2025 – Sep 2025)",
       },
@@ -633,31 +718,49 @@ export const careerDetailSections: CareerDetailSection[] = [
     role: [
       {
         title: "QR 출석",
-        titleEn: "QR attendance",
+        titleEn: "QR Attendance",
         items: [
           {
-            text: "운영진이 QR을 띄우고 부원이 모바일로 스캔하면 서버에 바로 기록되고, 세션 시작 20분이 지난 스캔은 지각으로 자동 판정되게 했습니다.",
-            textEn: "Staff show a QR code and members scan it on their phones, so attendance is recorded on the server at once; scans more than 20 minutes after the session starts are marked late automatically.",
+            text: "앱 안에서 바로 스캔하는 모달을 만들었습니다 — 후면 카메라(facingMode: environment)로 운영진 화면의 QR을 읽어 출석 API로 보내고, 성공·실패 메시지를 띄운 뒤 자동으로 닫힙니다. 세션 시작 20분이 지난 스캔은 서버가 지각으로 판정합니다.",
+            textEn:
+              "Built an in-app scan modal — the rear camera (facingMode: environment) reads the QR on the staff screen, posts it to the attendance API, shows success or failure, and closes itself. The server marks scans more than 20 minutes after the session starts as late.",
           },
           {
-            text: "오늘 출석부에서는 지각·결석자만 팀별로 보여주게 했습니다.",
-            textEn: "Today's roll shows only late or absent members, grouped by team.",
-          },
-          {
-            text: "데스크톱에서는 QR 띄우기와 출석부 최신화만, 모바일에서는 출석하기 버튼만 보이게 했습니다.",
-            textEn: "On desktop only 'show QR' and 'refresh roll' appear; on mobile only the 'check in' button does.",
+            text: "오늘 출석부는 지각·결석자만 걸러 팀과 함께 보여 주고, 운영진 화면에는 출석부 최신화 버튼을 두었습니다. 데스크톱·모바일 화면 분기는 공용 브레이크포인트 컴포넌트로 옮겼습니다.",
+            textEn:
+              "Today's roll filters to late and absent members only, shown with their team, and the staff view has a refresh-roll button. I moved the desktop/mobile split onto a shared breakpoint component.",
           },
         ],
       },
       {
-        title: "빙고 미션",
-        titleEn: "Bingo missions",
+        title: "빙고 미션 · PWA · 계정 화면",
+        titleEn: "Bingo Missions, PWA, Account Screens",
         items: [
           {
-            text: "승인 대기 중인 칸이 있으면 다른 칸을 선택할 수 없게 하고, 운영진이 승인하면 카드가 뒤집히며 미션이 공개되게 했습니다.",
-            textEn: "While one square awaits approval, no other square can be picked; once staff approve it, the card flips and the mission is revealed.",
+            text: "빙고 칸을 누르면 공개 요청(PUT)을 보내고 카드가 뒤집히며 미션이 나타나게 했습니다. 승인 대기 중인 칸이 있으면 서버가 다른 칸 선택을 거부합니다.",
+            textEn:
+              "Tapping a bingo square sends a reveal request (PUT), then the card flips to show the mission. While a square awaits approval, the server rejects picking another.",
+          },
+          {
+            text: "PWA 설치 안내 컴포넌트와, 버전별 캐시를 쓰고 활성화될 때 이전 캐시를 지우는 서비스 워커를 만들었습니다. 비밀번호 변경, 프로필 이미지 업로드(FormData), 소개 페이지, 반응형 레이아웃 컴포넌트, 로그아웃도 맡았습니다.",
+            textEn:
+              "Built the PWA install prompt and a service worker that uses a versioned cache and deletes old caches on activate. I also built password change, profile image upload (FormData), the intro page, responsive layout components, and logout.",
           },
         ],
+      },
+    ],
+    troubles: [
+      {
+        title: "빙고 칸을 빠르게 여러 번 누르면 공개 요청이 겹칠 수 있었습니다",
+        titleEn: "Rapid taps on a bingo square could send overlapping reveal requests",
+        problem: "칸을 누르면 공개 요청을 보내고 카드를 뒤집는데, 응답이 오기 전에 다시 누르면 같은 요청이 여러 번 나갈 수 있었습니다.",
+        problemEn: "Tapping a square sends a reveal request and flips the card; tapping again before the response arrived could send the same request several times.",
+        solution: "요청이 진행 중인지를 나타내는 isProcessing 잠금을 두어, 진행 중에는 클릭을 무시하고 응답을 받은 뒤에만 카드를 뒤집어 내용을 공개하게 했습니다.",
+        solutionEn: "An isProcessing lock ignores taps while a request is in flight, and the card flips to reveal its content only after the response arrives.",
+        result: "한 번의 탭은 한 번의 요청으로만 이어지고, 카드는 서버가 공개를 확인한 뒤에 뒤집힙니다.",
+        resultEn: "One tap leads to exactly one request, and the card flips only after the server confirms the reveal.",
+        files: ["src/pages/bingo.jsx"],
+        branch: "dev",
       },
     ],
     results: [
@@ -671,8 +774,8 @@ export const careerDetailSections: CareerDetailSection[] = [
 
   {
     id: "devsite",
-    title: "비개발 직군을 위한 6회 강의와 교육 사이트 — 사내 개발 교육",
-    titleEn: "Six Lectures and a Companion Site for Non-Developers — Internal Dev Literacy Course",
+    title: "비개발 직군을 위한 교육 사이트 개발과 6회 강의 — 사내 개발 교육",
+    titleEn: "A Course Site and Six Lectures for Non-Developers — Internal Dev Literacy Course",
     images: [
       "/projects/devsite/01.png",
       "/projects/devsite/02.png",
@@ -689,6 +792,34 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     role: [
       {
+        title: "교육 사이트 단독 개발 — React · TypeScript · Vite",
+        titleEn: "Built the Course Site Solo — React · TypeScript · Vite",
+        items: [
+          {
+            text: "React 18 · TypeScript(strict) · Vite 6 · Tailwind CSS v4 · React Router 7로 강의 6회를 따라가는 교육 사이트를 혼자 만들어 Vercel에 배포했습니다. 커밋 20개가 모두 제 커밋입니다.",
+            textEn:
+              "I built and deployed the course site for the six lectures on my own with React 18, TypeScript (strict), Vite 6, Tailwind CSS v4, and React Router 7 on Vercel. All 20 commits are mine.",
+            subItems: [
+              {
+                text: "SVG 개념 도식 17종을 컴포넌트로 만들었습니다(강의 페이지 14종 · 가이드 3종). 이미지가 아니라 코드라 문구를 고치고 강의마다 재사용할 수 있습니다.",
+                textEn:
+                  "Made 17 SVG concept diagrams as components (14 on lecture pages, 3 on guides). Being code rather than images, their wording is editable and they're reused across lectures.",
+              },
+              {
+                text: "브라우저에서 바로 동작하는 인터랙티브 실습 10개를 만들었습니다 — 로그인 요청이 FE→API→BE→DB를 오가는 7단계 왕복(Ep1Journey), 브랜치 → 커밋 → PR → 머지를 단계별로 여는 Git 시뮬레이터(Ep3GitSim), 필드를 고르면 API 명세가 조립되는 API 빌더(Ep5ApiBuilder), requestAnimationFrame 캔버스 룰렛 등.",
+                textEn:
+                  "Built 10 in-browser interactive exercises — a 7-step login round-trip across FE→API→BE→DB (Ep1Journey), a Git simulator that unlocks branch → commit → PR → merge step by step (Ep3GitSim), an API builder that assembles a spec as you pick fields (Ep5ApiBuilder), a requestAnimationFrame canvas roulette, and more.",
+              },
+              {
+                text: "용어 사전 51개는 용어·뜻·설명을 한 번에 검색하고(useMemo 필터) 강의별로 걸러 보게 했습니다. 스크롤에 맞춰 나타나는 효과는 IntersectionObserver로 만들었습니다.",
+                textEn:
+                  "The 51-term glossary searches term, meaning, and description at once (a useMemo filter) and filters by lecture. The scroll reveal uses IntersectionObserver.",
+              },
+            ],
+          },
+        ],
+      },
+      {
         title: "커리큘럼 설계와 강의 — 단독",
         titleEn: "Curriculum & Teaching — Solo",
         items: [
@@ -698,23 +829,10 @@ export const careerDetailSections: CareerDetailSection[] = [
               "Designed a 6-session lunchtime curriculum and taught it weekly for 6 weeks — software structure, dev vocabulary, Git & GitHub, collaboration communication, AI & vibe coding, AI trends.",
             subItems: [
               {
-                text: "모든 개념을 식당 비유 하나로 통일했습니다 — 홀=프론트엔드, 주방=백엔드, 냉장고=DB, 주문서=API. 회차가 바뀌어도 같은 그림 위에 새 개념을 얹도록 했습니다.",
+                text: "모든 개념을 식당 비유 하나로 통일했습니다 — 홀=프론트엔드, 주방=백엔드, 냉장고=DB, 주문서=API. 5회차의 API 빌더도 1회차의 '주문서=API'를 이어받도록 만들었습니다.",
                 textEn:
-                  "Unified every concept under one restaurant metaphor — dining hall = frontend, kitchen = backend, fridge = DB, order slip = API — so each session added to the same picture.",
+                  "Every concept sat under one restaurant metaphor — dining hall = frontend, kitchen = backend, fridge = DB, order slip = API. Lecture 5's API builder picks up lecture 1's 'order slip = API'.",
               },
-            ],
-          },
-        ],
-      },
-      {
-        title: "교육 사이트 직접 제작",
-        titleEn: "Built the Companion Site",
-        items: [
-          {
-            text: "React · TypeScript · Vite로 교육용 사이트를 만들었습니다 — SVG 개념 도식 14종, 브라우저에서 바로 동작하는 라이브 실습(로그인 요청 왕복, Git 협업 시뮬레이터 등), 용어 사전 51개.",
-            textEn:
-              "Built the site with React · TypeScript · Vite — 14 SVG concept diagrams, live in-browser demos (login round-trip, Git collaboration simulator), and a 51-term glossary.",
-            subItems: [
               {
                 text: "설치·계정이 필요한 실습은 전부 뺐습니다. 밥 먹으면서 듣는 환경을 전제로, 링크 하나로 바로 따라 할 수 있는 것만 남겼습니다.",
                 textEn:
@@ -723,6 +841,19 @@ export const careerDetailSections: CareerDetailSection[] = [
             ],
           },
         ],
+      },
+    ],
+    troubles: [
+      {
+        title: "강의별 조회 수를 재려다 새로고침하면 404가 났습니다",
+        titleEn: "Measuring views per lecture made refreshes 404",
+        problem: "처음에는 HashRouter로 만들어 주소가 #/lesson/1 형태였고, Vercel Analytics가 강의별 페이지를 따로 세지 못했습니다. BrowserRouter로 바꾸자 이번에는 깊은 링크에서 새로고침하면 404가 나고 에셋 경로가 깨질 수 있었습니다.",
+        problemEn: "It started on HashRouter with URLs like #/lesson/1, so Vercel Analytics couldn't count each lecture page separately. Switching to BrowserRouter meant a refresh on a deep link could 404 and asset paths could break.",
+        solution: "BrowserRouter로 옮기면서 vercel.json에 모든 경로를 index.html로 돌리는 SPA rewrite를 넣고, Vite base를 '/'로 고정했습니다. 버튼 컴포넌트(Pill)에는 라우터 링크용 to 속성을 추가했습니다.",
+        solutionEn: "Moving to BrowserRouter, I added an SPA rewrite in vercel.json that sends every path to index.html and pinned Vite's base to '/'. The button component (Pill) gained a to prop for router links.",
+        result: "강의 페이지마다 조회 수가 따로 잡히고, 어느 강의 주소에서 새로고침해도 페이지가 그대로 열립니다.",
+        resultEn: "Each lecture page now gets its own view count, and refreshing on any lecture URL opens the page as expected.",
+        files: ["vercel.json", "vite.config.ts", "src/App.tsx"],
       },
     ],
     results: [
@@ -764,8 +895,8 @@ export const careerDetailSections: CareerDetailSection[] = [
         titleEn: "The habit of jotting account numbers by hand became the transfer screen",
         steps: [
           { label: "기존 습관", labelEn: "Existing habit", note: "계좌번호를 손글씨로 메모 — 고령층이 이미 하는 행동을 입력 수단으로", noteEn: "Writing account numbers by hand — something seniors already do, used as input" },
-          { label: "① 촬영", labelEn: "① Capture", tag: "AI-OCR", tagEn: "AI-OCR", note: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델의 가중 투표로 인식", noteEn: "Weighted vote of CLOVA OCR, Google Vision, and our fine-tuned model" },
-          { label: "② 확인", labelEn: "② Confirm", tag: "사람 확인 1", tagEn: "Human check 1", note: "인식된 수취인·계좌·금액을 큰 글씨로 본인이 확인", noteEn: "The user checks the recognized payee, account, and amount in large type" },
+          { label: "① 촬영", labelEn: "① Capture", tag: "AI-OCR 설계", tagEn: "AI-OCR (design)", note: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델의 가중 투표로 설계 (공개 프로토타입은 인식 결과를 목업 데이터로 대신함)", noteEn: "Designed as a weighted vote of CLOVA OCR, Google Vision, and a fine-tuned model (the public prototype uses mock recognition data)" },
+          { label: "② 확인", labelEn: "② Confirm", tag: "사람 확인 1", tagEn: "Human check 1", note: "인식된 은행·계좌·금액을 큰 글씨로 보여 주고 음성으로도 읽어 줌", noteEn: "Shows the recognized bank, account, and amount in large type and reads them aloud" },
           { label: "③ 승인", labelEn: "③ Approve", tag: "사람 확인 2", tagEn: "Human check 2", note: "송금이 실행되기 전에 가족이 한 번 더 확인하는 2단계 인증", noteEn: "A family member confirms once more before the transfer runs" },
           { label: "송금 완료", labelEn: "Sent", tag: "결과", tagEn: "Result", note: "착오송금의 주요 원인인 계좌번호 직접 입력이 흐름에서 사라짐", noteEn: "Typing the account number, the main cause of mistaken transfers, is gone" },
         ],
@@ -790,9 +921,44 @@ export const careerDetailSections: CareerDetailSection[] = [
         text: "2025 한국정보기술전략혁신학회(KIITI) 동계 학술대회 아이디어 및 앱 개발 콘테스트 출품 작품입니다. 6인 팀(프론트엔드 3 · 백엔드 3)의 PM으로 기획·AI 설계·프론트엔드 개발을 리드했습니다.",
         textEn:
           "Submitted to the 2025 KIITI Winter Academic Conference App Development Contest. I led a 6-person team (3 frontend · 3 backend) as PM across planning, AI architecture, and frontend development.",
+        subItems: [
+          {
+            text: "공개 저장소(songeul)는 2026년 1월에 제가 혼자 커밋한 React 프로토타입입니다. 화면 흐름과 접근성 계층을 구현했고, OCR 인식과 보안 검사는 목업 데이터로 흐름만 보여 줍니다.",
+            textEn:
+              "The public repo (songeul) is a React prototype I committed on my own in January 2026. It implements the screen flow and the accessibility layer; OCR recognition and the security check run on mock data to show the flow.",
+          },
+        ],
       },
     ],
     role: [
+      {
+        title: "프론트엔드 프로토타입 — React · TypeScript · Vite",
+        titleEn: "Frontend Prototype — React · TypeScript · Vite",
+        items: [
+          {
+            text: "React 18 · TypeScript · Vite · React Router 6로 라우트 14개의 송금 흐름을 만들었습니다 — 촬영 → 인식 결과 확인 → 보안 검사 → 사기 경고 또는 송금 완료 → 가족 승인 대기.",
+            textEn:
+              "Built the transfer flow across 14 routes with React 18, TypeScript, Vite, and React Router 6 — capture → confirm the recognized result → security check → fraud alert or success → waiting for family approval.",
+            subItems: [
+              {
+                text: "확인 화면(OCRConfirm)은 들어온 지 0.5초 뒤 인식된 은행·계좌·금액을 Web Speech API(SpeechSynthesis, ko-KR, 0.9배속)로 읽어 줍니다. 글씨를 읽기 어려운 사용자도 귀로 한 번 더 확인할 수 있습니다.",
+                textEn:
+                  "The confirm screen (OCRConfirm) reads the recognized bank, account, and amount aloud 0.5 s after it opens, using the Web Speech API (SpeechSynthesis, ko-KR, 0.9× rate), so users who struggle to read can confirm once more by ear.",
+              },
+              {
+                text: "접근성 계층을 훅과 유틸로 분리했습니다 — useTTS · useHaptic(성공·오류·경고별 navigator.vibrate 패턴), 포커스 트랩, 스크린리더 알림(announceToScreenReader), 본문 건너뛰기 링크.",
+                textEn:
+                  "Split the accessibility layer into hooks and utilities — useTTS and useHaptic (navigator.vibrate patterns for success, error, and warning), a focus trap, screen-reader announcements (announceToScreenReader), and a skip link.",
+              },
+              {
+                text: "큰 글씨 디자인 토큰을 CSS 변수로 두었습니다 — 본문 20~24px, 제목 32~36px, 터치 영역 최소 48px, 주요 버튼 64px. 가족 관리(관계별 권한), 송금 한도(기본·관계별·시간대별), 고령자 보호 설정 화면도 만들었습니다.",
+                textEn:
+                  "Large-type design tokens live in CSS variables — body 20–24px, headings 32–36px, 48px minimum touch targets, 64px primary buttons. I also built the family management (per-relation permissions), transfer limits (base, per-relation, time-of-day), and elderly-protection settings screens.",
+              },
+            ],
+          },
+        ],
+      },
       {
         title: "서비스 기획 및 UX 설계",
         titleEn: "Product Planning & UX Design",
@@ -816,25 +982,14 @@ export const careerDetailSections: CareerDetailSection[] = [
         titleEn: "AI System Design",
         items: [
           {
-            text: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델 앙상블(가중 투표 방식)을 설계하여 OCR 인식률의 한계를 보완했습니다. 3단계 이상 패턴 감지 로드맵(Rule → 통계 → ML·Isolation Forest·LSTM)을 수립했습니다.",
+            text: "CLOVA OCR + Google Vision + 자체 파인튜닝 모델 앙상블(가중 투표 방식)과 3단계 이상 패턴 감지 로드맵(Rule → 통계 → ML·Isolation Forest·LSTM)을 설계했습니다. 공개 프로토타입에는 구현돼 있지 않은 설계 단계의 내용입니다.",
             textEn:
-              "Designed a CLOVA OCR + Google Vision + fine-tuned model ensemble (weighted voting) to compensate for OCR accuracy limitations. Established a 3-stage anomaly detection roadmap (Rule → Statistical → ML: Isolation Forest, LSTM).",
+              "Designed a CLOVA OCR + Google Vision + fine-tuned model ensemble (weighted voting) and a 3-stage anomaly-detection roadmap (Rule → Statistical → ML: Isolation Forest, LSTM). This is design-stage work, not implemented in the public prototype.",
           },
           {
             text: "LLM 역할을 NLU(텍스트 의미 구조화)와 XAI(위험 설명)로 분리 설계하고, 사용자 수정 데이터를 자동 학습하는 피드백 루프를 포함했습니다.",
             textEn:
               "Separated LLM roles into NLU (text semantic structuring) and XAI (risk explanation), and included a feedback loop for auto-learning from user correction data.",
-          },
-        ],
-      },
-      {
-        title: "비즈니스 모델 설계",
-        titleEn: "Business Model Design",
-        items: [
-          {
-            text: "통계청 고령 인구 통계를 기반으로 시장 규모를 직접 산정하고, 4개 수익원을 설계했습니다: B2C 구독 / B2B 라이선싱(금감원 고령자 서비스 의무화 규제 활용) / Financial Brokerage / Government Grants.",
-            textEn:
-              "Sized the market directly from Statistics Korea senior population data and designed 4 revenue streams: B2C subscription / B2B licensing (leveraging the FSS senior service mandate) / financial brokerage / government grants.",
           },
         ],
       },
@@ -854,9 +1009,9 @@ export const careerDetailSections: CareerDetailSection[] = [
           "Instead of teaching seniors a new way, I turned their habit of jotting account numbers by hand into the interface. I judged that carrying a familiar behavior onto the screen asks far less of seniors than teaching them new controls.",
       },
       {
-        text: "OCR 인식률에는 한계가 있다는 전제에서 설계를 시작했습니다. 인식 결과를 큰 글씨로 재확인하는 단계를 넣고 앙상블로 보정했습니다. 인식이 어긋나도 잘못된 송금으로 이어지지 않게 막는 확인 단계가 금융 서비스의 신뢰를 만든다고 판단했습니다.",
+        text: "OCR 인식률에는 한계가 있다는 전제에서 설계를 시작했습니다. 인식 결과를 큰 글씨와 음성으로 재확인하는 단계를 넣고, 앙상블 보정을 설계했습니다. 인식이 어긋나도 잘못된 송금으로 이어지지 않게 막는 확인 단계가 금융 서비스의 신뢰를 만든다고 판단했습니다.",
         textEn:
-          "The design started from the premise that OCR has an error rate: an oversized confirmation step for the recognized number, plus ensemble correction. I judged that a confirmation step which stops a misread from becoming a wrong transfer is what builds trust in a financial service.",
+          "The design started from the premise that OCR has an error rate: a confirmation step for the recognized number in large type and by voice, plus a designed ensemble correction. I judged that a confirmation step which stops a misread from becoming a wrong transfer is what builds trust in a financial service.",
       },
     ],
   },
@@ -894,38 +1049,74 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     role: [
       {
-        title: "기획 및 프로덕트 설계",
-        titleEn: "Planning & Product Design",
+        title: "프론트엔드 개발 — 지도 · API 계층 · 인증 · PWA",
+        titleEn: "Frontend — Map, API Layer, Auth, PWA",
         items: [
           {
-            text: "OCR 기술과 AI 추천을 결합한 종합 쇼핑 도우미 PWA의 전체 서비스 플로우를 기획했습니다.",
+            text: "Next.js 15(App Router) · React 19 · TypeScript · TanStack Query · Tailwind CSS v4 프로젝트에서 지도 페이지, API 계층, 토큰 갱신, PWA를 맡았습니다. OCR 스캔 · 카카오 로그인 · 홈 화면은 팀원이 만들었습니다.",
             textEn:
-              "Planned the complete service flow of a comprehensive shopping assistant PWA combining OCR technology and AI recommendations.",
+              "In a Next.js 15 (App Router), React 19, TypeScript, TanStack Query, and Tailwind CSS v4 project, I owned the map page, the API layer, token refresh, and the PWA. A teammate built OCR scanning, Kakao login, and the home screen.",
             subItems: [
               {
-                text: "실시간 가격비교(전통시장 vs 대형마트), OCR 영수증 스캔, Google Maps 연동 경로안내, AI 상품 대체 추천 등 4가지 핵심 기능을 정의했습니다.",
+                text: "지도 페이지: 브라우저 위치를 먼저 쓰고 실패하면 Google Geolocation API로 넘어갑니다. 가게까지 거리·시간은 Google Directions를 Next.js 라우트 핸들러로 프록시해 서버에서 부르고, 도보 → 대중교통 → 직선거리 추정(시속 4.8km, '대략적' 표시) 순으로 대체합니다.",
                 textEn:
-                  "Defined 4 core features: real-time price comparison (traditional market vs. large mart), OCR receipt scanning, Google Maps-integrated navigation, and AI alternative product recommendations.",
+                  "Map page: it uses browser geolocation first and falls back to the Google Geolocation API. Distance and time to a shop come from Google Directions, proxied through a Next.js route handler so it's called server-side, falling back from walking → transit → a straight-line estimate (4.8 km/h, labelled 'approximate').",
+              },
+              {
+                text: "API 계층: axios 인터셉터가 쿠키의 토큰을 Bearer로 붙이고, 쇼핑·인증·추천·가격·시장·절약 API를 타입이 있는 객체로 묶었습니다. 화면은 queryKeys 팩토리를 쓰는 TanStack Query 훅으로 홈·카테고리·마이페이지·스캔 페이지를 실제 API에 연결했습니다.",
+                textEn:
+                  "API layer: an axios interceptor attaches the cookie token as Bearer, and the shopping, auth, recommendation, price, market, and savings APIs are grouped into typed objects. Screens use TanStack Query hooks with a queryKeys factory, which is how I connected the home, category, my-page, and scan pages to the real API.",
+              },
+              {
+                text: "토큰 갱신은 서버 라우트 핸들러에서 쿠키를 다시 써서(access 1시간 · refresh 30일) 처리하고, next-pwa와 설치 안내 컴포넌트, cache-first 서비스 워커로 홈 화면 설치를 붙였습니다.",
+                textEn:
+                  "Token refresh runs in a server route handler that rewrites the cookies (access 1 h, refresh 30 d), and next-pwa, an install prompt component, and a cache-first service worker add home-screen install.",
               },
             ],
           },
         ],
       },
       {
-        title: "아키텍처 설계 및 개발 리드",
-        titleEn: "Architecture Design & Development Lead",
+        title: "기획 및 프로덕트 설계",
+        titleEn: "Planning & Product Design",
         items: [
           {
-            text: "Next.js 15 + React 19 기반 PWA 아키텍처를 설계하여 오프라인 지원, 홈 화면 추가, 빠른 로딩 등 PWA 핵심 기능을 구현했습니다.",
+            text: "OCR 기술과 AI 추천을 결합한 종합 쇼핑 도우미 PWA의 전체 서비스 플로우를 기획했습니다.",
             textEn:
-              "Designed a Next.js 15 + React 19-based PWA architecture and implemented core PWA features: offline support, home screen installation, and fast loading.",
-          },
-          {
-            text: "팀 전체 기획부터 개발, 디자인, 팀 관리까지 프로젝트 리드 역할을 수행했습니다.",
-            textEn:
-              "Served as project lead covering the entire team — from planning and development to design and team management.",
+              "Planned the end-to-end service flow of a shopping assistant PWA combining OCR and AI recommendations.",
+            subItems: [
+              {
+                text: "실시간 가격비교(전통시장 vs 대형마트), OCR 영수증 스캔, Google Maps 연동 경로안내, AI 상품 대체 추천 등 4가지 핵심 기능을 정의했습니다.",
+                textEn:
+                  "Defined 4 core features: real-time price comparison (traditional market vs. supermarket), OCR receipt scanning, Google Maps route guidance, and AI product substitution.",
+              },
+            ],
           },
         ],
+      },
+    ],
+    troubles: [
+      {
+        title: "여러 요청이 동시에 401을 받으면 각자 토큰을 갱신하려 했습니다",
+        titleEn: "Concurrent 401s each tried to refresh the token",
+        problem: "액세스 토큰이 만료된 순간 화면의 여러 쿼리가 한꺼번에 401을 받으면, 요청마다 따로 갱신을 시도해 갱신 요청이 겹치고 순서에 따라 새 토큰이 서로를 덮어쓸 수 있었습니다.",
+        problemEn: "When the access token expired, several queries on a screen could hit 401 at once and each try its own refresh, so refresh calls overlapped and new tokens could overwrite each other depending on order.",
+        solution: "갱신 중인지를 나타내는 isRefreshing 플래그 하나와 대기열(pendingQueue)을 두어, 첫 요청만 갱신하고 그 사이 실패한 요청은 대기열에서 기다리게 했습니다. 갱신이 끝나면 새 토큰으로 모두 재시도하고, 갱신이 실패하면 대기 중인 요청을 함께 실패시킵니다.",
+        solutionEn: "A single isRefreshing flag and a pendingQueue make only the first request refresh while others that fail in the meantime wait in the queue. When the refresh finishes, they all retry with the new token; if it fails, the waiting requests fail together.",
+        result: "만료 시점에 요청이 몰려도 갱신은 한 번만 나가고, 대기하던 요청은 같은 새 토큰으로 이어집니다.",
+        resultEn: "However many requests arrive at expiry, only one refresh goes out, and the waiting requests continue with the same new token.",
+        files: ["src/lib/api/diplomats.ts", "src/app/api/auth/refresh/route.ts"],
+      },
+      {
+        title: "도보 경로가 없으면 가게까지 길 안내가 비었습니다",
+        titleEn: "With no walking route, directions came back empty",
+        problem: "전통시장 가게까지 Google Directions의 도보 경로가 나오지 않는 경우가 있었고, 그러면 거리와 소요 시간이 비었습니다.",
+        problemEn: "Google Directions sometimes returned no walking route to a market shop, leaving distance and time blank.",
+        solution: "Directions 호출을 Next.js 라우트 핸들러로 옮겨 서버에서 부르고, 도보가 실패하면 대중교통으로 다시 요청하고, 그것도 실패하면 직선거리를 시속 4.8km로 나눈 값을 '대략적'이라고 표시해 보여 주게 했습니다.",
+        solutionEn: "I moved the Directions call into a Next.js route handler so it runs server-side; if walking fails it retries with transit, and if that fails too it shows the straight-line distance at 4.8 km/h, labelled 'approximate'.",
+        result: "어떤 가게를 골라도 거리와 시간이 표시되고, 추정값이면 추정이라고 드러납니다.",
+        resultEn: "Every shop shows a distance and time, and an estimate says it's an estimate.",
+        files: ["src/app/map/page.tsx", "src/app/api/google-directions/route.ts"],
       },
     ],
     results: [
@@ -981,8 +1172,46 @@ export const careerDetailSections: CareerDetailSection[] = [
         textEn:
           "Existing programs were government-led and face-to-face — paradoxically creating high barriers for isolated youth. Concluded that a non-face-to-face, anonymous, step-by-step approach would be the key differentiator.",
       },
+      {
+        text: "한국외대 GBT학부 캡스톤 프로젝트로, 3인 팀에서 기획·디자인·프론트엔드를 맡았습니다. (2024.09 ~ 2024.12)",
+        textEn:
+          "A HUFS GBT capstone project — in a team of three, I handled planning, design, and frontend. (Sep – Dec 2024)",
+      },
     ],
     role: [
+      {
+        title: "프론트엔드 개발 — 라우트 39개 모바일 웹",
+        titleEn: "Frontend — A 39-Route Mobile Web App",
+        items: [
+          {
+            text: "React 18 · React Router 6 · styled-components로 라우트 39개(페이지 파일 40개)의 모바일 웹을 혼자 만들었습니다. 프론트엔드 저장소의 커밋 23개가 모두 제 커밋입니다.",
+            textEn:
+              "I built the mobile web app on my own with React 18, React Router 6, and styled-components: 39 routes (40 page files). All 23 commits in the frontend repo are mine.",
+            subItems: [
+              {
+                text: "모든 화면을 최대 폭 402px 모바일 프레임 하나에 담는 공용 레이아웃을 두어, 데스크톱에서 열어도 휴대폰 화면처럼 보이게 했습니다.",
+                textEn:
+                  "A shared layout puts every screen inside one mobile frame capped at 402px, so it looks like a phone even when opened on a desktop.",
+              },
+              {
+                text: "외부 기관 연계 화면은 카카오맵 SDK를 필요할 때 동적으로 불러와 현재 위치를 마커·정보창·줌 컨트롤과 함께 띄웁니다. 기관 목록은 카테고리 필터로 거릅니다.",
+                textEn:
+                  "The partner-organization screen loads the Kakao Map SDK on demand and shows the current location with a marker, info window, and zoom control; the organization list is filtered by category.",
+              },
+              {
+                text: "AI 역할극 채팅과 텍스트 시뮬레이션, 자가진단 문항은 발표 시연을 위해 대화 스크립트와 로컬 상태로 흐름을 구현했습니다.",
+                textEn:
+                  "The AI role-play chat, text simulations, and self-assessment were implemented for the demo with scripted conversations and local state.",
+              },
+            ],
+          },
+          {
+            text: "와이어프레임부터 스타일 가이드, 아이콘·버튼 등 세부 UI 요소까지 Figma로 전체 디자인 시스템을 구축했습니다.",
+            textEn:
+              "Built the full design system in Figma — from wireframes to style guide, down to individual icons and buttons.",
+          },
+        ],
+      },
       {
         title: "서비스 기획 및 PM",
         titleEn: "Product Planning & PM",
@@ -990,35 +1219,12 @@ export const careerDetailSections: CareerDetailSection[] = [
           {
             text: "2단계 사회 적응 커리큘럼을 설계했습니다: 1단계(사회 적응 훈련) - 텍스트 시뮬레이션, AI 역할극 채팅, 사용자 매칭 대화 / 2단계(사회 참여 훈련) - AI 취업 컨설팅, 외부 기관 연계, 일간 뉴스레터.",
             textEn:
-              "Designed a 2-stage social adaptation curriculum: Stage 1 (Social Adaptation Training) — text simulation, AI role-play chat, user matching dialogue / Stage 2 (Social Participation Training) — AI job consulting, institution links, daily newsletter.",
+              "Designed a 2-stage social adaptation curriculum: Stage 1 (social adaptation) — text simulation, AI role-play chat, user matching / Stage 2 (social participation) — AI career consulting, partner organization links, daily newsletter.",
           },
           {
             text: "구독 모델(사회 적응 훈련 6,900원/월, 사회 참여 훈련 9,900원/월)과 3단계 확장 전략(B2C → 기술 안정화 → B2B)을 수립하고 3개년 수익 예측을 작성했습니다.",
             textEn:
-              "Established subscription model (₩6,900/month for adaptation, ₩9,900/month for participation) and 3-phase growth strategy (B2C → tech stabilization → B2B), including 3-year revenue projections.",
-            subItems: [
-              {
-                text: "첫 해 당기순이익 563만원 → 3년차 3억 987만원 달성 전망의 손익계산서를 작성했습니다.",
-                textEn:
-                  "Prepared a P&L statement projecting ₩5.63M net profit in year 1, scaling to ₩309.87M by year 3.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "UI/UX 디자인 및 프론트엔드 개발",
-        titleEn: "UI/UX Design & Frontend Development",
-        items: [
-          {
-            text: "와이어프레임부터 스타일 가이드, 아이콘·버튼 등 세부 UI 요소까지 Figma로 전체 디자인 시스템을 구축했습니다.",
-            textEn:
-              "Built the complete design system in Figma — from wireframes and style guides to detailed UI elements like icons and buttons.",
-          },
-          {
-            text: "React 기반으로 40개 이상의 페이지를 구현하고, Spring Boot 백엔드 API(회원가입, 뉴스레터, OpenAI 연동)와 카카오맵 API를 연동했습니다. (3인팀, 멋쟁이사자처럼 12기)",
-            textEn:
-              "Implemented 40+ pages in React, integrated Spring Boot backend APIs (registration, newsletter, OpenAI) and Kakao Maps API. (3-person team, Likelion 12th cohort)",
+              "Built a subscription model (₩6,900/mo social adaptation, ₩9,900/mo social participation) and a 3-stage expansion strategy (B2C → tech stabilization → B2B), with a 3-year revenue forecast.",
           },
         ],
       },
@@ -1030,9 +1236,9 @@ export const careerDetailSections: CareerDetailSection[] = [
           "Achieved overall usefulness score of 8.9 (exceeding 8.0 target) in market testing with 26 participants. Weekly challenge received the highest rating (9.4), and AI role-play chat was praised for minimizing aversion to real conversation.",
       },
       {
-        text: "서비스 기획, UI/UX 디자인, 40페이지 프론트엔드 개발을 완성하고 최종 발표와 시연을 맡았습니다.",
+        text: "서비스 기획, UI/UX 디자인, 라우트 39개의 프론트엔드 개발을 완성하고 최종 발표와 시연을 맡았습니다.",
         textEn:
-          "Completed the service planning, UI/UX design, and 40-page frontend build, and delivered the final presentation and demo.",
+          "Completed the service planning, UI/UX design, and 39-route frontend build, and delivered the final presentation and demo.",
       },
     ],
     lessons: [
@@ -1074,12 +1280,45 @@ export const careerDetailSections: CareerDetailSection[] = [
         ],
       },
       {
-        text: "멋쟁이사자처럼 12기 최종 프로젝트로, 4인 팀에서 기획·디자인·프론트엔드 개발을 맡았습니다. 2024년 7월부터 11월까지 약 4개월간 진행했습니다.",
+        text: "멋쟁이사자처럼 12기 최종 프로젝트로, 4인 팀에서 기획·디자인·프론트엔드 개발을 맡았습니다. 2024년 9월부터 11월까지 약 3개월간 진행했습니다.",
         textEn:
-          "The Likelion 12th cohort final project — in a 4-person team, I handled planning, design, and frontend development over about 4 months (July–November 2024).",
+          "The Likelion 12th cohort final project — in a 4-person team, I handled planning, design, and frontend development over about 3 months (September–November 2024).",
       },
     ],
     role: [
+      {
+        title: "프론트엔드 개발 — 면접 진행 화면 전체",
+        titleEn: "Frontend — The Whole Interview Flow",
+        items: [
+          {
+            text: "React 18 · React Router 6 · styled-components · axios 프론트엔드에서 면접 옵션 선택부터 음성·화상 면접, 결과 요약까지 면접 진행 화면을 맡았습니다(프론트엔드 3인 중 가장 많은 커밋 19개).",
+            textEn:
+              "In a React 18, React Router 6, styled-components, and axios frontend, I owned the interview flow from option selection through voice and video interviews to the summary (19 commits, the most of the three frontend developers).",
+            subItems: [
+              {
+                text: "녹음: RecordRTC로 답변을 모노 44.1kHz WAV로 녹음해 면접 API에 multipart로 올리고, 서버가 돌려준 질문 음성(blob)을 URL.createObjectURL로 바로 재생합니다. 같은 파일을 발음 평가 API로 이어서 보냅니다. Azure STT/TTS 호출은 백엔드가 맡았습니다.",
+                textEn:
+                  "Recording: RecordRTC records answers as mono 44.1 kHz WAV and uploads them to the interview API as multipart, and the next question's audio returned by the server (a blob) plays right away via URL.createObjectURL. The same file then goes to the pronunciation API. The backend handled the Azure STT/TTS calls.",
+              },
+              {
+                text: "화상 면접은 웹캠 getUserMedia({ video, audio }) 스트림에서 답변 음성을 녹음해 마이크 권한을 두 번 묻지 않게 했습니다. 업로드는 공용 함수로 묶어 네트워크 오류와 서버 오류를 나눠 처리합니다.",
+                textEn:
+                  "Video interviews record the answer audio from the webcam's getUserMedia({ video, audio }) stream, so the mic permission isn't asked twice. Uploads go through one shared function that separates network errors from server errors.",
+              },
+              {
+                text: "면접 옵션(음성/화상, 1:1/3:1, 면접 유형)을 API 요청 형식으로 바꿔 알맞은 화면으로 보내고, 기술 면접에서는 3:1을 막았습니다. 15분 세션 타이머가 끝나면 요약 화면으로 넘어가고 남은 질문 수를 보여 줍니다.",
+                textEn:
+                  "Interview options (voice/video, 1:1 or 3:1, interview type) map to the API payload and route to the right screen, with 3:1 blocked for technical interviews. A 15-minute session timer moves to the summary when it ends and shows the questions remaining.",
+              },
+              {
+                text: "면접 화면에서 반복되던 드롭다운 · 입력 영역 · 안내 박스 · 헤더 · 레이아웃을 공용 컴포넌트로 뽑아냈습니다(파일 13개, +589/−828줄). axios 인스턴스에는 토큰을 붙이고 401이면 로그인으로 보내는 인터셉터를 두었습니다.",
+                textEn:
+                  "I extracted the dropdowns, input sections, info boxes, header, and layout repeated across interview screens into shared components (13 files, +589/−828 lines). The axios instance has interceptors that attach the token and send a 401 to the login page.",
+              },
+            ],
+          },
+        ],
+      },
       {
         title: "서비스 기획 및 PM",
         titleEn: "Product Planning & PM",
@@ -1087,44 +1326,35 @@ export const careerDetailSections: CareerDetailSection[] = [
           {
             text: "취준생의 실제 페인 포인트를 분석하여 세 가지 핵심 기능(음성 인식 면접 시뮬레이션, 직무별 맞춤 질문 자동 생성, AI 피드백)을 정의하고 우선순위를 결정했습니다.",
             textEn:
-              "Analyzed actual pain points of job seekers and defined three core features: voice-based interview simulation, auto-generation of role-specific questions, and AI feedback — then prioritized them.",
+              "Analyzed real job-seeker pain points to define and prioritize three core features: voice-recognition interview simulation, role-specific question generation, and AI feedback.",
             subItems: [
               {
-                text: "Azure Speech Service를 활용해 음성-텍스트(STT) 및 텍스트-음성(TTS) 변환 시스템을 구현하여 실제 면접과 유사한 음성 기반 인터랙션을 구현했습니다.",
+                text: "Azure Speech Service 기반 음성 인터랙션과, GPT-4o-mini를 직무별 면접 데이터로 파인튜닝해 IT · 경영 · 마케팅 등 직군별 질문을 생성하는 구조를 설계했습니다.",
                 textEn:
-                  "Implemented speech-to-text (STT) and text-to-speech (TTS) conversion using Azure Speech Service, enabling voice-based interaction similar to a real interview.",
+                  "Designed the Azure Speech Service voice interaction and a structure that fine-tunes GPT-4o-mini on role-specific interview data to generate questions for IT, business, marketing, and other roles.",
               },
               {
-                text: "GPT-4o-mini를 직무별 면접 데이터로 Fine-tuning하여 IT, 경영, 마케팅 등 직군별로 적절한 면접 질문을 자동 생성하는 시스템을 설계했습니다.",
+                text: "서비스 플로우 설계: 로그인 → 직무 선택 → AI 질문 생성 → 음성 답변 → STT 변환 → 피드백 제공의 전체 사용자 여정을 설계했습니다.",
                 textEn:
-                  "Fine-tuned GPT-4o-mini on role-specific interview data to design a system that auto-generates appropriate interview questions for IT, business, marketing, and other fields.",
+                  "Service flow: designed the full journey — login → role selection → AI question generation → voice answer → STT → feedback.",
               },
             ],
-          },
-          {
-            text: "서비스 플로우 설계: 로그인 → 직무 선택 → AI 질문 생성 → 음성 답변 → STT 변환 → 피드백 제공의 전체 사용자 여정을 설계했습니다.",
-            textEn:
-              "Designed the complete user journey: Login → Role Selection → AI Question Generation → Voice Answer → STT Conversion → Feedback.",
           },
         ],
       },
+    ],
+    troubles: [
       {
-        title: "UI/UX 디자인 및 프론트엔드 개발",
-        titleEn: "UI/UX Design & Frontend Development",
-        items: [
-          {
-            text: "실제 면접 환경을 재현한 인터랙티브 UI를 Figma로 설계하고, React 기반으로 구현했습니다. 음성 녹음 시각화, 타이머, 질문 카드 등 면접 몰입감을 높이는 요소들을 포함했습니다.",
-            textEn:
-              "Designed an interactive UI replicating a real interview environment in Figma and implemented it in React. Included elements to enhance interview immersion: voice recording visualization, timer, and question cards.",
-            subItems: [
-              {
-                text: "Spring Boot 백엔드와 API를 연동하여 실시간 STT 처리, 질문 생성, 피드백 조회 플로우를 구현했습니다.",
-                textEn:
-                  "Integrated with Spring Boot backend API to implement real-time STT processing, question generation, and feedback retrieval flow.",
-              },
-            ],
-          },
-        ],
+        title: "녹음 파일이 이름만 WAV였습니다",
+        titleEn: "The recording was a WAV in name only",
+        problem: "처음에는 mic-recorder-to-mp3로 녹음해, 실제 내용은 MP3인데 파일 이름은 audio.wav, 형식은 audio/wav로 붙여 서버에 보내고 있었습니다.",
+        problemEn: "The first version recorded with mic-recorder-to-mp3, so the content was MP3 while the file was named audio.wav with type audio/wav when sent to the server.",
+        solution: "RecordRTC의 StereoAudioRecorder로 바꿔 모노 채널 · 44.1kHz의 실제 WAV를 만들었습니다. 이어서 업로드를 재사용 함수로 분리하고, 같은 녹음을 발음 평가 API까지 순서대로 보내게 했습니다.",
+        solutionEn: "I switched to RecordRTC's StereoAudioRecorder to produce a real WAV at mono, 44.1 kHz. Then I pulled the upload into a reusable function and sent the same recording on to the pronunciation API in sequence.",
+        result: "서버가 받는 파일의 형식과 실제 내용이 일치하게 됐고, 음성 면접과 화상 면접이 같은 업로드 경로를 씁니다.",
+        resultEn: "The file the server receives now matches its declared format, and voice and video interviews share one upload path.",
+        files: ["src/pages/Audio.jsx", "src/pages/Video.jsx"],
+        branch: "develop",
       },
     ],
     results: [
@@ -1140,11 +1370,6 @@ export const careerDetailSections: CareerDetailSection[] = [
       },
     ],
     lessons: [
-      {
-        text: "STT가 답변을 텍스트로 바꾸는 데 몇 초씩 걸렸습니다. 기술로는 줄일 수 없는 시간이라, 그 정적을 타이머와 진행 표시로 채웠습니다. 기술의 한계를 인정하고 UX로 감싸는 법을 처음 연습한 프로젝트입니다.",
-        textEn:
-          "STT took seconds to transcribe each answer — time we couldn't shrink with tech. So we filled the silence with a timer and progress cues. This was my first practice in accepting a technical limit and wrapping it in UX.",
-      },
       {
         text: "GPT fine-tuning 범위를 놓고 개발팀과 계속 조율했습니다. '이상적인 질문 생성'과 '기한 안에 되는 것' 사이에서 스코프를 자르는 일, 그게 PM 역할의 실체였습니다.",
         textEn:
@@ -1181,25 +1406,41 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     role: [
       {
-        title: "기획 및 프론트엔드 개발",
-        titleEn: "Planning & Frontend Development",
+        title: "프론트엔드 개발 — 마이페이지 · 홈 뉴스 피드",
+        titleEn: "Frontend — My Page and Home News Feed",
+        items: [
+          {
+            text: "Next.js 15(App Router) · React 19 · TypeScript · Emotion 프로젝트에서 마이페이지와 홈 뉴스 피드를 맡았습니다. AI 채팅 화면과 입력 온보딩 · 로그인 · 배포는 팀원이 맡았습니다.",
+            textEn:
+              "In a Next.js 15 (App Router), React 19, TypeScript, and Emotion project, I owned the my page and the home news feed. Teammates built the AI chat screen, input onboarding, login, and deployment.",
+            subItems: [
+              {
+                text: "홈은 사용자 정보와 메인 데이터를 Promise.all로 함께 불러와 관심 키워드별 뉴스를 보여 주고, 키워드 페이지(대표 카드 + 하위 카드, 빈 상태 포함)와 뉴스 상세 페이지로 이어집니다.",
+                textEn:
+                  "Home loads user info and main data together with Promise.all and shows news by interest keyword, leading to keyword pages (a featured card plus sub-cards, with an empty state) and news detail pages.",
+              },
+              {
+                text: "마이페이지는 관심사 · 목표 · 희망 직무를 칩으로 고치는 편집 바텀시트를 두고, 삭제는 화면을 먼저 바꾼 뒤 PUT이 실패하면 이전 값으로 되돌리는 낙관적 업데이트로 처리했습니다. API 응답과 사용자 정보는 타입으로 정의했습니다.",
+                textEn:
+                  "My page has an edit bottom sheet for interests, goals, and desired roles as chips; removals update the screen first and roll back to the previous values if the PUT fails (an optimistic update). API responses and user info are typed.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "기획",
+        titleEn: "Planning",
         items: [
           {
             text: "사용자의 경험·역량·관심사를 입력받아 AI가 맞춤형 커리어 로드맵과 취업 전략을 제안하는 서비스 흐름을 기획했습니다.",
             textEn:
-              "Planned a service structure where AI proposes personalized career roadmaps and job strategies based on user-inputted experience, competencies, and interests.",
-            subItems: [
-              {
-                text: "AI 멘토와의 대화형 인터페이스를 설계하여 딱딱한 분석 결과 대신 자연스러운 멘토링 경험을 제공하는 UX를 기획했습니다.",
-                textEn:
-                  "Designed a conversational interface with an AI mentor so the guidance reads as a natural mentoring conversation instead of a rigid analytical report.",
-              },
-            ],
+              "Planned a flow where AI takes the user's experience, skills, and interests and proposes a personalized career roadmap and job strategy.",
           },
           {
-            text: "해커톤의 시간 제약 안에서 기획·설계·개발 우선순위를 빠르게 결정하고 팀 전체의 방향을 이끌었습니다.",
+            text: "AI 멘토와의 대화형 인터페이스를 설계하여 딱딱한 분석 결과 대신 자연스러운 멘토링 경험을 제공하는 UX를 기획했습니다.",
             textEn:
-              "Quickly prioritized planning, design, and development within hackathon time constraints and led the overall team direction.",
+              "Designed a conversational interface with an AI mentor, delivering natural mentoring instead of dry analysis output.",
           },
         ],
       },
@@ -1247,48 +1488,58 @@ export const careerDetailSections: CareerDetailSection[] = [
         ],
       },
       {
-        text: "멋쟁이사자처럼 12기 프로젝트로, 문제 정의부터 비즈니스 모델 설계, UI/UX 디자인, 프론트엔드 개발까지 맡았습니다.",
+        text: "멋쟁이사자처럼 12기 프로젝트로, 팀장과 함께 문제 정의와 비즈니스 모델을 공동으로 기획하고 UI/UX 디자인과 프론트엔드 개발을 맡았습니다.",
         textEn:
-          "A Likelion 12th cohort project — I handled problem definition, business model design, UI/UX design, and frontend development.",
+          "A Likelion 12th cohort project — I co-planned the problem definition and business model with the team lead, and handled UI/UX design and frontend development.",
       },
     ],
     role: [
       {
-        title: "서비스 기획 및 BM 설계",
-        titleEn: "Product Planning & Business Model Design",
+        title: "프론트엔드 개발 — 혈당 기록 · 다이어톤 · 포도 포인트",
+        titleEn: "Frontend — Blood Sugar Log, Diethon, Grape Points",
         items: [
           {
-            text: "대한당뇨병학회의 식품교환표(6가지 식품군)를 기반으로 사용자의 체중·키·활동량에 따른 개인 맞춤 일일 권장 칼로리를 자동 계산하는 알고리즘을 기획했습니다.",
+            text: "React 18 · React Router 6 · styled-components · axios · nivo 프론트엔드에서 커밋 148개 중 47개를 맡아(프론트엔드 3인) 다음 화면을 만들었습니다.",
             textEn:
-              "Planned an algorithm to auto-calculate personalized daily recommended calories based on user weight, height, and activity level using the Korean Diabetes Association's food exchange table (6 food groups).",
+              "In a React 18, React Router 6, styled-components, axios, and nivo frontend, I wrote 47 of the 148 commits (three frontend developers) and built these screens:",
             subItems: [
               {
-                text: "ChatGPT API를 활용해 계산된 칼로리 제한 안에서 사용자 식품교환단위에 맞는 개인화된 식단을 자동 생성하는 기능을 설계했습니다.",
+                text: "주간 혈당 차트: nivo 라인 차트로 공복·식후 혈당을 나눠 그리고, y축 눈금은 데이터의 최솟값·최댓값에서 계산합니다. 기록이 없으면 예시 데이터와 안내 모달을 보여 줍니다. 하루 혈당 입력은 localStorage에 두고 날짜가 바뀌면 초기화합니다.",
                 textEn:
-                  "Designed an auto-generation feature that uses the ChatGPT API to create personalized meal plans matching user food exchange units within the calculated calorie limit.",
+                  "Weekly blood sugar chart: a nivo line chart separating fasting and post-meal readings, with y-axis ticks computed from the data's min and max; with no records it shows sample data and a guide modal. The day's blood sugar input is kept in localStorage and reset when the date changes.",
+              },
+              {
+                text: "다이어톤(식단 챌린지) 랭킹 · 식단 페이지, 포도 포인트 교환 · 사용 페이지, 즐겨찾기 음식 상세를 만들었습니다. 식사 인증은 FileReader로 사진 미리보기를 띄우고 인증 상태를 바꿉니다.",
+                textEn:
+                  "Built the Diethon (diet challenge) ranking and diet pages, the grape-point exchange and use pages, and the favorite-food detail. Meal certification previews the photo with FileReader and flips the certified state.",
+              },
+              {
+                text: "AI 식단 생성 요청은 시간이 걸려, 요청 중에는 화면 전체를 흐리게 덮는 로딩 오버레이를 띄우고 실패 상태를 따로 보여 주며, 끝나면 finally에서 상태를 되돌리게 했습니다.",
+                textEn:
+                  "The AI diet request takes a while, so a full-screen blurred loading overlay covers the screen during the request, failures show their own state, and a finally block resets the state afterwards.",
               },
             ],
-          },
-          {
-            text: "프리미엄 구독(개인화 식단 고도화), 당뇨 관련 제품 쇼핑몰 연계, 익명화 식사 데이터 판매(헬스케어 기업 대상) 등 3가지 수익원을 설계했습니다.",
-            textEn:
-              "Designed 3 revenue streams: premium subscription (advanced personalization), diabetic product store integration, and anonymized meal data sales (to healthcare companies).",
           },
         ],
       },
       {
-        title: "UI/UX 디자인 및 프론트엔드 개발",
-        titleEn: "UI/UX Design & Frontend Development",
+        title: "서비스 기획 및 BM 설계",
+        titleEn: "Service Planning & BM Design",
         items: [
           {
-            text: "혈당 모니터링 로그, 식품교환표 기반 식단 생성, 당뇨 친화 식당 지도 등 핵심 기능을 Figma로 설계하고 React로 구현했습니다.",
+            text: "대한당뇨병학회의 식품교환표(6가지 식품군)를 기반으로 사용자의 체중·키·활동량에 따른 개인 맞춤 일일 권장 칼로리를 자동 계산하는 알고리즘을 기획했습니다.",
             textEn:
-              "Designed core features — blood glucose logging, exchange-table-based meal generation, and diabetes-friendly restaurant map — in Figma and implemented them in React.",
+              "Planned an algorithm that auto-calculates personalized daily calorie targets from weight, height, and activity level, based on the Korean Diabetes Association's food exchange table (6 food groups).",
           },
           {
-            text: "당뇨 환자라는 특수 사용자를 고려하여 큰 폰트, 명확한 수치 시각화, 간결한 입력 플로우 등 접근성 중심의 UI를 설계했습니다.",
+            text: "ChatGPT API를 활용해 계산된 칼로리 제한 안에서 사용자 식품교환단위에 맞는 개인화된 식단을 자동 생성하는 기능을 설계했습니다.",
             textEn:
-              "Designed accessibility-centered UI considering the special user group of diabetics: large fonts, clear numerical visualization, and simplified input flow.",
+              "Designed a feature that uses the ChatGPT API to generate personalized meal plans within the calculated calorie limit and the user's food exchange units.",
+          },
+          {
+            text: "프리미엄 구독(개인화 식단 고도화), 당뇨 관련 제품 쇼핑몰 연계, 익명화 식사 데이터 판매(헬스케어 기업 대상) 등 3가지 수익원을 설계했습니다.",
+            textEn:
+              "Designed 3 revenue streams: premium subscription (advanced personalized plans), diabetes product shop tie-ins, and anonymized meal data sales (to healthcare companies).",
           },
         ],
       },

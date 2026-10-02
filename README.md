@@ -51,7 +51,7 @@ npm install
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000) 에서 확인하세요. 배포 주소는 `NEXT_PUBLIC_BASE_URL` 환경 변수로 지정합니다(기본값 `https://dev-portfolio-tlstkdgus.vercel.app`).
+[http://localhost:3000](http://localhost:3000) 에서 확인하세요. 배포 주소는 `NEXT_PUBLIC_BASE_URL` 환경 변수로 지정합니다(기본값 `https://dev-portfolio-phi-eight.vercel.app`).
 
 ---
 

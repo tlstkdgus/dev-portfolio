@@ -33,7 +33,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Set the deployed URL with `NEXT_PUBLIC_BASE_URL` (defaults to `https://dev-portfolio-tlstkdgus.vercel.app`).
+Open [http://localhost:3000](http://localhost:3000). Set the deployed URL with `NEXT_PUBLIC_BASE_URL` (defaults to `https://dev-portfolio-phi-eight.vercel.app`).
 
 ## License
 
