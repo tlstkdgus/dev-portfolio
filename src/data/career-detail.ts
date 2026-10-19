@@ -1004,6 +1004,12 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     results: [
       {
+        // GA4 보고서 개요 CSV (2026-10-19 본인 제공). 수집은 10/11부터. 앱 화면 사용자는 화면별 활성 사용자 중 최대인 캘린더(30명) 기준이라 '이상'
+        text: "배포 후 8일간 방문자 157명, 그중 로그인해 앱 화면까지 쓴 사용자 30명 이상 (GA4, 2026.10.11~10.18). 출시 이튿날부터 8일 동안 매일 재방문 사용자가 있었습니다(하루 2~6명).",
+        textEn:
+          "157 visitors in the first 8 days after launch, 30+ of whom signed in and used the app (GA4, Oct 11–18 2026). Returning users came back every day for eight days from day two (2–6 a day).",
+      },
+      {
         text: "next-step-ssh.vercel.app 배포·운영 중 (2026.10.10~10.19 커밋 56개, 1인)",
         textEn: "Live at next-step-ssh.vercel.app (56 commits, Oct 10–19 2026, solo)",
       },
