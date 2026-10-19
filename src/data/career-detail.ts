@@ -87,7 +87,7 @@ export const careerDetailSections: CareerDetailSection[] = [
           { label: "314팀", labelEn: "314 teams", note: "제출 · 562개 레포 · 80개 대학", noteEn: "submitted · 562 repos · 80 universities" },
           { label: "60팀", labelEn: "60 teams", note: "서류 심사 100점 배점 · 트랙별 15팀", noteEn: "100-point document review · 15 per track" },
           { label: "8팀", labelEn: "8 teams", note: "트랙 피칭 발표 5분 + Q&A · 트랙별 2팀", noteEn: "5-minute track pitch + Q&A · 2 per track" },
-          { label: "1팀", labelEn: "1 team", note: "본선 토너먼트 1:1 3라운드 · 2,000명 앞 실시간 발표", noteEn: "1:1 three-round live tournament before 2,000" },
+          { label: "1팀", labelEn: "1 team", note: "본선 토너먼트 1:1 3라운드 · 2,500명 앞 실시간 발표", noteEn: "1:1 three-round live tournament before 2,500" },
         ],
         caption: "배점의 절반 가까이를 문제 정의(25점)와 실현 가능성(20점)에 두었습니다. 제출 항목과 심사 기준을 1:1로 연결해, 무엇을 쓰면 어떻게 평가받는지 예측할 수 있게 했습니다.",
         captionEn: "Nearly half the points went to problem definition (25) and feasibility (20). Submission items mapped 1:1 to criteria, so teams could predict how they'd be scored.",
@@ -108,14 +108,14 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     background: [
       {
-        text: "80개 대학, 참가자 2,000명+, 314팀 제출(562개 레포) → 본선 8팀 토너먼트로 최종 1팀을 뽑는 역대 최대 규모 중앙해커톤입니다. 커뮤니티 매니저 인턴으로 기획부터 본선 운영까지 맡았고, 기능명세서·워밍업 세션·참가자 가이드·심사 정책은 팀과 함께 만들었으며 운영 도구 3개와 본선 현장 운영은 직접 맡았습니다. (2026.06 ~ 2026.08.25, 본선 코엑스 마곡)",
+        text: "80개 대학, 참가자 2,500명, 314팀 제출(562개 레포) → 본선 8팀 토너먼트로 최종 1팀을 뽑는 역대 최대 규모 중앙해커톤입니다. 커뮤니티 매니저 인턴으로 기획부터 본선 운영까지 맡았고, 기능명세서·워밍업 세션·참가자 가이드·심사 정책은 팀과 함께 만들었으며 운영 도구 3개와 본선 현장 운영은 직접 맡았습니다. (2026.06 ~ 2026.08.25, 본선 코엑스 마곡)",
         textEn:
-          "The largest LIKELION hackathon to date: 80 universities, 2,000+ participants, 314 submitting teams (562 repos) → an 8-team finals tournament picking one winner. As a community manager intern I took it from planning through the finals: the feature specs, warm-up sessions, participant guide, and judging policy were made with the team, and I built the 3 ops tools and ran the finals on site myself. (Jun 2026 – Aug 25, 2026; finals at COEX Magok)",
+          "The largest LIKELION hackathon to date: 80 universities, 2,500 participants, 314 submitting teams (562 repos) → an 8-team finals tournament picking one winner. As a community manager intern I took it from planning through the finals: the feature specs, warm-up sessions, participant guide, and judging policy were made with the team, and I built the 3 ops tools and ran the finals on site myself. (Jun 2026 – Aug 25, 2026; finals at COEX Magok)",
         subItems: [
           {
-            text: "참가자·심사위원·파트너의 이해가 충돌하는 지점마다 규칙이 필요했고, 314팀·562개 레포 검증과 2,000명 앞 실시간 토너먼트는 수작업으로 풀 수 없는 문제였습니다.",
+            text: "참가자·심사위원·파트너의 이해가 충돌하는 지점마다 규칙이 필요했고, 314팀·562개 레포 검증과 2,500명 앞 실시간 토너먼트는 수작업으로 풀 수 없는 문제였습니다.",
             textEn:
-              "Every collision point between participants, judges, and partners needed a rule — and verifying 562 repos or running a live tournament for 2,000 people was not a manual job.",
+              "Every collision point between participants, judges, and partners needed a rule — and verifying 562 repos or running a live tournament for 2,500 people was not a manual job.",
           },
         ],
       },
@@ -172,9 +172,9 @@ export const careerDetailSections: CareerDetailSection[] = [
         titleEn: "Participant Comms, FAQ Bot & Partner Ops",
         items: [
           {
-            text: "참가자 2,000명이 한 달간 참조하는 노션 통합 가이드를 팀과 공동 작성했습니다. 참가자 여정(팀빌딩 → 개발 → 심사 → 현장) 순서로 목차를 설계하고, 변경 사항마다 날짜를 명시해 추적 가능하게 운영했습니다.",
+            text: "참가자 2,500명이 한 달간 참조하는 노션 통합 가이드를 팀과 공동 작성했습니다. 참가자 여정(팀빌딩 → 개발 → 심사 → 현장) 순서로 목차를 설계하고, 변경 사항마다 날짜를 명시해 추적 가능하게 운영했습니다.",
             textEn:
-              "Co-wrote the Notion guide that 2,000 participants referenced for a month — structured by participant journey (team building → build → judging → venue), with every change dated and traceable.",
+              "Co-wrote the Notion guide that 2,500 participants referenced for a month — structured by participant journey (team building → build → judging → venue), with every change dated and traceable.",
             subItems: [
               {
                 text: "FAQ 78문항을 지식으로 쓰는 디스코드 봇을 직접 만들어 운영했습니다. 키워드 매칭 우선(비용 0) + LLM 폴백의 2단 응답, 자료에 없는 내용은 지어내지 않고 '운영진 문의' 안내, 미답변 질문 일일 리포트로 지식을 보강하되 반영 여부는 사람이 판단. 한 달간 229건(사용자 53명)을 응대했고 80.8%가 키워드 즉답, 미응답은 0건이었습니다.",
@@ -263,8 +263,8 @@ export const careerDetailSections: CareerDetailSection[] = [
       {
         title: "네트워크가 끊기거나 표가 0건이어도 본선은 진행돼야 했습니다",
         titleEn: "The finals had to go on even with no network or zero votes",
-        problem: "행사장 네트워크나 심사 화면에 문제가 생기면 2,000명 앞의 무대가 멈추고, 한 번 공개한 결과는 되돌릴 수 없었습니다.",
-        problemEn: "If the venue network or the judge view failed, the stage in front of 2,000 people would stall, and a revealed result couldn't be taken back.",
+        problem: "행사장 네트워크나 심사 화면에 문제가 생기면 2,500명 앞의 무대가 멈추고, 한 번 공개한 결과는 되돌릴 수 없었습니다.",
+        problemEn: "If the venue network or the judge view failed, the stage in front of 2,500 people would stall, and a revealed result couldn't be taken back.",
         solution: "심사 제출이 0건이어도 운영자가 직접 승자를 지정해 공개하는 백업 모드를 두고, 결과 공개에는 롤백 대신 확인 다이얼로그를 필수로 넣었습니다. 로컬 production 빌드를 LAN IP로 띄우는 오프라인 폴백을 위해 secure 쿠키를 끄는 환경 변수를 따로 두었고, 빌드가 Supabase 키 없이도 통과하는지 CI에서 확인했습니다.",
         solutionEn: "A backup mode lets the operator name the winner and reveal even with zero votes, and reveals require a confirm dialog instead of offering rollback. For an offline fallback that serves a local production build over a LAN IP, a separate env var can turn off the secure cookie flag, and CI checks that the build passes without Supabase keys.",
         result: "본선 8팀 토너먼트를 이 콘솔로 끝까지 진행했고, 콘솔 조작이 무대 스크린에 반영되기까지 실측 2.2초였습니다.",

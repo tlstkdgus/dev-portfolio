@@ -85,11 +85,11 @@ export const selectedProjects: SelectedProject[] = [
     period: { ko: "2026.06 – 2026.08", en: "Jun – Aug 2026" },
     role: { ko: "운영 도구 3종 단독 개발 · 본선 현장 운영", en: "Built 3 ops tools solo · Ran the finals on site" },
     headline: {
-      ko: "2,000명 앞에서 멈추면 안 되는\n본선 콘솔을 직접 만들어 운영했습니다.",
-      en: "I built and ran a finals console that couldn't stop in front of 2,000 people.",
+      ko: "2,500명 앞에서 멈추면 안 되는\n본선 콘솔을 직접 만들어 운영했습니다.",
+      en: "I built and ran a finals console that couldn't stop in front of 2,500 people.",
     },
     // '연합 해커톤'은 학생 주최 대학 연합 해커톤(별도 기획물)을 가리키므로 여기서는 쓰지 않는다 (§G-5)
-    summary: { ko: "80개 대학 2,000명이 참가한 14기 중앙해커톤의 본선 토너먼트 콘솔(스크린·심사·운영 3화면)과 제출물 검사 스크립트, FAQ 디스코드 봇", en: "The finals tournament console (stage, judge, and ops views), a submission-checking script, and an FAQ Discord bot for LIKELION's 14th hackathon, with 2,000 participants from 80 universities" },
+    summary: { ko: "80개 대학 2,500명이 참가한 14기 중앙해커톤의 본선 토너먼트 콘솔(스크린·심사·운영 3화면)과 제출물 검사 스크립트, FAQ 디스코드 봇", en: "The finals tournament console (stage, judge, and ops views), a submission-checking script, and an FAQ Discord bot for LIKELION's 14th hackathon, with 2,500 participants from 80 universities" },
     decision: { ko: "결과를 되돌릴 수 없는 현장이라고 보고, 심사 제출은 서버가 명단과 경기 상태로 다시 검증하고 상태 쓰기는 버전 번호로 충돌을 막도록 설계했습니다.", en: "Results couldn't be undone on stage, so the server re-validates every vote against the allowlist and match state, and state writes are guarded by a version number against conflicts." },
     thumb: {
       src: { ko: "/projects/hackathon14/thumb-ko.jpg", en: "/projects/hackathon14/thumb-en.jpg" },

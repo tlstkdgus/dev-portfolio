@@ -16,7 +16,7 @@
   "hero": {
     "name": "Sanghyeon Shin",
     "lead": "A frontend developer who builds the screens people actually use, then keeps running and fixing them after launch.",
-    "summary": "Over two years I've built and shipped 15+ services with React, Next.js, and TypeScript. As a LIKELION intern running a 2,000-person national hackathon, **I built a finals tournament console (Next.js · Supabase), a script that checked 562 submitted repos, and an FAQ Discord bot, and put them to work on site**; a judge's vote reached the stage screen in a measured 2.2 seconds.\n\nBuilding tools for a live event taught me to **close off the failures you can't undo before adding features**. I re-validate requests on the server, keep state consistent when several people operate at once, and build a way forward for when the network drops. Next, I want to be **a developer who keeps improving the product from the logs and data users leave behind**.",
+    "summary": "Over two years I've built and shipped 15+ services with React, Next.js, and TypeScript. As a LIKELION intern running a 2,500-person national hackathon, **I built a finals tournament console (Next.js · Supabase), a script that checked 562 submitted repos, and an FAQ Discord bot, and put them to work on site**; a judge's vote reached the stage screen in a measured 2.2 seconds.\n\nBuilding tools for a live event taught me to **close off the failures you can't undo before adding features**. I re-validate requests on the server, keep state consistent when several people operate at once, and build a way forward for when the network drops. Next, I want to be **a developer who keeps improving the product from the logs and data users leave behind**.",
     "metrics": [
       {
         "v": "15+",
