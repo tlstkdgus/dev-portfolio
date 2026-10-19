@@ -4,20 +4,20 @@
 > - 포지셔닝: **사용자가 실제로 쓰는 화면을 만들고, 배포한 뒤에도 직접 운영하며 고치는 프론트엔드 개발자** · 역할 라벨 '프론트엔드 개발자'
 > - 첫 화면 숫자: 15개+ 서비스 개발·배포 · 해커톤 운영 도구 3개 단독 개발 · 170+ PR 외주 저장소 릴리스 관리 · 투표→무대 스크린 2.2초
 > - 대표 프로젝트 순서: 해커톤 운영 도구(ANIMAL LEAGUE) → CleanB → FlowPay → Y:Wave
-> - 코드에서 확인한 기술 사실(animal-league 공개 저장소): 브래킷 전이는 순수 함수(lib/tournament.ts)·단위 테스트 59개(거부 경로 위주, Node 내장 러너) / 상태는 Supabase 한 행 + rev 낙관적 잠금, 충돌 시 최대 3회 재적용(lib/state.ts) / POST /api/vote는 서버가 심사 코드·명단·경기 live 여부 검증, 명단 밖 403·늦은 제출 409 / 운영 세션은 PIN을 HMAC-SHA256으로 파생한 httpOnly 쿠키 + timingSafeEqual, PIN 변경 시 전 세션 무효 / proxy.ts + 라우트 핸들러 이중 가드 / 스크린 1.5초 폴링 / CI: 타입체크·린트·테스트·빌드(Supabase 키 없이 빌드 통과 확인)
-> - 해커톤 운영 도구 저장소: FAQ 봇 https://github.com/tlstkdgus/hackathon-faq-bot (discord.py · OpenAI/Claude 상호 폴백 · NFKC 정규화 · 동점이면 LLM에 넘김 · 테스트 62개 · GitHub Actions → 서버 update.sh, 저널에서 '로그인 성공' 대기) / 제출물 검사 https://github.com/tlstkdgus/hackathon-commit-check (표준 라이브러리만 · 전 브랜치 SHA + pushed_at 스냅샷 · 스레드 8개, 실측 40개/8초 · 2차 레이트리밋 시 전 워커 일시정지 · 50개마다 저장 후 --resume · 테스트 34개)
+> - 코드에서 확인한 기술 사실(animal-league 공개 저장소): 브래킷 전이는 순수 함수(lib/tournament.ts)·단위 테스트 59개(거부 경로 18개 포함, Node 내장 러너) / 상태는 Supabase 한 행 + rev 낙관적 잠금, 충돌 시 최대 3회 재적용(lib/state.ts) / POST /api/vote는 서버가 심사 코드·명단·경기 live 여부 검증, 명단 밖 403·늦은 제출 409 / 운영 세션은 PIN을 HMAC-SHA256으로 파생한 httpOnly 쿠키 + timingSafeEqual, PIN 변경 시 전 세션 무효 / proxy.ts + 라우트 핸들러 이중 가드 / 스크린 1.5초 폴링 / CI: 타입체크·린트·테스트·빌드(Supabase 키 없이 빌드 통과 확인)
+> - 해커톤 운영 도구 저장소: FAQ 봇 https://github.com/tlstkdgus/hackathon-faq-bot (discord.py · OpenAI/Claude 상호 폴백 · NFKC 정규화 · 동점이면 LLM에 넘김 · 테스트 62개 · GitHub Actions → 서버 update.sh, 저널에서 '로그인 성공' 대기) / 제출물 검사 https://github.com/tlstkdgus/hackathon-commit-check (표준 라이브러리만 · 전 브랜치 SHA + pushed_at 스냅샷 · 스레드 8개, 실측 40개/8초 · 2차 레이트리밋 시 전 워커 일시정지 · 50개마다 저장 후 --resume · 테스트 34개) / 운영 현황판 dashboard/(PR #35, 2026.10.14, 행사 후 추가·현장 미투입): FastAPI 엔드포인트 8개 · React 18 + Vite + Recharts 단일 화면 · Docker(api python:3.12-slim, web nginx; 운영용 compose는 토큰 필수·로그 읽기 전용·127.0.0.1) · 사용자 ID 솔트 해시 별칭 · 테스트 9개 → 저장소 테스트 71개(봇 62 + 현황판 9)
 > - **프로젝트 저장소 커밋 확인 (2026-09-25, 개발자판 상세 페이지 근거)** — 본인 커밋·git blame 기준
 >   - Y:Wave(yong2gether/FE): 프론트 2인, 커밋 209개 중 184개·PR 77건, 코드 약 76%. 스택은 styled-components(Tailwind 아님), 프론트에서 ChatGPT 호출 없음(추천은 백엔드 API). ApiClient 재시도, GPS 정확도 100m 기준 폴백, MarkerClusterer, 150m 이동 시 재검색 버튼, 직접 만든 바텀시트
 >   - 손글(tlstkdgus/songeul): 2026-01-13 단독 커밋 8개의 React 프로토타입. OCR·보안 검사는 목업, OCR 앙상블은 설계만. TTS·햅틱 접근성 훅, 큰 글씨 토큰. README의 'WCAG AAA 7:1'·'CSS Modules'는 코드와 맞지 않음
->   - 사내 교육 사이트: 커밋 20개 전부 본인. SVG 도식 17종(강의 14 + 가이드 3), 인터랙티브 실습 10개, 용어 51개, HashRouter → BrowserRouter + vercel.json rewrite
+>   - 사내 교육 사이트: 커밋 21개 전부 본인(1개는 본인 세션의 Claude 커밋). SVG 도식 17종(강의 14 + 가이드 3), 인터랙티브 실습 13개(강의 10 + 부록 3), 용어 62개(강의 51 + 부록 11), 라우트 10개(홈 · 강의 6 · 용어 사전 · 가이드 · AI 실전), HashRouter → BrowserRouter + vercel.json rewrite. 부록 AI 실전(/ai-practice)은 2026.10.11 추가, 강의 기간 이후
 >   - RZi: 프론트 커밋 61개 중 13개(비머지), 백엔드 커밋 0 → 역할 '풀스택' 대신 '프론트엔드'. 지도 페이지·API 계층(401 단일 갱신 + 대기열)·토큰 갱신 라우트·PWA. OCR은 팀원
 >   - 커넥트: 프론트 커밋 23개 전부 본인, 라우트 39개. 프론트에 API 호출 없음(백엔드 연동 문구 삭제). 한국외대 GBT학부 캡스톤 프로젝트(상현 확인, 2026-09-25)
 >   - AInterview: 프론트 3인 중 최다 커밋 19개. 면접 진행 화면·RecordRTC WAV 녹음·업로드. Azure STT/TTS는 백엔드. 기간은 2024.09~11로 표기(상현 확인)
 >   - hai: 커밋 8개 — 마이페이지·홈 뉴스 피드. AI 채팅 UI는 팀원
 >   - Meal당: 커밋 148개 중 47개 — 혈당 차트·다이어톤·포도 포인트. 팀장과 함께 공동 진행(상현 확인) → 역할 '공동 PM · 프론트엔드'
 >   - 웰컴키트(포크): 커밋 98개 중 60개. 앱 안 QR 스캔 모달·빙고 공개 잠금·PWA. 지각 20분 판정은 백엔드(팀원) 코드
->   - FlowPay: main에는 FIDO2/WebAuthn 실제 호출 없음(결제 단계 라벨만), 대시보드는 목업 데이터, 운영 빌드에서 서비스 워커 설치 실패 — 기능 수정 중이라 사이트 문구는 보류
-> - FlowPay 공개 저장소: React 19 · TypeScript · Tailwind CSS · Tesseract.js 영수증 OCR · PWA(서비스 워커)
+>   - FlowPay(2026-10-19 재확인, main 2fa8da4): 패스키 서버 검증(api/_lib/core.js)·store 연동 대시보드·서비스 워커 수정 반영. 앱 테스트 21개 + 인증 서버 테스트 12개 통과, CI=true 빌드 경고 0건. 서버 검증·데이터 연동은 2026.09 커밋(대회 이후)
+> - FlowPay 공개 저장소: React 19 · TypeScript · Tailwind CSS 3 · React Router 7 · Framer Motion · Tesseract.js · SimpleWebAuthn(browser/server) · Vercel 서버리스 함수 · PWA
 > - 웰컴키트 공개 저장소: React 18 · styled-components · html5-qrcode/qrcode.react · JWT 쿠키 인증 · Docker 멀티 스테이지 빌드 · GitHub Actions(self-hosted) 배포
 
 > 이 문서는 사이트(src/data/*)의 모든 콘텐츠를 텍스트로 정리한 원본입니다.
@@ -120,7 +120,7 @@
 **2025.06 ~ 2025.08** · PM · 프론트엔드 · IR · Live: https://flow-pay-seven.vercel.app · Repo: https://github.com/tlstkdgus/FlowPay
 
 - **문제**: 직원은 지출보고서 한 건에 20분, 회계담당자는 월 100건+ — 기업당 연 약 1,000시간·8천만 원이 정산에 사라진다. 근본 원인은 무기명 카드에 사용자가 기록되지 않는 구조.
-- **한 일**: 현업 회계담당자 인터뷰로 문제 정의(진짜 병목은 결제 후 수기 전표) / Flow ID 익명 태깅 시스템 설계(8→3단계 단축) / React 실시간 대시보드 + FIDO2 생체인증 결제 개발 / 3개 유효 시장 분석, FINNECT IR 발표
+- **한 일**: 현업 회계담당자 인터뷰로 문제 정의(진짜 병목은 결제 후 수기 전표) / Flow ID 익명 태깅 시스템 설계(8→3단계 단축) / React 예산·지출 대시보드 + FIDO2 생체인증 결제 개발(서버 서명 검증은 대회 이후 2026.09) / 3개 유효 시장 분석, FIN:NECT IR 발표
 - **판단 한 줄(메인 카드)**: 회계에 필요한 것은 실명보다 누가 썼는지의 구분이라고 판단해, 가명 토큰으로 결제자를 식별했습니다.
 - **핵심 의사결정**: 가명토큰 vs 실명인증 비교 후 익명성 유지를 위한 가명토큰 채택 / MVP 스코프를 ERP 전체 연동에서 지출보고서 자동 생성으로 축소
 - **성과**: FIN:NECT 챌린지(한국핀테크지원센터×카카오뱅크) 장려상 — 102팀 중 5위
@@ -165,7 +165,7 @@
 **2026.07 ~ 2026.08** · 인턴 업무 · 기획·제작·강의 단독 · Live: https://likelion-dev-site.vercel.app · Repo: https://github.com/tlstkdgus/likelion-dev-site
 
 - **문제**: 비전공 동료에게 '배포'·'API'는 여전히 어렵다. AI에게 물어보면 답이 나오는 시대지만, 기본 흐름을 모르면 무엇을 물어야 할지 모른다.
-- **한 일**: 점심시간 분량 6회 커리큘럼 설계·6주 직접 강의(소프트웨어 구조·개발 용어·Git·협업 커뮤니케이션·AI와 바이브 코딩·AI 트렌드) / 모든 개념을 식당 비유로 통일(홀=프론트엔드, 주방=백엔드, 냉장고=DB, 주문서=API) / 교육 사이트 직접 제작(React·TS·Vite) — SVG 도식 14종, 브라우저 라이브 실습, 용어 사전 51개
+- **한 일**: 점심시간 분량 6회 커리큘럼 설계·6주 직접 강의(소프트웨어 구조·개발 용어·Git·협업 커뮤니케이션·AI와 바이브 코딩·AI 트렌드) / 모든 개념을 식당 비유로 통일(홀=프론트엔드, 주방=백엔드, 냉장고=DB, 주문서=API) / 교육 사이트 직접 제작(React·TS·Vite) — SVG 도식 17종, 브라우저 라이브 실습 13개, 용어 사전 62개 / 강의 후 부록 'AI 실전' 페이지 추가(2026.10)
 - **핵심 의사결정**: 코드를 가르치지 않기로 — 목표를 개발자와 대화할 수 있는 수준으로 축소 / 설치·계정 없는 브라우저 실습만(점심 환경 전제)
 - **성과**: 수강자 설문(6명) 만족도 전원 5/5, 추천 의향 9.7/10, 이해 증가 4.7/5. '짧아서 아쉽다' + 후속 주제 요청.
 

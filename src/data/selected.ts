@@ -97,7 +97,7 @@ export const selectedProjects: SelectedProject[] = [
     },
     body: {
       ko: "본선 토너먼트는 심사위원 5명의 투표가 무대 스크린에 바로 반영돼야 했고, 결과를 공개한 뒤에는 되돌릴 수 없었습니다. 브래킷 전이를 순수 함수로 분리해 단위 테스트 59개로 거부 경로를 확인하고, Supabase의 상태 한 행을 rev 번호로 잠가 운영자가 동시에 조작해도 상태가 꼬이지 않게 했으며, 명단 밖 제출과 늦게 도착한 제출은 서버에서 거부했습니다. 이 콘솔로 본선 8팀 토너먼트를 끝까지 진행했고, 투표에서 무대 스크린까지 실측 2.2초였습니다.",
-      en: "In the finals tournament, five judges' votes had to reach the stage screen right away, and a revealed result couldn't be taken back. I split the bracket transitions into pure functions covered by 59 unit tests focused on rejection paths, locked the single Supabase state row with a rev number so concurrent operators couldn't corrupt it, and rejected off-list and late-arriving votes on the server. The console ran the 8-team finals to the end, with a measured 2.2 seconds from vote to stage screen.",
+      en: "In the finals tournament, five judges' votes had to reach the stage screen right away, and a revealed result couldn't be taken back. I split the bracket transitions into pure functions covered by 59 unit tests, including the rejection paths, locked the single Supabase state row with a rev number so concurrent operators couldn't corrupt it, and rejected off-list and late-arriving votes on the server. The console ran the 8-team finals to the end, with a measured 2.2 seconds from vote to stage screen.",
     },
     stats: [
       // §G-4·5: 전후 단위를 맞췄다(하루 3시간 → 하루 15분). 추정치(약 2일)는 숫자 전체의 신뢰도를 깎아 뺐다.
@@ -131,7 +131,7 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "hackathon14",
-    stack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Python", "discord.py", "LLM API"],
+    stack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Python", "discord.py", "LLM API", "FastAPI", "Docker"],
     repoUrl: "https://github.com/tlstkdgus/animal-league",
     extraRepos: [
       { label: { ko: "FAQ 봇", en: "FAQ bot" }, url: "https://github.com/tlstkdgus/hackathon-faq-bot" },
@@ -220,8 +220,8 @@ export const selectedProjects: SelectedProject[] = [
       alt: { ko: "회색 바탕 썸네일: FlowPay, 무기명 법인카드 정산 8단계에서 3단계로. 노트북의 지출 대시보드와 휴대폰 결제 화면", en: "Gray thumbnail: FlowPay, corporate-card expenses from 8 steps to 3. The spending dashboard on a laptop and the payment screen on a phone" },
     },
     body: {
-      ko: "회계담당자 인터뷰에서 진짜 병목은 결제 이후 수기로 쓰는 전표라고 판단해, 가명 토큰 Flow ID로 결제 시점부터 사용자를 식별하고 지출보고서가 자동 생성되는 흐름을 설계했습니다. React·TypeScript·Tailwind CSS로 부서별 예산과 지출을 보여 주는 대시보드, FIDO2 생체인증 결제 화면, Tesseract.js로 영수증에서 가맹점·금액을 읽어 오는 OCR 업로드를 직접 개발하고 PWA로 배포했습니다. FIN:NECT 챌린지에서 102팀 중 5위에 올랐습니다.",
-      en: "Interviews with accountants showed the real bottleneck was the vouchers written by hand after each payment, so I designed a flow where Flow ID, a pseudonymous token, identifies the user at the moment of payment and expense reports generate themselves. I built the budget and spending dashboard, the FIDO2 biometric payment screens, and an OCR receipt upload that reads merchant and amount with Tesseract.js, in React, TypeScript, and Tailwind CSS, and shipped it as a PWA. It placed 5th of 102 teams at the FIN:NECT Challenge.",
+      ko: "회계담당자 인터뷰에서 진짜 병목은 결제 이후 수기로 쓰는 전표라고 판단해, 가명 토큰 Flow ID로 결제 시점부터 사용자를 식별하고 지출보고서가 자동 생성되는 흐름을 설계했습니다. React·TypeScript·Tailwind CSS로 부서별 예산·지출 대시보드, 영수증에서 가맹점·금액·날짜를 읽는 Tesseract.js OCR 업로드를 개발하고 PWA로 배포했습니다. 대회 이후 패스키 결제를 SimpleWebAuthn 기반 서버리스 인증 서버로 옮겨, 결제 내용에 묶인 챌린지에 대한 생체인증 서명을 서버가 검증하게 했습니다. FIN:NECT 챌린지에서 102팀 중 5위에 올랐습니다.",
+      en: "Interviews with accountants showed the real bottleneck was the vouchers written by hand after each payment, so I designed a flow where Flow ID, a pseudonymous token, identifies the user at the moment of payment and expense reports generate themselves. In React, TypeScript, and Tailwind CSS, I built the budget and spending dashboard and a Tesseract.js OCR receipt upload that reads merchant, amount, and date, and shipped it as a PWA. After the competition, I moved passkey payment to a serverless auth server on SimpleWebAuthn, so the server verifies a biometric signature over a challenge bound to the payment. It placed 5th of 102 teams at the FIN:NECT Challenge.",
     },
     stats: [
       { before: { ko: "8단계", en: "8 steps" }, v: { ko: "3단계", en: "3 steps" }, k: { ko: "법인카드 지출 정산 단계", en: "corporate-card reconciliation steps" } },
@@ -250,7 +250,7 @@ export const selectedProjects: SelectedProject[] = [
       },
     ],
     caseId: "flowpay",
-    stack: ["React", "TypeScript", "Tailwind CSS", "Tesseract.js", "PWA"],
+    stack: ["React 19", "TypeScript", "Tailwind CSS", "WebAuthn (SimpleWebAuthn)", "Vercel Functions", "Tesseract.js", "PWA"],
     repoUrl: "https://github.com/tlstkdgus/FlowPay",
     liveUrl: "https://flow-pay-seven.vercel.app",
   },

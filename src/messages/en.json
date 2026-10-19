@@ -57,6 +57,7 @@
           "Supabase",
           "Firebase",
           "Python",
+          "FastAPI",
           "Java",
           "SQL",
           "LLM API"
@@ -203,7 +204,7 @@
       {
         "v": "59",
         "label": "unit tests on the console's bracket logic",
-        "note": "mostly rejection paths · run in CI with typecheck, lint, build"
+        "note": "18 on rejection paths · run in CI with typecheck, lint, build"
       },
       {
         "v": "45",
