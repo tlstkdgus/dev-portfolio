@@ -35,7 +35,7 @@ export interface Project {
 // Other projects 노출 (§G-6, 2026-09-24): 앞의 6개만 펼쳐 두고 나머지는 '그 외 프로젝트' 접기 안에 둔다.
 // 15개가 한 번에 펼쳐져 있어 대표가 아닌 작업까지 같은 무게로 읽혔다. 데이터와 상세 페이지는 모두 유지한다.
 // 개발자 포트폴리오 (2026-09-25): 직접 코드를 쓴 프로젝트를 앞에 펼치고, 기획·IR 중심 작업은 접기 안으로 보낸다.
-export const otherProjectsShown = ["welcomekit", "devsite", "songeul", "rzi", "connect", "ainterview"];
+export const otherProjectsShown = ["nextstep", "welcomekit", "devsite", "songeul", "rzi", "connect", "ainterview"];
 export const otherProjectsFolded = ["hai", "mealdang", "16play", "dotori", "tcp", "neurosight", "artliving", "huriup"];
 
 export const projects: Project[] = [
@@ -358,6 +358,56 @@ export const projects: Project[] = [
       "/projects/ywave/04.png",
       "/projects/ywave/05.png",
       "/projects/ywave/06.png",
+    ],
+  },
+  {
+    // 혼자 기획·개발·운영하는 취업 지원 관리 서비스 (2026-10-19 추가). 기간은 저장소 커밋 기준:
+    // 첫 커밋 2026-10-10, 2026-10-19까지 커밋 56개 모두 본인. 화면은 로컬에서 가상 회사 데이터로 띄워 캡처
+    title: "Next Step",
+    caseId: "nextstep",
+    featured: true,
+    titleEn: "Next Step",
+    subtitle: "공고를 붙여넣으면 마감일·전형이 채워지는 취업 지원 관리 도구",
+    subtitleEn: "A job-application tracker that fills in deadlines and steps from a posting",
+    period: "2026.10.",
+    periodEn: "Oct 2026",
+    url: "https://next-step-ssh.vercel.app",
+    repo: "https://github.com/tlstkdgus/next-step",
+    roles: ["1인 풀스택 개발·운영"],
+    rolesEn: ["Solo full-stack development & ops"],
+    goals: [
+      "취업 준비를 하면 공고, 마감일, 면접 일정, 자소서, 제출 서류가 여기저기 흩어지고, 회사마다 전형 이름과 단계 수가 달라 지금 어느 회사가 어느 단계인지 한 화면에서 보기 어려웠습니다",
+    ],
+    goalsEn: [
+      "Job hunting scatters postings, deadlines, interview dates, essays, and files everywhere, and every company names and counts its steps differently, so it was hard to see who was at which step on one screen",
+    ],
+    contents: [
+      "캘린더 · 단계별 보드(끌어다 놓기) · 자소서 · 내 정보 4개 화면을 프레임워크·빌드 없이 index.html 한 파일(약 2,270줄)로 구현, 서비스 워커로 앱 셸 오프라인 열기·홈 화면 설치",
+      "공고 링크는 서버(Vercel 함수)가 읽어 Claude에 넘김: 사람인·잡코리아 iframe 본문, schema.org JobPosting, Next.js 페이지 데이터까지 따라가고, 글이 거의 없으면 본문 이미지 최대 3장을 함께 보냄",
+      "Supabase Auth · Postgres(행 수준 보안) · Storage로 기록과 제출 파일을 사용자별로 격리, updated_at 조건부 갱신으로 두 기기 동시 저장 충돌 감지",
+      "구글·iPhone 캘린더에 연결하는 ICS 구독 피드(비밀 토큰 URL, 1시간 간격 갱신 요청), 회원별·서비스 전체 AI 사용 한도, 서버 경유 가입·탈퇴",
+    ],
+    contentsEn: [
+      "Built four screens (calendar, drag-and-drop step board, essays, profile) as a single index.html (about 2,270 lines) with no framework or build step; a service worker opens the app shell offline and makes it installable",
+      "The server (a Vercel function) reads posting links and hands them to Claude, following Saramin and JobKorea body iframes, schema.org JobPosting data, and Next.js page data, and attaching up to three body images when there is little text",
+      "Supabase Auth, Postgres with row-level security, and Storage keep records and files per user; conditional updates on updated_at detect two devices saving at once",
+      "An ICS subscription feed for Google and iPhone Calendar (secret-token URL, asks for hourly refresh), per-user and service-wide AI usage limits, and server-side sign-up and account deletion",
+    ],
+    results: [
+      "next-step-ssh.vercel.app 배포·운영 중 (2026.10.10~10.19 커밋 56개, 1인)",
+      "지원 종류 3가지(채용 · 공모전·해커톤 · 시험), 전형 템플릿 10개",
+    ],
+    resultsEn: [
+      "Live at next-step-ssh.vercel.app (56 commits, Oct 10–19 2026, solo)",
+      "Three application types (hiring, contests/hackathons, exams) and ten step templates",
+    ],
+    tags: ["JavaScript", "Supabase", "Vercel Functions", "Claude API", "PWA", "iCalendar"],
+    image: "/projects/nextstep/02.png",
+    images: [
+      "/projects/nextstep/02.png",
+      "/projects/nextstep/03.png",
+      "/projects/nextstep/04.png",
+      "/projects/nextstep/01.png",
     ],
   },
   {
