@@ -104,7 +104,7 @@ export const projects: Project[] = [
       { label: "검사 레포", labelEn: "Repos swept", value: "562개" },
       { label: "직접 만든 도구", labelEn: "Tools built", value: "3개" },
     ],
-    tags: ["Next.js", "React", "TypeScript", "Supabase", "Python", "discord.py", "LLM"],
+    tags: ["Next.js", "React", "TypeScript", "Supabase", "Python", "discord.py", "LLM", "FastAPI", "Docker"],
     image: "/projects/hackathon14/01.png",
     images: [
       "/projects/hackathon14/01.png",
@@ -136,12 +136,12 @@ export const projects: Project[] = [
     contents: [
       "점심시간 분량 6회 커리큘럼을 직접 설계하고 주 1회, 6주간 직접 강의 — 소프트웨어 구조 · 개발 용어 · Git과 GitHub · 협업 커뮤니케이션 · AI와 바이브 코딩 · AI 트렌드",
       "모든 개념을 식당 비유 하나로 통일 (홀=프론트엔드, 주방=백엔드, 냉장고=DB, 주문서=API)",
-      "교육용 웹사이트 직접 제작(React · TypeScript · Vite) — SVG 개념 도식 14종, 브라우저에서 바로 동작하는 라이브 실습(로그인 요청 왕복, Git 협업 시뮬레이터 등), 용어 사전 51개",
+      "교육용 웹사이트 직접 제작(React · TypeScript · Vite) — SVG 개념 도식 17종, 브라우저에서 바로 동작하는 라이브 실습 13개(로그인 요청 왕복, Git 협업 시뮬레이터, AI 프롬프트 빌더 등), 용어 사전 62개",
     ],
     contentsEn: [
       "Designed a 6-session lunchtime curriculum and taught it weekly for 6 weeks — software structure, dev vocabulary, Git & GitHub, collaboration communication, AI & vibe coding, AI trends",
       "Unified every concept under one restaurant metaphor (dining hall = frontend, kitchen = backend, fridge = DB, order slip = API)",
-      "Built the companion website myself (React · TypeScript · Vite) — 14 SVG concept diagrams, live in-browser demos (login round-trip, Git collaboration simulator), and a 51-term glossary",
+      "Built the companion website myself (React · TypeScript · Vite) — 17 SVG concept diagrams, 13 live in-browser demos (login round-trip, Git collaboration simulator, AI prompt builder), and a 62-term glossary",
     ],
     decisions: [
       "코드를 가르치지 않기로 결정 — 목표를 개발자와 대화할 수 있는 수준으로 좁혀 점심시간 6회에 담았습니다",
@@ -160,7 +160,7 @@ export const projects: Project[] = [
       "Feedback that it was 'too short' — with requests for follow-up topics like infrastructure, databases, and dev collaboration",
     ],
     stats: [
-      { label: "만족도", labelEn: "Satisfaction", value: "5/5 전원" },
+      { label: "만족도 (전원)", labelEn: "Satisfaction (all)", value: "5/5" },
       { label: "추천 의향", labelEn: "Recommend", value: "9.7/10" },
     ],
     tags: ["React 18", "TypeScript", "Vite", "Tailwind CSS v4", "React Router 7", "Vercel"],
@@ -197,14 +197,14 @@ export const projects: Project[] = [
     contents: [
       "현업 회계담당자 인터뷰로 Pain Point를 발굴하고 솔루션 재정의",
       "Flow ID 기반 익명 태깅 시스템 아이디어 도출, 사용자 여정 맵핑·정보구조 설계 — 업무 프로세스를 8단계에서 3단계로 단축",
-      "React 기반 실시간 대시보드 및 FIDO2 API 연동 생체인증 결제 시스템 개발",
-      "3개 유효 시장 분석으로 시장 규모 산정, FINNECT IR 발표 담당",
+      "React 기반 예산·지출 대시보드 개발, 대회 이후 FIDO2 패스키 결제와 서버 서명 검증 추가",
+      "3개 유효 시장 분석으로 시장 규모 산정, FIN:NECT IR 발표 담당",
     ],
     contentsEn: [
       "Discovered Pain Points and redefined the solution through interviews with working accountants",
       "Conceived the Flow ID anonymous tagging system, mapped user journeys, and designed the IA — cutting the workflow from 8 steps to 3",
-      "Built a real-time dashboard with React and integrated FIDO2 biometric payment",
-      "Analyzed 3 addressable markets to size the opportunity; delivered the FINNECT IR pitch",
+      "Built the budget and spending dashboard in React; after the competition, added FIDO2 passkey payment with server-side signature verification",
+      "Analyzed 3 addressable markets to size the opportunity; delivered the FIN:NECT IR pitch",
     ],
     decisions: [
       "가명토큰 vs 실명인증 방식 비교 후, 무기명 카드의 익명성 유지를 위해 Flow ID 기반 가명토큰 방식을 채택",
@@ -215,16 +215,16 @@ export const projects: Project[] = [
       "Reduced accounting automation scope from full ERP integration to auto expense reports to fix MVP scope",
     ],
     results: [
-      "FINNECT 챌린지 장려상 수상 (102팀 중 5위)",
+      "FIN:NECT 챌린지 장려상 수상 (102팀 중 5위)",
     ],
     resultsEn: [
-      "Won Encouragement Prize at FINNECT Challenge (5th out of 102 teams)",
+      "Won Encouragement Prize at FIN:NECT Challenge (5th out of 102 teams)",
     ],
     stats: [
       { label: "프로세스", labelEn: "Process", value: "8→3단계" },
       { label: "순위", labelEn: "Rank", value: "102팀 중 5위" },
     ],
-    tags: ["React", "TypeScript", "FIDO2", "B2B SaaS", "Figma"],
+    tags: ["React", "TypeScript", "WebAuthn(FIDO2)", "Tesseract.js", "PWA", "Vercel Functions"],
     image: "/projects/flowpay/01.png",
     images: [
       "/projects/flowpay/01.png",
@@ -254,8 +254,8 @@ export const projects: Project[] = [
       "해커톤처럼 만들고 끝나는 게 아니라, 실제 사용자를 받는 서비스로 운영하는 것이 목표",
     ],
     goalsEn: [
-      "Productize the full cleaning operation flow — from request to completion — connecting Airbnb hosts with cleaners",
-      "Build a production-grade deployment, QA, and release pipeline beyond student-project scope",
+      "This is a client project. Airbnb hosts struggle to find reliable cleaners and cleaners struggle to get steady work; I'm building a matching service that connects the two",
+      "The goal is to run it as a service that takes real users, not to build it and stop like a hackathon project",
     ],
     contents: [
       "전체 PM을 맡아 기능 개발부터 배포까지의 우선순위를 정하고, PR 170개가 넘는 저장소의 코드 리뷰와 릴리스 머지를 담당",
@@ -264,10 +264,10 @@ export const projects: Project[] = [
       "컴포넌트 체계(아토믹 디자인)와 QA 테스트 규칙(data-testid)을 정해 팀의 코드 일관성 유지",
     ],
     contentsEn: [
-      "As overall PM, managed merges for features, CI workflows, QA, and prod releases across a 170+ PR repository",
-      "Built the cleaner-side domain: request list → progress management → completion pages (UI, API, types)",
-      "Integrated Kakao Map / SGIS map search and Firebase Web Push notifications",
-      "Introduced atomic design component architecture and data-testid QA conventions",
+      "As overall PM, set priorities from feature work to deployment and handled code review and release merges across a 170+ PR repository",
+      "Built every cleaner-facing screen: UI and API integration for receiving requests, managing progress, and reporting completion",
+      "Integrated Kakao Map search and Firebase Web Push notifications needed for operation",
+      "Set the component structure (atomic design) and QA test rules (data-testid) to keep the team's code consistent",
     ],
     decisions: [
       "3인 팀 규모에 맞춰 배포를 k3s/ArgoCD에서 Docker Compose + Caddy로 단순화해 유지보수 부담을 줄임",
@@ -275,7 +275,7 @@ export const projects: Project[] = [
     ],
     decisionsEn: [
       "Migrated production deployment from k3s/ArgoCD to Docker Compose + Caddy, matching ops complexity to team size",
-      "Served Next.js static chunks from a CDN (CloudFront) for deployment stability and load speed",
+      "Moved static files to a CDN (CloudFront) so pages stay up during deploys",
     ],
     results: [
       "GitHub Actions 자동 배포로 rumiclean.com 배포 완료. 토스 결제 연동 전이라 아직 실사용자는 받지 않는 상태",
@@ -283,13 +283,13 @@ export const projects: Project[] = [
     ],
     resultsEn: [
       "Deployed to rumiclean.com with GitHub Actions auto-deployment. Toss payments are not connected yet, so it does not take real users",
-      "An ongoing project covering the full cycle: planning, design, development, deployment, and QA",
+      "My first project running the full cycle of a service myself: planning, design, development, deployment, and QA",
     ],
     stats: [
       { label: "PR", labelEn: "PRs", value: "170+" },
       { label: "상태", labelEn: "Status", value: "배포 완료 · 결제 연동 전" },
     ],
-    tags: ["Next.js", "TypeScript", "Kakao Map", "Firebase", "Docker", "CI/CD"],
+    tags: ["Next.js", "TypeScript", "Kakao Map", "Firebase", "Docker Compose", "Caddy", "CloudFront", "GitHub Actions"],
     image: "/projects/cleanb/01.png",
     images: [
       "/projects/cleanb/01.png",
@@ -322,7 +322,7 @@ export const projects: Project[] = [
     ],
     contents: [
       "경기도 39만 건 가맹점 데이터 전수 분석으로 추천 알고리즘 방향 확정",
-      "사용자 위치 반경 + 소비 카테고리 기반 AI 가맹점 추천 기능 설계 및 구현",
+      "사용자 위치 반경 + 소비 카테고리 기반 AI 가맹점 추천 기능 설계, 추천 API 결과 화면 구현",
       "React + TypeScript + styled-components 기반 반응형 UI 개발 (Google Maps 마커 클러스터링, 드래그 바텀시트, 추천 리스트, 카테고리 필터)",
       "멋쟁이사자처럼 13기 중앙해커톤 제출작 — 6인 팀에서 PM·프론트엔드·디자인 담당",
     ],
@@ -381,13 +381,13 @@ export const projects: Project[] = [
     contents: [
       "손으로 쓴 메모를 촬영하면 AI-OCR이 인식하고, 가족 승인을 거쳐 송금이 완료되는 '입력 제거' UX 플로우 설계 (촬영 → 확인 → 승인 3단계)",
       "CLOVA OCR + Google Vision + 자체 파인튜닝 앙상블 아키텍처 설계 및 이상 패턴 감지 로드맵",
-      "SAFE 프레임워크(Security·Assets·Family·Education) 기반 부가 기능 체계화",
+      "SAFE 프레임워크(Security·Assets·Family Connect·Education) 기반 부가 기능 체계화",
       "시장 규모 산정 및 4개 수익원 설계",
     ],
     contentsEn: [
       "Designed an 'input-free' UX flow — photograph a handwritten memo, AI-OCR reads it, family approves, transfer completes (capture → confirm → approve)",
       "Designed CLOVA OCR + Google Vision + fine-tuned ensemble architecture with an anomaly detection roadmap",
-      "Systematized features using the SAFE framework (Security · Assets · Family · Education)",
+      "Systematized features using the SAFE framework (Security · Assets · Family Connect · Education)",
       "Sized the market and designed 4 revenue streams",
     ],
     results: [
@@ -427,7 +427,7 @@ export const projects: Project[] = [
     contents: [
       "운영진이 QR을 띄우고 부원이 모바일로 스캔하면 서버에 바로 기록, 세션 시작 20분이 지난 스캔은 지각으로 자동 판정",
       "오늘 출석부에는 지각·결석자만 팀별로 표시",
-      "빙고 미션: 승인 대기 중인 칸이 있으면 다른 칸 선택 불가, 승인되면 카드가 뒤집히며 미션 공개",
+      "빙고 미션: 승인 대기 중인 칸이 있으면 다른 칸 선택 불가, 칸을 누르면 공개 요청 후 카드가 뒤집히며 미션 공개",
     ],
     contentsEn: [
       "Staff show a QR code, members scan it on their phones, and it's recorded on the server; scans more than 20 minutes after the start are marked late automatically",
@@ -461,14 +461,14 @@ export const projects: Project[] = [
       "텍스트 시뮬레이션, AI 역할극 채팅, 사용자 매칭 대화 등 사회 적응 훈련 기능 설계",
       "AI 취업 컨설팅, 외부 기관 연계, 일간 뉴스레터 등 사회 참여 훈련 기능 개발",
       "구독 모델(사회 적응 6,900원 / 사회 참여 9,900원) 및 3단계 확장 전략 수립",
-      "React 기반 40개 페이지 UI 구현, Spring Boot 백엔드 연동, 카카오맵 API 연동",
+      "React 기반 라우트 39개(페이지 파일 40개) UI 구현, 카카오맵 API 연동",
       "한국외대 GBT학부 캡스톤 3인 팀 프로젝트 — 기획·디자인·프론트엔드 담당",
     ],
     contentsEn: [
       "Designed social adaptation training features: text simulation, AI role-play chat, and user matching dialogue",
       "Developed social participation training: AI job consulting, institution links, and daily newsletters",
       "Established subscription model (₩6,900 / ₩9,900/month) and 3-phase growth strategy",
-      "Implemented 40-page React UI, integrated Spring Boot backend and Kakao Maps API",
+      "Built a 39-route React UI (40 page files) with Kakao Maps API integration",
       "A 3-person team project (Likelion 12th cohort) — planning, design, and frontend",
     ],
     results: [
@@ -510,7 +510,7 @@ export const projects: Project[] = [
     ],
     goalsEn: [
       "Framed the structural problem: most anesthesia incidents occur in settings without anesthesia specialists",
-      "Design concept features using Barrel Eye's QUS technology: real-time tissue analysis, needle tracking, and 3D anesthetic diffusion prediction",
+      "Designed concept features using Barrel Eye's QUS technology: real-time tissue analysis, needle tracking, and 3D anesthetic diffusion prediction",
     ],
     contents: [
       "마취 의료 사고 현황 및 비전문의 의존 구조 문제 분석, 글로벌 의료 AI 시장 조사",
@@ -582,7 +582,7 @@ export const projects: Project[] = [
       "Designed auto-extraction of key clauses and risk terms using BERT/GPT models fine-tuned on legal datasets",
       "Planned a system to summarize complex ToS in plain language and visually highlight risky clauses",
       "Structured 5 revenue streams and analyzed the global legaltech market",
-      "Led overall planning as Likelion 13th cohort",
+      "Planning (Likelion 13th cohort)",
     ],
     results: [
       "교내 아이디어톤 최우수상 수상",
@@ -625,13 +625,13 @@ export const projects: Project[] = [
     ],
     contents: [
       "커리어 탐색 과정을 '자기 이해 → 직무 매칭 → 로드맵 수립' 3단계로 구조화하고 AI 대화 흐름 기획",
-      "React + TypeScript 기반 대화형 UI 개발 및 AI 추천 결과 시각화 구현",
+      "마이페이지(관심사·목표 편집, 낙관적 업데이트)와 홈 관심 키워드 뉴스 피드 개발 (Next.js · TypeScript · Emotion)",
       "기획·프론트엔드 개발 담당 (CHALLKATHON, 한국외국어대학교 컴퓨터공학부 × UMC 공동 주최)",
     ],
     contentsEn: [
       "Structured career exploration into 3 phases (self-understanding → job matching → roadmap building) and planned the AI conversation flow",
-      "Developed conversational UI with React + TypeScript and implemented AI recommendation visualization",
-      "Led planning and frontend development (CHALLKATHON, co-hosted by HUFS CS Dept × UMC)",
+      "Built the my page (editing interests and goals with optimistic updates) and the home news feed by interest keyword (Next.js · TypeScript · Emotion)",
+      "Planning and frontend development (CHALLKATHON, co-hosted by HUFS CS Dept × UMC)",
     ],
     results: [
       "해커톤 기간 내 AI 커리어 추천 MVP를 완성해 배포",
@@ -656,8 +656,8 @@ export const projects: Project[] = [
     titleEn: "AInterview",
     subtitle: "모의 면접 서비스",
     subtitleEn: "Mock Interview App",
-    period: "2024.09. ~ 2024.11.",
-    periodEn: "Sep 2024 — Nov 2024",
+    period: "2024.09. ~ 2024.12.",
+    periodEn: "Sep 2024 — Dec 2024",
     repo: "https://github.com/Team2-AInterview/frontend",
     commitsUrl: "https://github.com/Team2-AInterview/frontend/commits?author=tlstkdgus",
     roles: ["PM", "프론트엔드"],
@@ -671,16 +671,16 @@ export const projects: Project[] = [
       "Developed an AI-based real-time mock interview service combining voice recognition and GPT fine-tuning",
     ],
     contents: [
-      "Azure Speech Service 활용 음성-텍스트 변환(STT/TTS) 처리 시스템 구현",
+      "Azure Speech Service(STT/TTS) 기반 음성 면접 흐름 설계, 프론트엔드에서 RecordRTC WAV 녹음·업로드와 질문 음성 재생 구현",
       "Fine-tuned GPT-4o-mini 기반 직무별 맞춤 면접 질문 자동 생성",
       "React 기반 인터랙티브 UI 설계 및 Spring Boot 백엔드 연동",
       "기획·디자인·프론트엔드 개발 담당 (멋쟁이사자처럼 12기 최종 프로젝트)",
     ],
     contentsEn: [
-      "Implemented voice-to-text (STT/TTS) processing with Azure Speech Service",
+      "Designed the voice interview flow on Azure Speech Service (STT/TTS); on the frontend, built RecordRTC WAV recording/upload and question-audio playback",
       "Built auto job-specific question generation using fine-tuned GPT-4o-mini",
       "Designed interactive React UI and integrated with Spring Boot backend",
-      "Led planning, design, and frontend development (Likelion 12th cohort final project)",
+      "Planning, design, and frontend development (Likelion 12th cohort final project)",
     ],
     results: [
       "음성 인식 기반 실시간 AI 면접 플로우를 완성해 12기 최종 프로젝트로 발표",
@@ -709,7 +709,7 @@ export const projects: Project[] = [
     repo: "https://github.com/Gongdori-Moondori/Gongdori-Moondori-FE",
     commitsUrl: "https://github.com/Gongdori-Moondori/Gongdori-Moondori-FE/commits/main/?author=tlstkdgus",
     roles: ["PM", "프론트엔드"],
-    rolesEn: ["PM", "Full-stack"],
+    rolesEn: ["PM", "Frontend"],
     goals: [
       "동대문구 청년층 전통시장 이용률(8.2%) 저조 문제를 전통시장·대형마트 실시간 가격 비교로 해결",
       "K-HTML 해커톤(서울시 동대문구청 × 경희대) 과제 해결",
@@ -720,13 +720,13 @@ export const projects: Project[] = [
     ],
     contents: [
       "OCR 기술 + AI 추천을 결합한 종합 쇼핑 도우미 PWA 개발",
-      "실시간 가격비교, OCR 스캔, Google Maps 경로안내, AI 상품추천 핵심 기능 구현",
-      "Next.js 15 + React 19 기반 PWA 아키텍처 설계 및 개발 리드",
+      "핵심 기능: 실시간 가격비교, OCR 스캔, Google Maps 경로안내, AI 상품추천 (팀 구현)",
+      "Next.js 15 + React 19 프로젝트에서 지도 페이지 · API 계층 · 토큰 갱신 · PWA 설정 개발",
     ],
     contentsEn: [
       "Built a comprehensive shopping assistant PWA combining OCR and AI recommendations",
-      "Implemented real-time price comparison, OCR scanning, Google Maps navigation, and AI product recommendations",
-      "Led PWA architecture design and development on Next.js 15 + React 19",
+      "Core features: real-time price comparison, OCR scanning, Google Maps navigation, and AI product recommendations (team build)",
+      "Built the map page, API layer, token refresh, and PWA setup on Next.js 15 + React 19",
     ],
     results: [
       "Next.js 15 + PWA 기반 종합 쇼핑 도우미 서비스 해커톤 기간 내 완성 배포",
@@ -783,12 +783,12 @@ export const projects: Project[] = [
     resultsEn: [
       "Won Grand Prize (Truth Award) at 2025 HUFS H-UP Career Exploration Program",
     ],
-    tags: ["AR", "React", "AI", "Figma"],
+    tags: ["AR", "AI", "Figma"],
   },
   {
     title: "Meal당",
     caseId: "mealdang",
-    titleEn: "Meal당",
+    titleEn: "Mealdang",
     subtitle: "당뇨병 환자를 위한 AI 식단 관리 서비스",
     subtitleEn: "Diet Management Service for Diabetics, with AI",
     period: "2024.07. ~ 2024.08.",
@@ -815,7 +815,7 @@ export const projects: Project[] = [
       "Designed food-exchange-table calorie algorithm and developed ChatGPT-integrated personalized meal generation",
       "Built React web app including blood glucose monitoring and diabetes-friendly restaurant map",
       "Established multi-channel business model: premium subscription, data sales, and diabetic product store",
-      "Led entire process from planning to UI/UX design to frontend development (Likelion 12th cohort)",
+      "Service planning, UI/UX design, and frontend development (Likelion 12th cohort)",
     ],
     results: [
       "서비스 배포 완료 (mealdang.vercel.app)",
@@ -844,7 +844,7 @@ export const projects: Project[] = [
     subtitle: "웹캠 기반 자세 교정 서비스",
     subtitleEn: "Webcam-Based Posture Correction Service",
     period: "2024.05.",
-    periodEn: "May 1 — May 16, 2024",
+    periodEn: "May 2024",
     roles: ["PM"],
     rolesEn: ["PM"],
     goals: [
@@ -868,11 +868,11 @@ export const projects: Project[] = [
       "Completed UI/UX design and prototype (PM role, 6-person team, Likelion 12th cohort)",
     ],
     results: [
-      "B2C → B2B 구독 수익 모델 전략 및 핵심 기능 PoC 완성 (웹캠 자세 분석·알림·웨어러블 연동)",
+      "B2C → B2B 구독 수익 모델 전략 및 핵심 기능 Figma 프로토타입 완성 (웹캠 자세 분석·알림·웨어러블 연동)",
       "6인팀 PM으로서 문제 정의·솔루션 설계·UI/UX 프로토타입 전 과정 주도 (멋쟁이사자처럼 12기 아이디어톤)",
     ],
     resultsEn: [
-      "Completed B2C → B2B subscription model strategy and core PoC (webcam posture analysis, alerts, wearable integration)",
+      "Completed the B2C → B2B subscription strategy and a Figma prototype of the core features (webcam posture analysis, alerts, wearable integration)",
       "Led a 6-person team as PM through the full process: problem definition, solution design, and UI/UX prototype (Likelion 12th Ideathon)",
     ],
     tags: ["Figma", "UX/UI", "Healthcare"],

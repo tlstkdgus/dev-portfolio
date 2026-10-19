@@ -182,6 +182,11 @@ export const careerDetailSections: CareerDetailSection[] = [
                   "Built and ran a Discord bot over the 78-item FAQ: keyword matching first (zero cost) with LLM fallback, a strict no-fabrication policy (unknowns route to staff), and a daily unanswered-question report — with humans deciding what gets added. Over a month it answered 229 questions from 53 users — 80.8% via instant keyword match, 0 unanswered.",
               },
               {
+                text: "행사가 끝난 뒤 봇 로그(stats.log · unanswered.log)를 읽는 운영 현황판을 FastAPI · React · Docker로 추가했습니다(2026.10). 집계 기준은 봇의 faq_engine · digest를 그대로 import해 일일 리포트와 숫자가 어긋나지 않게 했고, 사용자 ID는 솔트 해시 별칭으로만 내보냅니다.",
+                textEn:
+                  "After the event I added an ops dashboard over the bot's logs (stats.log, unanswered.log) in FastAPI, React, and Docker (Oct 2026). It imports the bot's own faq_engine and digest so its numbers never drift from the daily report, and user IDs leave the API only as salted-hash aliases.",
+              },
+              {
                 text: "파트너 8종 툴 지원 정책(신청 마감 일원화, 팀장 대표 제출, 과금 리스크 안내)을 운영했고, OpenAI와는 영문으로 직접 커뮤니케이션하며 크레딧 지급 이슈를 추적하고 본선 기술 심사위원 섭외까지 연결했습니다.",
                 textEn:
                   "Ran the 8-partner tool support program (unified deadlines, team-lead submission, billing-risk notices), and communicated directly with OpenAI in English — tracking credit issues and landing a finals technical judge.",
@@ -245,8 +250,8 @@ export const careerDetailSections: CareerDetailSection[] = [
         problemEn: "The whole bracket and match state lived in one Supabase row (JSON) and was operated from several consoles. If two requests read the same state and each wrote back, the first change could silently vanish.",
         solution: "쓰기를 모두 mutate() 하나로 모으고 UPDATE … WHERE rev = <읽은 값>으로 낙관적 잠금을 걸었습니다. 0행이 갱신되면 다시 읽어 같은 변형을 최대 3회 재적용하고, 재적용이 안전하도록 브래킷 전이를 입력을 바꾸지 않는 순수 함수로 분리했습니다. 최초 접근 때 두 요청이 동시에 초기 행을 만들면 PK 충돌(23505)을 무시하고 다시 읽게 했습니다.",
         solutionEn: "All writes go through a single mutate() with optimistic locking: UPDATE … WHERE rev = <value read>. If zero rows update, it re-reads and re-applies the same transform up to three times, so every bracket transition is a pure function that never mutates its input. When two first requests race to create the initial row, the PK conflict (23505) is ignored and the row is re-read.",
-        result: "전이 로직이 DB·React와 분리돼 Node 내장 테스트 러너로 단위 테스트 59개(거부 경로 위주)를 돌릴 수 있었고, GitHub Actions에서 타입체크 · 린트 · 테스트 · 빌드를 푸시마다 확인했습니다.",
-        resultEn: "With transitions decoupled from the DB and React, 59 unit tests (mostly rejection paths) run on Node's built-in test runner, and GitHub Actions checks typecheck, lint, tests, and build on every push.",
+        result: "전이 로직이 DB·React와 분리돼 Node 내장 테스트 러너로 단위 테스트 59개(거부 경로 18개 포함)를 돌릴 수 있었고, GitHub Actions에서 타입체크 · 린트 · 테스트 · 빌드를 푸시마다 확인했습니다.",
+        resultEn: "With transitions decoupled from the DB and React, 59 unit tests (18 on rejection paths) run on Node's built-in test runner, and GitHub Actions checks typecheck, lint, tests, and build on every push.",
         files: ["lib/state.ts", "lib/tournament.ts", "lib/tournament.test.ts", ".github/workflows/ci.yml"],
       },
       {
@@ -290,8 +295,8 @@ export const careerDetailSections: CareerDetailSection[] = [
         problemEn: "The FAQ bot matches keywords first, and during operation one-letter keywords like '상' (prize) hijacked '7인 이상' (7 or more), and '발표' pulled in the wrong entry. Some students typed full-width characters, and a single failing LLM backend cut answers off.",
         solution: "입력을 NFKC로 정규화하고, 점수가 동점이면 찍지 않고 LLM에 넘기며, OpenAI와 Claude를 같은 인터페이스로 두어 한쪽이 실패하면 다른 쪽으로 자동 전환했습니다. 질문별로 어느 항목에 가야 하는지를 라우팅 표 형태의 회귀 테스트로 고정하고, 미답변 리포트(digest.py)는 제안만 하고 faq.md는 사람이 고치게 했습니다. 배포는 GitHub Actions가 서버에서 update.sh를 돌리고, 저널에 '로그인 성공'이 찍힐 때까지 기다려 확인합니다.",
         solutionEn: "Input is NFKC-normalized, ties go to the LLM instead of guessing, and OpenAI and Claude sit behind one interface so a failure on one switches to the other. Which entry each question should reach is pinned as a routing-table regression test, and the unanswered-question report (digest.py) only suggests while people edit faq.md. On deploy, GitHub Actions runs update.sh on the server and waits for 'login succeeded' in the journal.",
-        result: "한 달간 229건 중 80.8%를 키워드로 즉답(API 비용 0)하고 미응답은 0건이었습니다. 키워드를 늘릴 때마다 인접 주제를 가로채는지 테스트 62개가 바로 잡아냈습니다.",
-        resultEn: "Over a month, 80.8% of 229 questions got an instant keyword answer (zero API cost), with none unanswered. Each time keywords grew, 62 tests immediately caught any hijacking of neighboring topics.",
+        result: "한 달간 229건 중 80.8%를 키워드로 즉답(API 비용 0)하고 미응답은 0건이었습니다. 키워드를 늘릴 때마다 질문 178개의 라우팅 표가 인접 주제를 가로채는지 바로 잡아냈습니다(봇 테스트 62개).",
+        resultEn: "Over a month, 80.8% of 229 questions got an instant keyword answer (zero API cost), with none unanswered. Each time keywords grew, a 178-question routing table caught any hijacking of neighboring topics (62 bot tests).",
         files: ["faq_engine.py", "llm.py", "test_faq_matching.py", "deploy/lib.sh"],
         repo: "https://github.com/tlstkdgus/hackathon-faq-bot",
       },
@@ -485,9 +490,16 @@ export const careerDetailSections: CareerDetailSection[] = [
         ],
       },
       {
-        text: "FINNECT 챌린지(핀테크 해커톤) 과제로, 3인 팀에서 PM과 프론트엔드 개발, IR 피칭을 맡았습니다. (2025.06 ~ 2025.08)",
+        text: "FIN:NECT 챌린지(핀테크 해커톤) 과제로, 3인 팀에서 PM과 프론트엔드 개발, IR 피칭을 맡았습니다. (2025.06 ~ 2025.08)",
         textEn:
-          "A FINNECT Challenge (fintech hackathon) project — in a 3-person team, I handled PM, frontend development, and the IR pitch. (Jun–Aug 2025)",
+          "A FIN:NECT Challenge (fintech hackathon) project — in a 3-person team, I handled PM, frontend development, and the IR pitch. (Jun–Aug 2025)",
+        subItems: [
+          {
+            text: "대회 이후(2026.09) 패스키 서버 검증, 화면 간 데이터 연동, 서비스 워커 설치 오류 수정을 더했습니다.",
+            textEn:
+              "After the competition (Sep 2026), I added server-side passkey verification, shared data across screens, and fixed the service worker install.",
+          },
+        ],
       },
     ],
     role: [
@@ -514,14 +526,14 @@ export const careerDetailSections: CareerDetailSection[] = [
         titleEn: "Frontend Development",
         items: [
           {
-            text: "React 기반 실시간 대시보드(부서별 예산 현황, AI 이상 거래 탐지)와 데이터 시각화 컴포넌트를 구현했습니다.",
+            text: "React로 부서별 예산·지출 대시보드와 월별 지출 대비 예산 차트를 구현했습니다. 대회 이후(2026.09) 화면마다 따로 있던 목업 데이터를 하나의 저장소로 연결해, 결제가 저장되면 대시보드·분석·전표에 같은 데이터가 바로 반영되고 예산 사용률이 기준치를 넘은 부서에는 경고가 뜹니다.",
             textEn:
-              "Built real-time dashboard (department budget status, AI anomaly transaction detection) and data visualization components in React.",
+              "Built the department budget and spending dashboard and a monthly spend-vs-budget chart in React. After the competition (Sep 2026), I connected the per-screen mock data to one store: a saved payment shows up at once in the dashboard, analytics, and vouchers, and departments over the alert threshold are flagged.",
           },
           {
-            text: "FIDO2 API를 연동하여 지문·Face ID 생체인증 1초 결제 시스템을 개발했습니다. 복잡한 인증 과정을 제거하고 보안을 동시에 확보했습니다.",
+            text: "대회 이후(2026.09) 패스키 결제를 서버 검증 구조로 보완했습니다. 서버가 Flow ID·금액·가맹점에서 파생한 챌린지를 발급하고, 지문·Face ID 서명과 생체인증 여부·출처·RP ID를 검증한 뒤 결제 승인서를 발급합니다.",
             textEn:
-              "Integrated FIDO2 API to develop a 1-second biometric payment system (fingerprint/Face ID), eliminating complex authentication while maintaining security.",
+              "After the competition (Sep 2026), I rebuilt passkey payment around server verification. The server issues a challenge derived from the Flow ID, amount, and merchant, verifies the fingerprint/Face ID signature, user verification, origin, and RP ID, and only then issues a payment approval.",
           },
         ],
       },
@@ -535,18 +547,54 @@ export const careerDetailSections: CareerDetailSection[] = [
               "Analyzed TAM/SAM/SOM across 3 addressable markets, sizing the total at ₩1.62T. Built a phased roadmap: Phase 1 (50 companies) → Phase 2 (800) → Phase 3 (Enterprise/IPO).",
           },
           {
-            text: "FINNECT 챌린지 IR 발표를 직접 담당하여 102팀 중 5위(장려상)를 수상했습니다.",
+            text: "FIN:NECT 챌린지 IR 발표를 직접 담당하여 102팀 중 5위(장려상)를 수상했습니다.",
             textEn:
-              "Personally delivered the FINNECT Challenge IR pitch, winning 5th place (Encouragement Prize) out of 102 teams.",
+              "Personally delivered the FIN:NECT Challenge IR pitch, winning 5th place (Encouragement Prize) out of 102 teams.",
           },
         ],
       },
     ],
+    // 2026-10-19 FlowPay main(2fa8da4) 코드로 확인. 세 건 모두 대회 이후(2026.09) 보완한 내용이다.
+    troubles: [
+      {
+        title: "패스키 서명을 아무도 검증하지 않았습니다",
+        titleEn: "No one verified the passkey signature",
+        problem: "패스키 인증이 브라우저 안에서만 끝나, navigator.credentials.get()이 성공했다는 사실만으로 결제가 진행됐습니다. 서명을 검증하는 쪽이 없었습니다.",
+        problemEn: "Passkey auth ended inside the browser, so a successful navigator.credentials.get() alone let a payment through. Nothing verified the signature.",
+        solution: "Vercel 서버리스 함수로 인증 서버를 두고, 챌린지 발급과 attestation·assertion 검증을 @simplewebauthn/server로 처리했습니다. 등록과 결제 모두 생체인증(userVerification)을 필수로 두고 출처와 RP ID를 대조합니다. 서버리스 인스턴스는 메모리를 공유하지 않아, 챌린지와 공개키는 DB 대신 HMAC-SHA256으로 서명한 2분 만료 토큰에 담아 클라이언트에 맡겼습니다.",
+        solutionEn: "I added an auth server as Vercel functions, with @simplewebauthn/server issuing challenges and verifying attestations and assertions. Both registration and payment require user verification and check origin and RP ID. Serverless instances share no memory, so challenges and public keys travel in HMAC-SHA256-signed tokens that expire in two minutes, held by the client instead of a DB.",
+        result: "서버가 검증한 패스키만 1-Click 결제에 쓰이고, 변조된 토큰은 거부됩니다. 패스키가 없는 기기의 데모 인증은 거래·전표에 '서버 검증 없음'으로 따로 기록됩니다.",
+        resultEn: "Only server-verified passkeys can use 1-Click payment, and tampered tokens are rejected. Demo auth on devices without a passkey is recorded on the transaction and voucher as 'not server-verified'.",
+        files: ["api/_lib/core.js", "api/_lib/http.js", "src/utils/passkey.ts", "src/components/PGPayment.tsx"],
+      },
+      {
+        title: "생체인증이 어떤 결제에 대한 승인인지 묶여 있지 않았습니다",
+        titleEn: "The biometric signature wasn't tied to a specific payment",
+        problem: "임의 챌린지에 서명하면 서명과 결제 금액·가맹점 사이에 연결이 없습니다. 서명 하나로 다른 금액의 결제를 승인할 여지가 남습니다.",
+        problemEn: "Signing a random challenge leaves no link between the signature and the amount or merchant. One signature could approve a payment of a different amount.",
+        solution: "챌린지를 nonce·Flow ID·금액·가맹점의 SHA-256 해시로 만들고, 승인 단계에서 같은 값으로 다시 계산해 대조했습니다. 같은 결제 인증의 재사용은 nonce로 막았습니다.",
+        solutionEn: "The challenge is a SHA-256 hash of the nonce, Flow ID, amount, and merchant, recomputed and compared at authorization. Reuse of the same payment auth is blocked by the nonce.",
+        result: "금액을 바꾼 토큰, 다른 키의 서명, 생체인증 없는 서명, 재사용된 인증은 모두 거부됩니다. 소프트웨어 인증기로 실제 attestation·assertion을 만들어 이 경로를 테스트 12개로 확인합니다.",
+        resultEn: "A token with an altered amount, a signature from another key, one without user verification, and a replayed auth are all rejected. Twelve tests cover these paths with real attestations and assertions from a software authenticator.",
+        files: ["api/_lib/core.js", "server/tests/webauthn.test.js"],
+      },
+      {
+        title: "결제해도 대시보드가 바뀌지 않았습니다",
+        titleEn: "Payments never showed up on the dashboard",
+        problem: "화면마다 하드코딩된 목업 배열이 따로 있어, 결제를 해도 대시보드·분석·전표 어디에도 반영되지 않았습니다.",
+        problemEn: "Each screen had its own hardcoded mock array, so a payment showed up nowhere: not on the dashboard, in analytics, or in vouchers.",
+        solution: "상태 전이를 순수 reducer로 분리하고, Context 하나에서 localStorage에 저장했습니다. 다른 탭의 변경은 storage 이벤트로 동기화하고, 저장 공간이 넘치면 영수증 썸네일을 빼고 다시 저장합니다. 데모 데이터는 고정 시드 난수로 만들어 새로고침해도 같습니다.",
+        solutionEn: "State transitions became a pure reducer behind one Context saved to localStorage. Other tabs sync through the storage event, and on quota errors it retries without receipt thumbnails. Demo data comes from a fixed-seed generator, so it stays the same across reloads.",
+        result: "결제 → 분류 → 전표 → 결재 → 국세청 전송(시뮬레이션)이 한 데이터로 이어집니다. reducer 단위 테스트 10개를 포함해 앱 테스트 21개가 통과합니다.",
+        resultEn: "Payment → classification → voucher → approval → tax filing (simulated) runs on one dataset. Twenty-one app tests pass, ten of them on the reducer.",
+        files: ["src/store/FlowPayContext.tsx", "src/store/reducer.ts", "src/store/selectors.ts", "src/__tests__/reducer.test.ts"],
+      },
+    ],
     results: [
       {
-        text: "FINNECT 챌린지 장려상 수상 (5등/102팀) — 현업 인터뷰로 문제를 다시 정의하고 정산 단계를 8단계에서 3단계로 줄인 설계가 결과로 이어졌습니다.",
+        text: "FIN:NECT 챌린지 장려상 수상 (5등/102팀) — 현업 인터뷰로 문제를 다시 정의하고 정산 단계를 8단계에서 3단계로 줄인 설계가 결과로 이어졌습니다.",
         textEn:
-          "Won Encouragement Prize at FINNECT Challenge (5th of 102 teams) — redefining the problem through interviews and cutting reconciliation from 8 steps to 3 led to this outcome.",
+          "Won Encouragement Prize at FIN:NECT Challenge (5th of 102 teams) — redefining the problem through interviews and cutting reconciliation from 8 steps to 3 led to this outcome.",
       },
       {
         text: "3인 팀에서 PM·프론트엔드·IR 피칭을 모두 수행하며 B2B SaaS 기획의 전 사이클(문제 정의 → 솔루션 설계 → 기술 구현 → 사업화 전략)을 경험했습니다.",
@@ -712,7 +760,7 @@ export const careerDetailSections: CareerDetailSection[] = [
       {
         text: "한국외대 멋쟁이사자처럼 13기 부원 45명의 세션 출석을 운영진이 수기 출석부로 관리하고 있었습니다. 13기 운영진으로 출석과 팀 빙고 미션을 한 앱에서 처리하는 PWA를 기획하고 프론트엔드 개발을 이끌었습니다. 프론트엔드 저장소 커밋 98개 중 60개가 제 커밋입니다. (2025.03 ~ 2025.09)",
         textEn:
-          "Attendance for the 45 members of HUFS LIKELION's 13th cohort was kept by staff on a paper roll. As 13th-cohort staff, I planned a PWA that handled attendance and team bingo missions in one app, and led its frontend development. (Mar 2025 – Sep 2025)",
+          "Attendance for the 45 members of HUFS LIKELION's 13th cohort was kept by staff on a paper roll. As 13th-cohort staff, I planned a PWA that handled attendance and team bingo missions in one app, and led its frontend development; 60 of the frontend repo's 98 commits are mine. (Mar 2025 – Sep 2025)",
       },
     ],
     role: [
@@ -796,9 +844,9 @@ export const careerDetailSections: CareerDetailSection[] = [
         titleEn: "Built the Course Site Solo — React · TypeScript · Vite",
         items: [
           {
-            text: "React 18 · TypeScript(strict) · Vite 6 · Tailwind CSS v4 · React Router 7로 강의 6회를 따라가는 교육 사이트를 혼자 만들어 Vercel에 배포했습니다. 커밋 20개가 모두 제 커밋입니다.",
+            text: "React 18 · TypeScript(strict) · Vite 6 · Tailwind CSS v4 · React Router 7로 강의 6회를 따라가는 교육 사이트를 혼자 만들어 Vercel에 배포했습니다. 커밋 21개가 모두 제 커밋입니다.",
             textEn:
-              "I built and deployed the course site for the six lectures on my own with React 18, TypeScript (strict), Vite 6, Tailwind CSS v4, and React Router 7 on Vercel. All 20 commits are mine.",
+              "I built and deployed the course site for the six lectures on my own with React 18, TypeScript (strict), Vite 6, Tailwind CSS v4, and React Router 7 on Vercel. All 21 commits are mine.",
             subItems: [
               {
                 text: "SVG 개념 도식 17종을 컴포넌트로 만들었습니다(강의 페이지 14종 · 가이드 3종). 이미지가 아니라 코드라 문구를 고치고 강의마다 재사용할 수 있습니다.",
@@ -806,14 +854,19 @@ export const careerDetailSections: CareerDetailSection[] = [
                   "Made 17 SVG concept diagrams as components (14 on lecture pages, 3 on guides). Being code rather than images, their wording is editable and they're reused across lectures.",
               },
               {
-                text: "브라우저에서 바로 동작하는 인터랙티브 실습 10개를 만들었습니다 — 로그인 요청이 FE→API→BE→DB를 오가는 7단계 왕복(Ep1Journey), 브랜치 → 커밋 → PR → 머지를 단계별로 여는 Git 시뮬레이터(Ep3GitSim), 필드를 고르면 API 명세가 조립되는 API 빌더(Ep5ApiBuilder), requestAnimationFrame 캔버스 룰렛 등.",
+                text: "브라우저에서 바로 동작하는 인터랙티브 실습 13개(강의 10 · 부록 3)를 만들었습니다 — 로그인 요청이 FE→API→BE→DB를 오가는 7단계 왕복(Ep1Journey), 브랜치 → 커밋 → PR → 머지를 단계별로 여는 Git 시뮬레이터(Ep3GitSim), 필드를 고르면 API 명세가 조립되는 API 빌더(Ep5ApiBuilder), requestAnimationFrame 캔버스 룰렛 등.",
                 textEn:
-                  "Built 10 in-browser interactive exercises — a 7-step login round-trip across FE→API→BE→DB (Ep1Journey), a Git simulator that unlocks branch → commit → PR → merge step by step (Ep3GitSim), an API builder that assembles a spec as you pick fields (Ep5ApiBuilder), a requestAnimationFrame canvas roulette, and more.",
+                  "Built 13 in-browser interactive exercises (10 in lectures, 3 in the appendix) — a 7-step login round-trip across FE→API→BE→DB (Ep1Journey), a Git simulator that unlocks branch → commit → PR → merge step by step (Ep3GitSim), an API builder that assembles a spec as you pick fields (Ep5ApiBuilder), a requestAnimationFrame canvas roulette, and more.",
               },
               {
-                text: "용어 사전 51개는 용어·뜻·설명을 한 번에 검색하고(useMemo 필터) 강의별로 걸러 보게 했습니다. 스크롤에 맞춰 나타나는 효과는 IntersectionObserver로 만들었습니다.",
+                text: "용어 사전 62개는 용어·뜻·설명을 한 번에 검색하고(useMemo 필터) 강의·부록별로 걸러 보게 했습니다. 스크롤에 맞춰 나타나는 효과는 IntersectionObserver로 만들었습니다.",
                 textEn:
-                  "The 51-term glossary searches term, meaning, and description at once (a useMemo filter) and filters by lecture. The scroll reveal uses IntersectionObserver.",
+                  "The 62-term glossary searches term, meaning, and description at once (a useMemo filter) and filters by lecture or appendix. The scroll reveal uses IntersectionObserver.",
+              },
+              {
+                text: "강의를 마친 뒤 부록 'AI 실전' 페이지(/ai-practice)를 추가했습니다(2026.10). 요소를 켜고 끌 때마다 요청문과 예상 결과가 바뀌는 프롬프트 빌더, 원자료와 대조해 틀린 문장을 찾는 답변 검수, 문항마다 해설이 붙는 10문제 퀴즈를 넣었습니다.",
+                textEn:
+                  "After the course I added an 'AI in Practice' appendix page (/ai-practice, Oct 2026): a prompt builder whose request and expected output change as you toggle each element, an answer check that finds the wrong sentences against the source, and a 10-question quiz with an explanation for each.",
               },
             ],
           },
@@ -1280,9 +1333,9 @@ export const careerDetailSections: CareerDetailSection[] = [
         ],
       },
       {
-        text: "멋쟁이사자처럼 12기 최종 프로젝트로, 4인 팀에서 기획·디자인·프론트엔드 개발을 맡았습니다. 2024년 9월부터 11월까지 약 3개월간 진행했습니다.",
+        text: "멋쟁이사자처럼 12기 최종 프로젝트로, 4인 팀에서 기획·디자인·프론트엔드 개발을 맡았습니다. 2024년 9월부터 12월까지 약 4개월간 진행했습니다.",
         textEn:
-          "The Likelion 12th cohort final project — in a 4-person team, I handled planning, design, and frontend development over about 3 months (September–November 2024).",
+          "The Likelion 12th cohort final project — in a 4-person team, I handled planning, design, and frontend development over about 4 months (September–December 2024).",
       },
     ],
     role: [
@@ -1465,7 +1518,7 @@ export const careerDetailSections: CareerDetailSection[] = [
   {
     id: "mealdang",
     title: "당뇨병 환자를 위한 AI 식단 관리 서비스 — Meal당",
-    titleEn: "Diet Management Service for Diabetics, with AI — Meal당",
+    titleEn: "Diet Management Service for Diabetics, with AI — Mealdang",
     images: [
       "/projects/mealdang/01.png",
       "/projects/mealdang/02.png",
@@ -1546,9 +1599,9 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     results: [
       {
-        text: "mealdang.vercel.app으로 서비스를 실제 배포하여 실사용 가능한 형태로 완성했습니다. 식품교환표 기반 칼로리 계산과 ChatGPT 식단 자동 생성이 정상 작동합니다.",
+        text: "mealdang.vercel.app으로 서비스를 실제 배포하여 실사용 가능한 형태로 완성했습니다. 식품교환표 기반 칼로리 계산과 ChatGPT 식단 자동 생성이 배포 당시 동작했습니다.",
         textEn:
-          "Deployed the service at mealdang.vercel.app in a fully usable form. Food-exchange-table calorie calculation and ChatGPT meal auto-generation work correctly.",
+          "Deployed the service at mealdang.vercel.app in a fully usable form. Food-exchange-table calorie calculation and ChatGPT meal auto-generation worked at launch.",
       },
     ],
     lessons: [
@@ -1673,7 +1726,7 @@ export const careerDetailSections: CareerDetailSection[] = [
       {
         text: "사회적 가치만 강조하면 공감에 그치고, 수익 모델만 강조하면 설득력이 떨어진다고 판단했습니다. 임팩트 지표와 수익 모델을 같은 슬라이드에 올렸을 때 심사위원의 반응이 달라졌습니다.",
         textEn:
-          "I judged that social value alone earns sympathy and revenue alone sounds cold. When the impact metrics and the revenue model shared one slide, the judges' response changed.",
+          "I judged that social value alone earns sympathy and revenue alone falls short on persuasion. When the impact metrics and the revenue model shared one slide, the judges' response changed.",
       },
     ],
   },
@@ -1910,9 +1963,9 @@ export const careerDetailSections: CareerDetailSection[] = [
               "Planned a service concept where users point their smartphone camera at their actual space and virtual furniture is placed in real time using AR technology.",
             subItems: [
               {
-                text: "사용자의 인테리어 취향, 공간 크기, 예산 데이터를 결합한 AI 맞춤 가구 추천 알고리즘 기획을 설계했습니다.",
+                text: "사용자의 인테리어 취향, 공간 크기, 예산 데이터를 결합한 AI 맞춤 가구 추천 알고리즘을 기획했습니다.",
                 textEn:
-                  "Designed an AI personalized furniture recommendation algorithm that combines user interior preferences, space dimensions, and budget data.",
+                  "Planned an AI personalized furniture recommendation algorithm that combines user interior preferences, space dimensions, and budget data.",
               },
               {
                 text: "B2C 직접 판매 → 가구 브랜드 B2B 파트너십으로 확장하는 비즈니스 모델을 수립했습니다.",
@@ -1960,7 +2013,7 @@ export const careerDetailSections: CareerDetailSection[] = [
           {
             text: "도수 치료(10~50만원/회), 수술 등 기존 해결책은 비용이 높고 사후 치료 중심이었습니다. 일상에서 지속적으로 자세를 교정하는 저비용 IT 솔루션이 없다는 점에 주목했습니다.",
             textEn:
-              "Existing solutions like manual therapy (₩300,000–500,000/session) and surgery were expensive and reactive. Identified the absence of a low-cost IT solution for continuous daily posture correction.",
+              "Existing solutions like manual therapy (₩100,000–500,000/session) and surgery were expensive and reactive. Identified the absence of a low-cost IT solution for continuous daily posture correction.",
           },
         ],
       },
