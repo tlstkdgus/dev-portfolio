@@ -87,7 +87,7 @@ export const careerDetailSections: CareerDetailSection[] = [
           { label: "314팀", labelEn: "314 teams", note: "제출 · 562개 레포 · 80개 대학", noteEn: "submitted · 562 repos · 80 universities" },
           { label: "60팀", labelEn: "60 teams", note: "서류 심사 100점 배점 · 트랙별 15팀", noteEn: "100-point document review · 15 per track" },
           { label: "8팀", labelEn: "8 teams", note: "트랙 피칭 발표 5분 + Q&A · 트랙별 2팀", noteEn: "5-minute track pitch + Q&A · 2 per track" },
-          { label: "1팀", labelEn: "1 team", note: "본선 토너먼트 1:1 3라운드 · 2,000명 앞 실시간 발표", noteEn: "1:1 three-round live tournament before 2,000" },
+          { label: "1팀", labelEn: "1 team", note: "본선 토너먼트 1:1 3라운드 · 2,500명 앞 실시간 발표", noteEn: "1:1 three-round live tournament before 2,500" },
         ],
         caption: "배점의 절반 가까이를 문제 정의(25점)와 실현 가능성(20점)에 두었습니다. 제출 항목과 심사 기준을 1:1로 연결해, 무엇을 쓰면 어떻게 평가받는지 예측할 수 있게 했습니다.",
         captionEn: "Nearly half the points went to problem definition (25) and feasibility (20). Submission items mapped 1:1 to criteria, so teams could predict how they'd be scored.",
@@ -108,14 +108,14 @@ export const careerDetailSections: CareerDetailSection[] = [
     ],
     background: [
       {
-        text: "80개 대학, 참가자 2,000명+, 314팀 제출(562개 레포) → 본선 8팀 토너먼트로 최종 1팀을 뽑는 역대 최대 규모 중앙해커톤입니다. 커뮤니티 매니저 인턴으로 기획부터 본선 운영까지 맡았고, 기능명세서·워밍업 세션·참가자 가이드·심사 정책은 팀과 함께 만들었으며 운영 도구 3개와 본선 현장 운영은 직접 맡았습니다. (2026.06 ~ 2026.08.25, 본선 코엑스 마곡)",
+        text: "80개 대학, 참가자 2,500명, 314팀 제출(562개 레포) → 본선 8팀 토너먼트로 최종 1팀을 뽑는 역대 최대 규모 중앙해커톤입니다. 커뮤니티 매니저 인턴으로 기획부터 본선 운영까지 맡았고, 기능명세서·워밍업 세션·참가자 가이드·심사 정책은 팀과 함께 만들었으며 운영 도구 3개와 본선 현장 운영은 직접 맡았습니다. (2026.06 ~ 2026.08.25, 본선 코엑스 마곡)",
         textEn:
-          "The largest LIKELION hackathon to date: 80 universities, 2,000+ participants, 314 submitting teams (562 repos) → an 8-team finals tournament picking one winner. As a community manager intern I took it from planning through the finals: the feature specs, warm-up sessions, participant guide, and judging policy were made with the team, and I built the 3 ops tools and ran the finals on site myself. (Jun 2026 – Aug 25, 2026; finals at COEX Magok)",
+          "The largest LIKELION hackathon to date: 80 universities, 2,500 participants, 314 submitting teams (562 repos) → an 8-team finals tournament picking one winner. As a community manager intern I took it from planning through the finals: the feature specs, warm-up sessions, participant guide, and judging policy were made with the team, and I built the 3 ops tools and ran the finals on site myself. (Jun 2026 – Aug 25, 2026; finals at COEX Magok)",
         subItems: [
           {
-            text: "참가자·심사위원·파트너의 이해가 충돌하는 지점마다 규칙이 필요했고, 314팀·562개 레포 검증과 2,000명 앞 실시간 토너먼트는 수작업으로 풀 수 없는 문제였습니다.",
+            text: "참가자·심사위원·파트너의 이해가 충돌하는 지점마다 규칙이 필요했고, 314팀·562개 레포 검증과 2,500명 앞 실시간 토너먼트는 수작업으로 풀 수 없는 문제였습니다.",
             textEn:
-              "Every collision point between participants, judges, and partners needed a rule — and verifying 562 repos or running a live tournament for 2,000 people was not a manual job.",
+              "Every collision point between participants, judges, and partners needed a rule — and verifying 562 repos or running a live tournament for 2,500 people was not a manual job.",
           },
         ],
       },
@@ -172,9 +172,9 @@ export const careerDetailSections: CareerDetailSection[] = [
         titleEn: "Participant Comms, FAQ Bot & Partner Ops",
         items: [
           {
-            text: "참가자 2,000명이 한 달간 참조하는 노션 통합 가이드를 팀과 공동 작성했습니다. 참가자 여정(팀빌딩 → 개발 → 심사 → 현장) 순서로 목차를 설계하고, 변경 사항마다 날짜를 명시해 추적 가능하게 운영했습니다.",
+            text: "참가자 2,500명이 한 달간 참조하는 노션 통합 가이드를 팀과 공동 작성했습니다. 참가자 여정(팀빌딩 → 개발 → 심사 → 현장) 순서로 목차를 설계하고, 변경 사항마다 날짜를 명시해 추적 가능하게 운영했습니다.",
             textEn:
-              "Co-wrote the Notion guide that 2,000 participants referenced for a month — structured by participant journey (team building → build → judging → venue), with every change dated and traceable.",
+              "Co-wrote the Notion guide that 2,500 participants referenced for a month — structured by participant journey (team building → build → judging → venue), with every change dated and traceable.",
             subItems: [
               {
                 text: "FAQ 78문항을 지식으로 쓰는 디스코드 봇을 직접 만들어 운영했습니다. 키워드 매칭 우선(비용 0) + LLM 폴백의 2단 응답, 자료에 없는 내용은 지어내지 않고 '운영진 문의' 안내, 미답변 질문 일일 리포트로 지식을 보강하되 반영 여부는 사람이 판단. 한 달간 229건(사용자 53명)을 응대했고 80.8%가 키워드 즉답, 미응답은 0건이었습니다.",
@@ -263,8 +263,8 @@ export const careerDetailSections: CareerDetailSection[] = [
       {
         title: "네트워크가 끊기거나 표가 0건이어도 본선은 진행돼야 했습니다",
         titleEn: "The finals had to go on even with no network or zero votes",
-        problem: "행사장 네트워크나 심사 화면에 문제가 생기면 2,000명 앞의 무대가 멈추고, 한 번 공개한 결과는 되돌릴 수 없었습니다.",
-        problemEn: "If the venue network or the judge view failed, the stage in front of 2,000 people would stall, and a revealed result couldn't be taken back.",
+        problem: "행사장 네트워크나 심사 화면에 문제가 생기면 2,500명 앞의 무대가 멈추고, 한 번 공개한 결과는 되돌릴 수 없었습니다.",
+        problemEn: "If the venue network or the judge view failed, the stage in front of 2,500 people would stall, and a revealed result couldn't be taken back.",
         solution: "심사 제출이 0건이어도 운영자가 직접 승자를 지정해 공개하는 백업 모드를 두고, 결과 공개에는 롤백 대신 확인 다이얼로그를 필수로 넣었습니다. 로컬 production 빌드를 LAN IP로 띄우는 오프라인 폴백을 위해 secure 쿠키를 끄는 환경 변수를 따로 두었고, 빌드가 Supabase 키 없이도 통과하는지 CI에서 확인했습니다.",
         solutionEn: "A backup mode lets the operator name the winner and reveal even with zero votes, and reveals require a confirm dialog instead of offering rollback. For an offline fallback that serves a local production build over a LAN IP, a separate env var can turn off the secure cookie flag, and CI checks that the build passes without Supabase keys.",
         result: "본선 8팀 토너먼트를 이 콘솔로 끝까지 진행했고, 콘솔 조작이 무대 스크린에 반영되기까지 실측 2.2초였습니다.",
@@ -875,6 +875,151 @@ export const careerDetailSections: CareerDetailSection[] = [
           "The biggest decision was not teaching code. Narrowing the goal from 'becoming a developer' to 'talking with developers' made clear what fit in six sessions and what didn't — teaching, too, was scope cutting.",
       },
     ],
+  },
+
+  {
+    id: "nextstep",
+    title: "공고를 붙여넣으면 채워지는 취업 지원 관리 도구 — Next Step",
+    titleEn: "A Job-Application Tracker That Fills Itself from Postings — Next Step",
+    // 로컬에서 가상 회사 데이터로 띄워 캡처. 01은 로그인 화면
+    images: [
+      "/projects/nextstep/02.png",
+      "/projects/nextstep/03.png",
+      "/projects/nextstep/04.png",
+      "/projects/nextstep/01.png",
+    ],
+    diagrams: [
+      {
+        title: "AI는 제안만 하고, 저장은 사용자가 확인한 뒤에만 됩니다",
+        titleEn: "AI only proposes; nothing is saved until the user confirms",
+        steps: [
+          { label: "공고 링크·이미지·PDF", labelEn: "Posting link, image, PDF", note: "링크만 붙여넣거나 공고 이미지를 바로 붙여넣기, PDF는 10MB까지", noteEn: "Paste just a link or a posting image; PDFs up to 10MB" },
+          { label: "서버가 페이지 읽기", labelEn: "Server reads the page", tag: "lib/page.js", tagEn: "lib/page.js", note: "공개 주소만, 2MB·10초 제한. iframe 본문·구조화 데이터까지 따라가 텍스트로", noteEn: "Public hosts only, 2MB and 10s limits; follows body iframes and structured data into text" },
+          { label: "AI 추출", labelEn: "AI extraction", tag: "Claude", tagEn: "Claude", note: "공고는 Haiku, 지원서 전체 옮기기는 Sonnet. 결과는 JSON으로만 받음", noteEn: "Postings on Haiku, whole applications on Sonnet; results come back as JSON only" },
+          { label: "변경 미리보기", labelEn: "Preview changes", tag: "사람 확인", tagEn: "Human check", note: "이미 있는 항목과 이름이 비슷하면 추가 대신 빈칸 채우기로 제안", noteEn: "Items that look like existing ones are proposed as blank-filling, not new rows" },
+          { label: "저장", labelEn: "Save", tag: "결과", tagEn: "Result", note: "확인한 항목만 Supabase에 기록, 캘린더·보드에 바로 반영", noteEn: "Only confirmed items are written to Supabase and show up on the calendar and board" },
+        ],
+        caption: "AI가 공고를 잘못 읽어도 사용자 기록이 조용히 바뀌지 않도록, 추출과 저장 사이에 항목별 확인 단계를 두었습니다.",
+        captionEn: "A per-item confirmation sits between extraction and saving, so a misread posting never silently changes the user's records.",
+      },
+    ],
+    background: [
+      {
+        text: "취업 준비를 하면 공고, 마감일, 면접 일정, 자소서, 제출 서류가 메모·캘린더·폴더에 흩어집니다. 회사마다 전형 이름과 단계 수가 달라 지금 어느 회사가 어느 단계인지 한눈에 보기 어렵고, 지원서마다 같은 이력을 다시 입력해야 했습니다.",
+        textEn:
+          "Job hunting scatters postings, deadlines, interview dates, essays, and submitted files across notes, calendars, and folders. Every company names and counts its steps differently, so it was hard to see who was at which step, and every application meant retyping the same history.",
+      },
+      {
+        text: "열흘 동안 혼자 기획·개발·배포한 뒤 회원가입을 열어 공개 서비스로 운영하고 있습니다. 저장소 커밋 56개가 모두 제 커밋입니다.",
+        textEn:
+          "I planned, built, and shipped it alone over ten days, then opened sign-up and now run it as a public service. All 56 commits in the repo are mine.",
+      },
+    ],
+    role: [
+      {
+        title: "프론트엔드 — 프레임워크 없는 한 파일 앱",
+        titleEn: "Frontend — A Single-File App Without a Framework",
+        items: [
+          {
+            text: "index.html 한 파일에 상태 객체 하나와 render 함수를 두고, 클릭은 data-act 속성 하나로 위임해 처리했습니다. 캘린더 · 단계별 보드 · 자소서 · 내 정보 4개 화면과 휴대폰 전체 화면 시트를 같은 렌더 경로로 그립니다.",
+            textEn:
+              "One index.html holds a single state object and a render function, with clicks delegated through one data-act attribute. The calendar, step board, essays, and profile screens and the full-screen phone sheets all draw through the same render path.",
+            subItems: [
+              {
+                text: "회사마다 다른 전형 이름은 정규식으로 '과제·테스트', '1차 면접', '2차·최종 면접', '처우·입사' 칸에 나눠 보드에 묶고, 카드를 다른 칸으로 끌어다 놓으면 단계 상태가 바뀝니다.",
+                textEn:
+                  "Differently named steps are sorted by regex into 'Assignment/Test', '1st interview', '2nd/final interview', and 'Offer/Onboarding' columns, and dragging a card to another column updates its step status.",
+              },
+              {
+                text: "비슷한 자소서 문항은 글자 2개씩 묶은 집합의 겹침(자카드)에 '지원동기 ~ 지원한 이유' 같은 주제 정규식 가산점을 더해 찾고, 삭제·되돌리기는 6초 동안 '되돌리기' 토스트로 복구할 수 있게 했습니다.",
+                textEn:
+                  "Similar essay questions are found by character-bigram overlap (Jaccard) plus a bonus for matching topic regexes such as 'motivation ~ why you applied', and deletes can be undone from a six-second toast.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "백엔드 — Vercel 함수 · Supabase",
+        titleEn: "Backend — Vercel Functions & Supabase",
+        items: [
+          {
+            text: "모든 기록은 Supabase docs 테이블의 사용자별 JSON 행 하나로 두고 행 수준 보안(user_id = auth.uid())으로 막았습니다. 서비스 키가 필요한 가입·탈퇴·AI 사용량 기록만 Vercel 함수 6개(api/)에서 처리합니다.",
+            textEn:
+              "Every record is one per-user JSON row in a Supabase docs table guarded by row-level security (user_id = auth.uid()). Only sign-up, account deletion, and AI usage metering, which need the service key, run in six Vercel functions (api/).",
+          },
+          {
+            text: "AI 제공자는 환경 변수로 Claude와 OpenAI 중 고르고, 거절·요금 부족·레이트리밋·용량 초과를 각각 다른 오류 코드로 바꿔 화면에 알맞은 안내를 띄웁니다.",
+            textEn:
+              "The AI provider (Claude or OpenAI) is chosen by environment variable, and refusals, missing credit, rate limits, and oversize requests each map to their own error code so the screen shows the right message.",
+          },
+        ],
+      },
+    ],
+    troubles: [
+      {
+        title: "두 기기에서 동시에 고치면 한쪽 변경이 조용히 사라질 수 있었습니다",
+        titleEn: "Editing on two devices at once could silently drop one side's change",
+        problem: "입력하는 동안 자동 저장되는데, 휴대폰과 노트북에서 같은 지원 건을 고치면 나중에 저장한 쪽이 먼저 저장한 변경을 덮어썼습니다. 내 정보를 문서 하나로 두면 서로 다른 칸을 고쳐도 충돌했습니다.",
+        problemEn: "Edits save automatically while typing, so editing the same application on a phone and a laptop let the later save overwrite the earlier one. Keeping the profile as one document made even edits to different fields collide.",
+        solution: "기기마다 마지막으로 본 updated_at을 기억하고, 갱신은 match({updated_at: 본 값})으로 걸어 0행이면 서버 값을 다시 확인합니다. 서버가 실제로 앞서 있을 때만 충돌로 보고 최신 상태를 다시 불러오며, 같은 문서의 쓰기는 큐로 순서를 지키고 429는 지수 백오프로 재시도합니다. 내 정보는 학력·경력 같은 섹션마다 문서를 나눴습니다.",
+        solutionEn: "Each device remembers the updated_at it last saw and updates with match({updated_at: seen}); on zero rows it re-checks the server. Only when the server has really moved on is it treated as a conflict and the latest state reloaded; writes to the same doc are queued in order and 429s retry with exponential backoff. The profile is split into one doc per section, such as education and career.",
+        result: "덮어쓰기 대신 '다른 기기에서 먼저 바뀐 내용이 있어 다시 불러왔어요' 안내가 뜨고, 다른 섹션을 고치는 두 기기는 서로 부딪치지 않습니다. 저장되지 않은 변경이 있으면 페이지를 떠나기 전에 경고합니다.",
+        resultEn: "Instead of an overwrite, the user sees 'changed on another device first, reloaded'; two devices editing different sections no longer collide, and leaving the page with unsaved changes triggers a warning.",
+        files: ["index.html"],
+      },
+      {
+        title: "브라우저는 다른 사이트의 공고 페이지를 읽을 수 없었습니다",
+        titleEn: "The browser couldn't read job postings on other sites",
+        problem: "공고 링크만 붙여넣고 싶었지만 채용 사이트는 브라우저에서 다른 출처 요청을 막고, 사람인·잡코리아는 본문을 iframe 안에 두거나 이미지로만 올립니다. 서버가 대신 읽으면 사용자가 내부망 주소를 넣어 서버를 통로로 쓸 위험이 생깁니다.",
+        problemEn: "Users should be able to paste just a link, but job sites block cross-origin reads from the browser, and Saramin and JobKorea keep the body in an iframe or post it only as images. Having the server read it instead risks users pointing it at internal addresses.",
+        solution: "서버에서 공개 http(s) 주소만 열고 루프백·사설·링크로컬 IP와 IPv6 리터럴을 막았습니다. 리다이렉트는 직접 따라가며 매번 다시 검사하고(최대 3회), 2MB·10초로 제한합니다. 사이트별 본문 주소와 같은 사이트 iframe을 따라가 schema.org JobPosting·Next.js 페이지 데이터까지 텍스트로 모으고, euc-kr 페이지는 다시 디코딩하며, 글이 거의 없으면 본문 이미지 최대 3장을 함께 보냅니다.",
+        solutionEn: "The server opens only public http(s) hosts and blocks loopback, private, and link-local IPs and IPv6 literals. It follows redirects itself, re-checking each hop (up to three), with 2MB and 10s limits. It follows site-specific body URLs and same-site iframes, gathers schema.org JobPosting and Next.js page data as text, re-decodes euc-kr pages, and attaches up to three body images when there is little text.",
+        result: "링크만 붙여넣어도 회사·직무·마감일·전형·자소서 문항이 채워집니다. 링크를 읽지 못하면 첨부한 공고 이미지·파일만으로 이어서 추출합니다.",
+        resultEn: "Pasting just a link fills in the company, role, deadline, steps, and essay questions; when the link can't be read, extraction continues from attached posting images or files.",
+        files: ["lib/page.js", "api/extract.js"],
+      },
+      {
+        title: "지원서 PDF가 Vercel 함수 요청 한도(4.5MB)를 넘었습니다",
+        titleEn: "Application PDFs exceeded the Vercel function request limit (4.5MB)",
+        problem: "지원서 PDF를 base64로 요청 본문에 담으면 몇 MB짜리 파일도 Vercel 함수의 요청 본문 한도에 걸렸습니다.",
+        problemEn: "Putting an application PDF in the request body as base64 hit the Vercel function body limit even for files of a few megabytes.",
+        solution: "큰 PDF는 브라우저가 Supabase Storage의 사용자 폴더에 먼저 올리고 경로만 보냅니다. 서버는 경로가 그 사용자 폴더로 시작하는지와 '..'가 없는지 확인한 뒤, 서비스 키가 아닌 사용자 토큰으로 읽어 저장소 접근 규칙이 그대로 적용되게 했습니다. 붙여넣은 이미지는 브라우저에서 줄여 4장까지만 받습니다.",
+        solutionEn: "Large PDFs are uploaded by the browser to the user's Supabase Storage folder first, and only the path is sent. The server checks the path starts with that user's folder and contains no '..', then reads it with the user's token rather than the service key, so storage access rules still apply. Pasted images are shrunk in the browser and capped at four.",
+        result: "10MB까지의 PDF를 추출에 쓸 수 있고, 추출이 끝난 임시 파일은 바로 지웁니다.",
+        resultEn: "PDFs up to 10MB can be used for extraction, and the temporary file is deleted as soon as extraction ends.",
+        files: ["api/extract.js", "supabase/schema.sql"],
+      },
+      {
+        title: "캘린더 앱은 로그인할 수 없고, 가입자가 늘면 AI 비용도 늘었습니다",
+        titleEn: "Calendar apps can't sign in, and AI costs grew with sign-ups",
+        problem: "구글·iPhone 캘린더에 일정을 띄우려면 캘린더 앱이 로그인 없이 주기적으로 가져갈 주소가 필요했습니다. 동시에 회원가입을 열면 AI 호출 비용에 상한이 없었습니다.",
+        problemEn: "Showing the schedule in Google or iPhone Calendar needed an address calendar apps could poll without signing in. At the same time, opening sign-up left AI call costs uncapped.",
+        solution: "사용자가 만드는 32자 이상 16진수 비밀 토큰을 URL 키로 쓰고, 새로 만들면 이전 링크가 바로 막히게 했습니다. ICS는 75바이트마다 줄을 접되 한글 글자를 자르지 않고, 시간은 한국 시간 기준, 여러 날 일정은 종일 일정으로, 하루 전 알림을 붙였습니다. AI는 한국 날짜 기준으로 회원별 하루(공고 20 · 지원서 5)·한 달(100) 사용량과 서비스 전체 하루 합계(기본 300)를 세어 넘으면 429를 돌려줍니다.",
+        solutionEn: "A user-made secret token (32+ hex characters) is the URL key, and making a new one shuts the old link off at once. The ICS folds lines every 75 bytes without splitting Korean characters, uses Korean time, turns multi-day events into all-day ones, and adds a one-day-before alarm. AI usage is counted per Korean calendar day: per user per day (20 postings, 5 applications) and month (100), plus a service-wide daily total (300 by default), returning 429 when over.",
+        result: "구글 캘린더는 버튼 한 번으로, 다른 캘린더 앱은 URL 구독으로 연결되고 피드는 1시간 간격 갱신을 요청합니다. 가입자 수와 관계없이 하루 AI 호출 수에 상한이 생겼습니다.",
+        resultEn: "Google Calendar connects with one button and other apps by URL subscription, with the feed asking for hourly refresh. Daily AI calls now have a ceiling regardless of how many people sign up.",
+        files: ["api/cal.js", "lib/server.js", "supabase/002_usage.sql"],
+      },
+    ],
+    results: [
+      {
+        // GA4 보고서 개요 CSV (2026-10-19 본인 제공). 수집은 10/11부터. 앱 화면 사용자는 화면별 활성 사용자 중 최대인 캘린더(30명) 기준이라 '이상'
+        text: "배포 후 8일간 방문자 157명, 그중 로그인해 앱 화면까지 쓴 사용자 30명 이상 (GA4, 2026.10.11~10.18). 출시 이튿날부터 8일 동안 매일 재방문 사용자가 있었습니다(하루 2~6명).",
+        textEn:
+          "157 visitors in the first 8 days after launch, 30+ of whom signed in and used the app (GA4, Oct 11–18 2026). Returning users came back every day for eight days from day two (2–6 a day).",
+      },
+      {
+        text: "next-step-ssh.vercel.app 배포·운영 중 (2026.10.10~10.19 커밋 56개, 1인)",
+        textEn: "Live at next-step-ssh.vercel.app (56 commits, Oct 10–19 2026, solo)",
+      },
+      {
+        text: "지원 종류 3가지(채용 · 공모전·해커톤 · 시험), 전형 템플릿 10개, 사람인·잡코리아 등 공고 링크 자동 읽기, 구글·iPhone 캘린더 구독",
+        textEn:
+          "Three application types (hiring, contests/hackathons, exams), ten step templates, automatic reading of posting links such as Saramin and JobKorea, and Google/iPhone Calendar subscription",
+      },
+    ],
+    lessons: [],
   },
 
   {

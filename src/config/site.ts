@@ -38,7 +38,7 @@ export const siteConfig = {
     titleTemplate: "%s | 신상현",
     defaultTitle: "신상현 | 사용자가 실제로 쓰는 화면을 만들고, 배포한 뒤에도 직접 운영하며 고치는 프론트엔드 개발자",
     description:
-      "React·Next.js·TypeScript로 15개 이상의 서비스를 만들어 배포한 프론트엔드 개발자 신상현의 포트폴리오입니다. 2,000명 해커톤 본선을 진행한 토너먼트 콘솔(Next.js · Supabase), 562개 레포 제출물 검사 스크립트, FAQ 봇, 외주 서비스 루미클린의 청소자 앱까지.",
+      "React·Next.js·TypeScript로 15개 이상의 서비스를 만들어 배포한 프론트엔드 개발자 신상현의 포트폴리오입니다. 2,500명 해커톤 본선을 진행한 토너먼트 콘솔(Next.js · Supabase), 562개 레포 제출물 검사 스크립트, FAQ 봇, 외주 서비스 루미클린의 청소자 앱까지.",
     keywords: [
       "포트폴리오",
       "개발자 포트폴리오",
